@@ -87,6 +87,10 @@
     <Folder Include="Home\__pycache__\" />
     <Folder Include="Way\" />
     <Folder Include="Way\migrations\" />
+    <Folder Include="Way\templates\" />
+    <Folder Include="Way\static\" />
+    <Folder Include="Way\static\Way\" />
+    <Folder Include="Way\templates\Way\" />
     <Folder Include="Way\__pycache__\" />
   </ItemGroup>
   <ItemGroup>
@@ -2212,14 +2216,15 @@
     <Content Include="Home\static\Home\scripts\respond.min.js" />
     <None Include="Home\static\Home\scripts\_references.js" />
     <Content Include="Home\templates\Home\about.html" />
+    <Content Include="Home\templates\Home\base_layer.html" />
     <Content Include="Home\templates\Home\contact.html" />
     <Content Include="Home\templates\Home\index.html" />
-    <Content Include="Home\templates\Home\layout.html" />
     <Content Include="Home\templates\Home\list_way.html" />
     <Content Include="Home\templates\Home\login.html" />
     <Content Include="Home\templates\Home\loginpartial.html" />
     <Content Include="Home\templates\Home\profile.html" />
     <Content Include="Home\templates\Home\register.html" />
+    <Content Include="Home\templates\Home\base.html" />
     <Content Include="Home\__pycache__\admin.cpython-39.pyc" />
     <Content Include="Home\__pycache__\apps.cpython-39.pyc" />
     <Content Include="Home\__pycache__\forms.cpython-39.pyc" />

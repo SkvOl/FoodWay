@@ -1,57 +1,6 @@
-{% extends "Home/layout.html" %}
+{% extends "Home/base_layer.html" %}
 
 {% block content %}
-
-<!--<div class="row">
-    <div class="col-md-8">
-        <section id="loginForm">
-            <form method="post" action="." class="form-horizontal">
-                {% csrf_token %}
-                <h4>Create a local account to using website.</h4>
-                <hr />
-                <div class="form-group">
-                    <label for="id_username" class="col-md-2 control-label">User name</label>
-                    <div class="col-md-10">
-                        {{ form.username }}
-                    </div> 
-                </div>
-
-                <div class="form-group">
-                    <label for="id_password" class="col-md-2 control-label">Email</label>
-                    <div class="col-md-10">
-                        {{ form.email }}
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="id_password" class="col-md-2 control-label">Password</label>
-                    <div class="col-md-10">
-                        {{ form.password1 }}
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="id_password" class="col-md-2 control-label">Confirm password</label>
-                    <div class="col-md-10">
-                        {{ form.password2 }}
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <button type="submit" name ="submit" class="btn btn-default">Reg</button>
-                    </div>
-                </div>
-                {% if form.errors %}
-                <p class="validation-summary-errors">Please enter a correct user name and password.</p>
-                {% endif %}
-            </form>
-        </section>
-    </div>
-    <div class="col-md-4">
-        <section id="socialLoginForm"></section>
-    </div>
-</div>-->
 
 
 <div class="d-flex position-absolute top-50 start-50 translate-middle text-center login-form p-5">
@@ -75,7 +24,7 @@
             <label for="id_username" class="control-label">Подтвердите пароль</label>
             {{ form.password2 }}
         </div>
-        <button type="submit" name ="submit" class="btn btn-dark mt-5">Зарегистрироваться</button>
+        <button type="submit" name="submit" class="btn btn-dark mt-5">Зарегистрироваться</button>
 
         {% if form.errors %}
         <p class="validation-summary-errors">Введите корректные имя пользователя и/или пароль.</p>
