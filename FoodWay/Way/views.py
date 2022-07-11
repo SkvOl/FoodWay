@@ -13,3 +13,9 @@ def test(request):
     print(lis)
 
     return redirect('home')
+
+def add_way(request):
+    if request.method == 'POST':
+        return redirect('home')
+    else:
+        return render(request,'Way/form.html')
