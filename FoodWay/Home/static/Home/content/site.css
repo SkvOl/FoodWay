@@ -1,0 +1,48 @@
+body {
+    /*background-image: url("{% static 'Home/fonts/food_body.jpg' %}");*/
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+    flex-grow: 1;
+}
+
+
+.field-validation-error {
+    color: #b94a48;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+input.input-validation-error {
+    border: 1px solid #b94a48;
+}
+
+input[type="checkbox"].input-validation-error {
+    border: 0 none;
+}
+
+.validation-summary-errors {
+    color: #b94a48;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+
+
+footer {
+    flex-shrink: 0;
+}
+
+.login-form {
+    border: solid #0000006e 1px;
+    border-radius: 5%;
+    min-width:20vw;
+}

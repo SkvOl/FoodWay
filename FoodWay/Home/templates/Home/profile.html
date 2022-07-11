@@ -1,0 +1,98 @@
+{% extends "Home/layout.html" %}
+
+{% block content %}
+
+{% load staticfiles %}
+<script src="{% static 'Home/fontawesomefree/js/all.min.js' %}"></script>
+<link href="{% static 'Home/fontawesomefree/css/all.min.css' %}" rel="stylesheet" type="text/css">
+
+<style>
+    .test1 {
+        width: 500px;
+        height: 200px;
+    }
+
+    .test2 {
+        width: 500px;
+        height: 200px;
+    }
+
+    .image-profile {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .alert-secondary {
+        background-color: #e2e3e533;
+    }
+
+    .info-body {
+        width: 100%;
+    }
+
+    .info-row {
+    }
+</style>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-4">
+            <div class="alert alert-secondary m-1">
+                <img class="image-profile" src="{% static 'Home/media/123.jpg'%}" />
+            </div>
+        </div>
+
+        <div class="col-8 d-flex">
+            <div class="alert alert-secondary m-1 w-100">
+                <div class="h4">
+                    <h4>Информация:</h4>
+                    <div class="info-row"><b>Имя: </b>{{user.username}}</div>
+                    {% if user.lastname %}<div class="info-row mt-2"><b>Фамилия: </b>{{user.lastname}}</div> {% endif %}
+                    <div class="info-row"><i class="fa-regular fa-envelope"></i> <b>Почта: </b>{{user.mail}}</div>
+                    <!--<div class="info-row"><b>Имя: </b>{{name}}</div>-->
+                    <!--<div class="info-row"><b>Имя: </b>{{name}}</div>-->
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row alert alert-secondary">
+        <table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Название</th>
+      <th scope="col">Рейтинг</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>Mark</td>
+      <td>Otto</td>
+    </tr>
+      <tr>
+      <th scope="row">2</th>
+      <td>Мой путь</td>
+      <td><i class="fa-regular fa-star"></i>5.0</td>
+    </tr>
+      <tr>
+      <th scope="row">2</th>
+      <td>Мой путь</td>
+      <td><i class="fa-regular fa-star"></i>5.0</td>
+    </tr>
+      <tr>
+      <th scope="row">2</th>
+      <td>Мой путь</td>
+      <td><i class="fa-regular fa-star"></i>5.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    </div>
+
+{% endblock %}

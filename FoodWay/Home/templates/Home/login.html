@@ -1,0 +1,36 @@
+{% extends "Home/layout.html" %}
+ 
+{% block content %}
+
+
+<div class="position-absolute top-50 start-50 translate-middle text-center login-form p-5">
+    <form action="." method="post" class="form-horizontal">
+        {% csrf_token %}
+        <h2>{{ title }}</h2>
+        <h4 class="mb-3">Используйте свой логин и пароль</h4>
+        <div class="mb-3">
+            <label for="id_username" class="control-label">Введите логин</label>
+            {{ form.username }}
+        </div>
+        <div class="mb-3">
+            <label for="id_password" class="control-label">Пароль</label>
+            {{ form.password }}
+        </div>
+        <input type="hidden" name="next" value="/" />
+        <button type="submit" class="btn btn-dark">Войти</button>
+        {% if form.errors %}
+        <p class="validation-summary-errors">Введите корректные имя пользователя и/или пароль.</p>
+        {% endif %}
+    </form>
+    <a href ="/reg" type="submit" class="btn btn-success mt-2">Зарегистрироваться</a>
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+{% load staticfiles %}
+<script src="{% static 'Home/scripts/jquery.validate.min.js' %}"></script>
+
+{% endblock %}
