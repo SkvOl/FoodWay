@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import user_to_way, way_to_comm, rating
+
+from django.http import JsonResponse
 # Create your views here.
 
 
@@ -18,4 +20,13 @@ def add_way(request):
     if request.method == 'POST':
         return redirect('home')
     else:
-        return render(request,'Way/form.html')
+        context = { 
+            'test' : render(request,'Way/popup_marker.html'),
+        } 
+        return render(request,'Way/form.html',context)
+
+def save_way(request):
+    if request.method == 'POST':
+        print(request.POST)
+        return JsonResponse(request.POST.get('geoJSON'), safe=False)
+        

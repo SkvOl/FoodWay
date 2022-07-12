@@ -1,6 +1,9 @@
 {% extends "Home/base_layer.html" %}
 
 {% block content %}
+
+
+
 <style>
     #map {
         display: block;
@@ -19,9 +22,22 @@
         <div id="map"></div>
     </div>
 </div>
-<form>
-    
+<form class="row" id="form_name">
+    {% csrf_token %}
+    <label for="name_way" class="form-label text-center">Название вашего Way</label>
+    <div class="col-10">
+      
+      <input type="text" class="form-control" id="name_way" name="name_way" placeholder="Введите название">
+    </div>
+    <div class="col-2">
+      <button type="submit" class="btn btn-primary mb-3">Сохранить</button>
+    </div>
 </form>
+
+<button id="123">TEST</button>
+<template id="popup_marker">
+    {% include 'Way/popup_marker.html' %}
+</template>
 
 <script>
     DG.then(function () {
@@ -32,7 +48,6 @@
             worldCopyJump: true,
             zoomControl: false,
             fullscreenControl: false,
-            geoclicker: false
         };
         var query = parseQuery();
         var map = window.map = DG.map('map', getMapOptions(query, options));
@@ -45,52 +60,108 @@
         if (DG.screenfull.isAvailable()) {
             DG.control.fullscreen(controlOptions).addTo(map);
         }
-        var balloonHTML = '<a href="http://www.2gis.ru/" target="_blank">\n\
-        <img src="__BASE_URL__/img/2gis-logo.png" alt="2GIS" title="2GIS" width="154" height="66" style="border: none"></a>\n\
-        <p>Компания «ДубльГИС»</p>Тел.: (383) 363-05-55<br />Адрес: г. Новосибирск, Карла Маркса площадь, 7<br />\n\
-        (МФК «Сан Сити»), 13 этаж';
+
+        var balloonHTML = $('#popup_marker')[0].innerHTML;
         //var marker = DG.marker([53.20973372247789, 44.99897003173828]).addTo(map).bindPopup(balloonHTML);
 
-        //var latlngs = [
-        //    [53.20973372247789, 44.99897003173828],
-        //    [53.20973372247789, 44.99897003173858],
-        //    [53.20973372247789, 44.99897003173868],
-        //    [53.20973372247729, 44.99897003173828],
-        //    [82.91699, 55.042136]
-        //];
         var polyline = DG.polyline(0, { color: 'red' }).addTo(map);
         //map.fitBounds(polyline.getBounds());
+        var first_draw_way = true;
 
         var userMarker = DG.marker([54.980156831455, 82.897440725094], {
             draggable: true
-        }).addTo(map);
+        }).addTo(map).bindPopup(balloonHTML);
 
         userMarker.on('moveend', function (e) {
             var lat = e.target._latlng.lat,
                 lng = e.target._latlng.lng;
-            //save_marker();
+            
+            this.openPopup();
         });
-        //marker.openPopup();
 
+        userMarker.on('drag', function (e) {
+            var lat = e.target._latlng.lat,
+                lng = e.target._latlng.lng;
+            if (!polyline.isEmpty()) {
+                if (first_draw_way) {
+                    polyline.addLatLng(this.getLatLng());
+                    first_draw_way = false;
+                }
+                var mass_coord = polyline.getLatLngs();
+                mass_coord.pop();
+                mass_coord.push(this.getLatLng());
+                polyline.setLatLngs(mass_coord);
+            }
+        });
+
+        
 
         function save_marker() {
             DG.marker([userMarker.getLatLng().lat, userMarker.getLatLng().lng]).addTo(map);
         }
 
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function Send_data() {
+            var data_form = $('#form_name').serializeArray();
+            console.log(data_form);
+            data_form.push(polyline.toGeoJSON());
+            console.log(data_form);
+            $.ajax({
+	            url: "{% url 'save_way' %}",
+	            method: 'post',
+	            dataType: 'json',
+                data: data_form,
+	            success: function(data){
+		            console.log(data);
+	            }
+            });
+        }
+
+        $('#123').on('click', function (e) {
+            console.log("work");
+            Send_data();
+
+        });
         map.on('click', function (e) {
             console.log(e.latlng.lat + '   ' + e.latlng.lng);
             userMarker.setLatLng([e.latlng.lat, e.latlng.lng]);
 
-            polyline.addLatLng([e.latlng.lat, e.latlng.lng]);
+            //polyline.addLatLng([e.latlng.lat, e.latlng.lng]);
         });
 
         map.on('popupopen', function (e) {
-            console.log(e);
-            
+            $('#but_add').on('click', function (e) {
+                //console.log("work");
+                polyline.addLatLng(userMarker.getLatLng());
+                userMarker.closePopup();
+                first_draw_way = true;
+            });
+
+            $('#but_undo').on('click', function (e) {
+                console.log("work");
+                userMarker.closePopup();
+                var mass_coord = polyline.getLatLngs();
+                userMarker.setLatLng(mass_coord.pop());
+                polyline.setLatLngs(mass_coord);
+
+                userMarker.openPopup();
+            });
             //console.log(polyline.toGeoJSON());
-            //var test = e['popup'].getContent();
-            //console.log(test);
-            //$('#info').html(test);
         });
 
         map.on('moveend', function () {

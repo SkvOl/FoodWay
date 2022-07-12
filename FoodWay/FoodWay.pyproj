@@ -2234,6 +2234,7 @@
     <Content Include="requirements.txt" />
     <Content Include="db.sqlite3" />
     <Content Include="Way\templates\Way\form.html" />
+    <Content Include="Way\templates\Way\popup_marker.html" />
     <Content Include="Way\__pycache__\admin.cpython-39.pyc" />
     <Content Include="Way\__pycache__\apps.cpython-39.pyc" />
     <Content Include="Way\__pycache__\models.cpython-39.pyc" />
