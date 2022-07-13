@@ -15,7 +15,7 @@ from django.forms.forms import Form
 
 class BootstrapAuthenticationForm(AuthenticationForm):
     """Authentication form which uses boostrap CSS."""
-    username = forms.CharField(max_length=254,
+    username = forms.CharField(max_length=150,
                                widget=forms.TextInput({
                                    'class': 'form-control',
                                    'placeholder': 'Имя пользователя'}))
