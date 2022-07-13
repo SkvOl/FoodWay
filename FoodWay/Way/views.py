@@ -1,4 +1,3 @@
-from pickle import FALSE
 from .models import user_to_way, way_to_comm, rating, ways
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
