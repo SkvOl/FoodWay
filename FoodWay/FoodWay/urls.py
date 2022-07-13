@@ -12,3 +12,5 @@ urlpatterns = [
     path('way/', include('Way.urls')),
     path('admin/', admin.site.urls),
 ]
+
+handler404 = "FoodWay.views.page_not_found"
