@@ -9,8 +9,6 @@ body {
     perspective: 1000px;
 }
 
-$wallSize: 200px;
-
 div {
     transform-style: preserve-3d;
 }
@@ -23,129 +21,190 @@ div {
     justify-content: center;
     align-items: center;
     transform: rotateX(-30deg) rotateY(-30deg);
-    .stamp
+}
 
-{
-    position: absolute;
-    width: $wallSize;
-    height: $wallSize;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: rgba(20, 20, 20, 1);
-    color: #fff;
-    font-size: 7rem;
-
-    @for $i from 1 through 20 {
-        &:nth-child(#{$i}) {
-            animation: stampSlide 20 * 2000ms ($i * -2000) - 300ms linear infinite;
-        }
+    .rail .stamp {
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #141414;
+        color: #fff;
+        font-size: 7rem;
     }
-}
 
-}
+        .rail .stamp:nth-child(1) {
+            animation: stampSlide 40000ms -2300ms linear infinite;
+        }
+
+        .rail .stamp:nth-child(2) {
+            animation: stampSlide 40000ms -4300ms linear infinite;
+        }
+
+        .rail .stamp:nth-child(3) {
+            animation: stampSlide 40000ms -6300ms linear infinite;
+        }
+
+        .rail .stamp:nth-child(4) {
+            animation: stampSlide 40000ms -8300ms linear infinite;
+        }
+
+        .rail .stamp:nth-child(5) {
+            animation: stampSlide 40000ms -10300ms linear infinite;
+        }
+
+        .rail .stamp:nth-child(6) {
+            animation: stampSlide 40000ms -12300ms linear infinite;
+        }
+
+        .rail .stamp:nth-child(7) {
+            animation: stampSlide 40000ms -14300ms linear infinite;
+        }
+
+        .rail .stamp:nth-child(8) {
+            animation: stampSlide 40000ms -16300ms linear infinite;
+        }
+
+        .rail .stamp:nth-child(9) {
+            animation: stampSlide 40000ms -18300ms linear infinite;
+        }
+
+        .rail .stamp:nth-child(10) {
+            animation: stampSlide 40000ms -20300ms linear infinite;
+        }
+
+        .rail .stamp:nth-child(11) {
+            animation: stampSlide 40000ms -22300ms linear infinite;
+        }
+
+        .rail .stamp:nth-child(12) {
+            animation: stampSlide 40000ms -24300ms linear infinite;
+        }
+
+        .rail .stamp:nth-child(13) {
+            animation: stampSlide 40000ms -26300ms linear infinite;
+        }
+
+        .rail .stamp:nth-child(14) {
+            animation: stampSlide 40000ms -28300ms linear infinite;
+        }
+
+        .rail .stamp:nth-child(15) {
+            animation: stampSlide 40000ms -30300ms linear infinite;
+        }
+
+        .rail .stamp:nth-child(16) {
+            animation: stampSlide 40000ms -32300ms linear infinite;
+        }
+
+        .rail .stamp:nth-child(17) {
+            animation: stampSlide 40000ms -34300ms linear infinite;
+        }
+
+        .rail .stamp:nth-child(18) {
+            animation: stampSlide 40000ms -36300ms linear infinite;
+        }
+
+        .rail .stamp:nth-child(19) {
+            animation: stampSlide 40000ms -38300ms linear infinite;
+        }
+
+        .rail .stamp:nth-child(20) {
+            animation: stampSlide 40000ms -40300ms linear infinite;
+        }
 
 @keyframes stampSlide {
     0% {
-        transform: rotateX(90deg) rotateZ(-90deg) translateZ(-$wallSize) translateY(130px);
+        transform: rotateX(90deg) rotateZ(-90deg) translateZ(-200px) translateY(130px);
     }
 
     100% {
-        transform: rotateX(90deg) rotateZ(-90deg) translateZ(-$wallSize) translateY(130 - 200 * 20px);
+        transform: rotateX(90deg) rotateZ(-90deg) translateZ(-200px) translateY(-3870px);
     }
 }
 
 .world {
     transform: rotateX(-30deg) rotateY(-30deg);
-    .forward
-
-{
-    position: absolute;
-    animation: slide 2000ms linear infinite;
 }
 
-.box {
-    width: $wallSize;
-    height: $wallSize;
-    transform-origin: 100% 100%;
-    animation: roll 2000ms cubic-bezier(1.000, 0.010, 1.000, 1.000) infinite;
-    .wall
+    .world .forward {
+        position: absolute;
+        animation: slide 2000ms linear infinite;
+    }
 
-{
-    position: absolute;
-    width: $wallSize;
-    height: $wallSize;
-    background: rgba(10, 10, 10, 0.8);
-    border: 1px solid rgba(250, 250, 250, 1);
-    box-sizing: border-box;
-    &::before
+    .world .box {
+        width: 200px;
+        height: 200px;
+        transform-origin: 100% 100%;
+        animation: roll 2000ms cubic-bezier(1, 0.01, 1, 1) infinite;
+    }
 
-{
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #fff;
-    font-size: 7rem;
-}
+        .world .box .wall {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid #fafafa;
+            box-sizing: border-box;
+        }
 
-&:nth-child(1) {
-    transform: translateZ($wallSize / 2);
-}
+            .world .box .wall::before {
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: #fff;
+                font-size: 7rem;
+            }
 
-&:nth-child(2) {
-    transform: rotateX(180deg) translateZ($wallSize / 2);
-}
+            .world .box .wall:nth-child(1) {
+                transform: translateZ(100px);
+            }
 
-&:nth-child(3) {
-    transform: rotateX(90deg) translateZ($wallSize / 2);
-    &::before
+            .world .box .wall:nth-child(2) {
+                transform: rotateX(180deg) translateZ(100px);
+            }
 
-{
-    transform: rotateX(180deg) rotateZ(90deg) translateZ(-1px);
-    animation: zeroFour 4000ms -2000ms linear infinite;
-}
+            .world .box .wall:nth-child(3) {
+                transform: rotateX(90deg) translateZ(100px);
+            }
 
-}
+                .world .box .wall:nth-child(3)::before {
+                    transform: rotateX(180deg) rotateZ(90deg) translateZ(-1px);
+                    animation: zeroFour 4000ms -2000ms linear infinite;
+                }
 
-&:nth-child(4) {
-    transform: rotateX(-90deg) translateZ($wallSize / 2);
-    &::before
+            .world .box .wall:nth-child(4) {
+                transform: rotateX(-90deg) translateZ(100px);
+            }
 
-{
-    transform: rotateX(180deg) rotateZ(-90deg) translateZ(-1px);
-    animation: zeroFour 4000ms -2000ms linear infinite;
-}
+                .world .box .wall:nth-child(4)::before {
+                    transform: rotateX(180deg) rotateZ(-90deg) translateZ(-1px);
+                    animation: zeroFour 4000ms -2000ms linear infinite;
+                }
 
-}
+            .world .box .wall:nth-child(5) {
+                transform: rotateY(90deg) translateZ(100px);
+            }
 
-&:nth-child(5) {
-    transform: rotateY(90deg) translateZ($wallSize / 2);
-    &::before
+                .world .box .wall:nth-child(5)::before {
+                    transform: rotateX(180deg) translateZ(-1px);
+                    animation: zeroFour 4000ms linear infinite;
+                }
 
-{
-    transform: rotateX(180deg) translateZ(-1px);
-    animation: zeroFour 4000ms linear infinite;
-}
+            .world .box .wall:nth-child(6) {
+                transform: rotateY(-90deg) translateZ(100px);
+            }
 
-}
-
-&:nth-child(6) {
-    transform: rotateY(-90deg) translateZ($wallSize / 2);
-    &::before
-
-{
-    transform: rotateX(180deg) rotateZ(180deg) translateZ(-1px);
-    animation: zeroFour 4000ms linear infinite;
-}
-
-}
-}
-}
-}
+                .world .box .wall:nth-child(6)::before {
+                    transform: rotateX(180deg) rotateZ(180deg) translateZ(-1px);
+                    animation: zeroFour 4000ms linear infinite;
+                }
 
 @keyframes zeroFour {
     0% {
@@ -185,7 +244,6 @@ div {
     }
 
     100% {
-        transform: translateX(-$wallSize);
+        transform: translateX(-200px);
     }
 }
-
