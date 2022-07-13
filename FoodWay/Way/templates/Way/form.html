@@ -3,7 +3,6 @@
 {% block content %}
 
 
-
 <style>
     #map {
         display: block;
@@ -57,6 +56,7 @@
         DG.control.traffic(controlOptions).addTo(map);
         DG.control.location(controlOptions).addTo(map);
         DG.control.ruler(controlOptions).addTo(map);
+
         if (DG.screenfull.isAvailable()) {
             DG.control.fullscreen(controlOptions).addTo(map);
         }
@@ -66,6 +66,7 @@
 
         var polyline = DG.polyline(0, { color: 'red' }).addTo(map);
         //map.fitBounds(polyline.getBounds());
+        var GeoJson_to_save = '';
         var first_draw_way = true;
 
         var userMarker = DG.marker([54.980156831455, 82.897440725094], {
@@ -100,34 +101,36 @@
             DG.marker([userMarker.getLatLng().lat, userMarker.getLatLng().lng]).addTo(map);
         }
 
-        function getCookie(name) {
-            var cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                var cookies = document.cookie.split(';');
-                for (var i = 0; i < cookies.length; i++) {
-                    var cookie = jQuery.trim(cookies[i]);
-                    // Does this cookie string begin with the name we want?
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
+        function Send_data() {
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
                     }
                 }
+                return cookieValue;
             }
-            return cookieValue;
-        }
+            const csrftoken = getCookie('csrftoken');
 
-        function Send_data() {
-            var data_form = $('#form_name').serializeArray();
-            console.log(data_form);
-            data_form.push(polyline.toGeoJSON());
-            console.log(data_form);
+            var data_form = { 'name': $('#name_way').val(), 'GEOjson': JSON.stringify(GeoJson_to_save) };
+
             $.ajax({
 	            url: "{% url 'save_way' %}",
 	            method: 'post',
 	            dataType: 'json',
                 data: data_form,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                },
 	            success: function(data){
-		            console.log(data);
+                    console.log(JSON.parse(data));
 	            }
             });
         }
@@ -150,6 +153,7 @@
                 polyline.addLatLng(userMarker.getLatLng());
                 userMarker.closePopup();
                 first_draw_way = true;
+                GeoJson_to_save = polyline.toGeoJSON();
             });
 
             $('#but_undo').on('click', function (e) {
@@ -159,7 +163,8 @@
                 userMarker.setLatLng(mass_coord.pop());
                 polyline.setLatLngs(mass_coord);
 
-                userMarker.openPopup();
+                //userMarker.openPopup();
+                GeoJson_to_save = polyline.toGeoJSON();
             });
             //console.log(polyline.toGeoJSON());
         });

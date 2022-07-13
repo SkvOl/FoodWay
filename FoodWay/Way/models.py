@@ -70,7 +70,7 @@ class user_to_way(models.Model):
 #class way(models.Model):
 #    id_user = models.PositiveIntegerField('id_user')
 #    name_way = models.CharField(max_length=30)
-#    GeoJSON_lines - models.JSONField('GeoJSON_lines')
+#    GeoJSON_lines = JSONField('GeoJSON_lines')
 #    is_deleted = models.BooleanField('is_deleted')
 
 #    def __str__(self):
