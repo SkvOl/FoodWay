@@ -1,0 +1,210 @@
+{% extends "Home/base_layer.html" %}
+
+{% block content %}
+
+
+<style>
+    #map {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+
+    .content-map {
+        width: 85vw;
+        height: 80vh;
+    }
+</style>
+
+<div class="d-flex flex-row justify-content-around mt-1">
+    <div class="content-map">
+        <div id="map"></div>
+    </div>
+</div>
+<form class="row" id="form_name">
+    {% csrf_token %}
+    <label for="name_way" class="form-label text-center">Название вашего Way</label>
+    <div class="col-10">
+      
+      <input type="text" class="form-control" id="name_way" name="name_way" placeholder="Введите название">
+    </div>
+    <div class="col-2">
+      <button type="submit" class="btn btn-primary mb-3">Сохранить</button>
+    </div>
+</form>
+
+<button id="123">TEST</button>
+<template id="popup_marker">
+    {% include 'Way/popup_marker.html' %}
+</template>
+
+<script>
+    DG.then(function () {
+        var options = {
+            center: [53.20973372247789, 44.99897003173828],
+            zoom: 13,
+            geoclicker: true,
+            worldCopyJump: true,
+            zoomControl: false,
+            fullscreenControl: false,
+        };
+        var query = parseQuery();
+        var map = window.map = DG.map('map', getMapOptions(query, options));
+
+        var controlOptions = DG.Browser.mobile ? { position: 'bottomright' } : {};
+        DG.control.zoom(controlOptions).addTo(map);
+        DG.control.traffic(controlOptions).addTo(map);
+        DG.control.location(controlOptions).addTo(map);
+        DG.control.ruler(controlOptions).addTo(map);
+
+        if (DG.screenfull.isAvailable()) {
+            DG.control.fullscreen(controlOptions).addTo(map);
+        }
+
+        var balloonHTML = $('#popup_marker')[0].innerHTML;
+        //var marker = DG.marker([53.20973372247789, 44.99897003173828]).addTo(map).bindPopup(balloonHTML);
+
+        var polyline = DG.polyline(0, { color: 'red' }).addTo(map);
+        //map.fitBounds(polyline.getBounds());
+        var GeoJson_to_save = '';
+        var first_draw_way = true;
+
+        var userMarker = DG.marker([54.980156831455, 82.897440725094], {
+            draggable: true
+        }).addTo(map).bindPopup(balloonHTML);
+
+        userMarker.on('moveend', function (e) {
+            var lat = e.target._latlng.lat,
+                lng = e.target._latlng.lng;
+            
+            this.openPopup();
+        });
+
+        userMarker.on('drag', function (e) {
+            var lat = e.target._latlng.lat,
+                lng = e.target._latlng.lng;
+            if (!polyline.isEmpty()) {
+                if (first_draw_way) {
+                    polyline.addLatLng(this.getLatLng());
+                    first_draw_way = false;
+                }
+                var mass_coord = polyline.getLatLngs();
+                mass_coord.pop();
+                mass_coord.push(this.getLatLng());
+                polyline.setLatLngs(mass_coord);
+            }
+        });
+
+        
+
+        function save_marker() {
+            DG.marker([userMarker.getLatLng().lat, userMarker.getLatLng().lng]).addTo(map);
+        }
+
+        function Send_data() {
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+            const csrftoken = getCookie('csrftoken');
+
+            var data_form = { 'name': $('#name_way').val(), 'GEOjson': JSON.stringify(GeoJson_to_save) };
+
+            $.ajax({
+	            url: "{% url 'save_way' %}",
+	            method: 'post',
+	            dataType: 'json',
+                data: data_form,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                },
+	            success: function(data){
+                    console.log(JSON.parse(data));
+	            }
+            });
+        }
+
+        $('#123').on('click', function (e) {
+            console.log("work");
+            Send_data();
+
+        });
+        map.on('click', function (e) {
+            console.log(e.latlng.lat + '   ' + e.latlng.lng);
+            userMarker.setLatLng([e.latlng.lat, e.latlng.lng]);
+
+            //polyline.addLatLng([e.latlng.lat, e.latlng.lng]);
+        });
+
+        map.on('popupopen', function (e) {
+            $('#but_add').on('click', function (e) {
+                //console.log("work");
+                polyline.addLatLng(userMarker.getLatLng());
+                userMarker.closePopup();
+                first_draw_way = true;
+                GeoJson_to_save = polyline.toGeoJSON();
+            });
+
+            $('#but_undo').on('click', function (e) {
+                console.log("work");
+                userMarker.closePopup();
+                var mass_coord = polyline.getLatLngs();
+                userMarker.setLatLng(mass_coord.pop());
+                polyline.setLatLngs(mass_coord);
+
+                //userMarker.openPopup();
+                GeoJson_to_save = polyline.toGeoJSON();
+            });
+            //console.log(polyline.toGeoJSON());
+        });
+
+        map.on('moveend', function () {
+            if (!history.replaceState) {
+                return; // ie <= 9
+            }
+
+            var center = map.getCenter();
+            history.replaceState({}, document.title,
+                '?lng=' + center.lng.toFixed(5) +
+                '&lat=' + center.lat.toFixed(5) +
+                '&zoom=' + map.getZoom()
+            );
+        });
+    });
+
+
+    function parseQuery() {
+        var res = {};
+        location.search.slice(1).split('&')
+            .map(function (str) {
+                return str.split('=')
+            })
+            .forEach(function (couple) {
+                res[couple[0]] = couple[1];
+            });
+        return res;
+    }
+
+    function getMapOptions(query, options) {
+        if (query.lng !== undefined && query.lat !== undefined) {
+            options.center = [parseFloat(query.lat), parseFloat(query.lng)];
+        }
+        if (query.zoom !== undefined) {
+            options.zoom = parseInt(query.zoom, 10);
+        }
+        return options;
+    }
+
+</script>
+{% endblock content %}

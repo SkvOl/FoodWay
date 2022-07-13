@@ -1,0 +1,102 @@
+{% extends "Home/base.html" %}
+
+{% load staticfiles %}
+
+{% block navig_panel %}
+<style>
+    .login-block-phone {
+    }
+
+    .login-block-pc {
+    }
+
+    @media(min-width: 992px) {
+        .login-block-phone {
+            display: none
+        }
+
+        .login-block-pc {
+            display: flex
+        }
+    }
+
+    @media(max-width: 991px) {
+        .login-block-phone {
+            display: flex
+        }
+
+        .login-block-pc {
+            display: none
+        }
+    }
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a href="/" class="navbar-brand">FoodWay</a>
+
+        <div class="login-block-phone">
+            {% include 'Home/loginpartial.html' %}
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'profile' %}">Профиль</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Менеджер страниц
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="#">Список добавленных страниц</a></li>
+                        <li><a class="dropdown-item" href="#">Список добавленных путей</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Добавить страницу</a></li>
+                        <li><a class="dropdown-item" href="{% url 'add_way' %}">Добавить путь</a></li>
+                    </ul>
+                </li>
+                {% endif %}
+
+                {% if user.is_superuser %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin">Панель администратора</a>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="{% url 'about' %}">О нас</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'contact' %}">Контакты</a>
+                </li>
+
+
+            </ul>
+        </div>
+        <div class="login-block-pc">
+            {% include 'Home/loginpartial.html' %}
+        </div>
+
+
+    </div>
+</nav>
+{% endblock navig_panel %}
+
+
+
+{% block footer %}
+
+<footer class="bg-light text-center text-lg-start">
+    <!-- Copyright -->
+    <div class="text-center p-3" style="background-color: white;">
+        © {{ year }} Copyright:
+        <a class="text-dark" href="/">FoodWay</a>
+    </div>
+    <!-- Copyright -->
+</footer>
+
+{% endblock footer %}

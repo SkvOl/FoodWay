@@ -67,6 +67,18 @@ class user_to_way(models.Model):
         verbose_name = 'user_to_way'
         verbose_name_plural = 'user_to_way'
 
+#class way(models.Model):
+#    id_user = models.PositiveIntegerField('id_user')
+#    name_way = models.CharField(max_length=30)
+#    GeoJSON_lines = JSONField('GeoJSON_lines')
+#    is_deleted = models.BooleanField('is_deleted')
+
+#    def __str__(self):
+#        return f"{self.id} {self.id_user} {self.name_way} {self.GeoJSON_lines} {self.is_deleted}"
+
+#    class Meta:
+#        verbose_name = 'way'
+#        verbose_name_plural = 'way'
 
 class way_to_comm(models.Model):
     id_user = models.PositiveIntegerField('id_user')

@@ -1,20 +1,19 @@
-{% extends "Home/layout.html" %}
+{% extends "Home/base_layer.html" %}
+
 
 {% block content %}
-
 {% load staticfiles %}
 
-
-
 <style>
-    #map{
-        display:block;
-        width:100%;
-        height:100%;
+    #map {
+        display: block;
+        width: 100%;
+        height: 100%;
     }
-    .content-map{
-        width:50vw;
-        height:50vh;
+
+    .content-map {
+        width: 50vw;
+        height: 50vh;
     }
 </style>
 
@@ -134,5 +133,4 @@
         DG.marker([userMarker.getLatLng().lat, userMarker.getLatLng().lng]).addTo(map);
     }
 </script>
-{% endblock %}
-{
+{% endblock content %}

@@ -1,5 +1,5 @@
-{% extends "Home/layout.html" %}
- 
+{% extends "Home/base_layer.html" %}
+
 {% block content %}
 
 
@@ -22,7 +22,7 @@
         <p class="validation-summary-errors">Введите корректные имя пользователя и/или пароль.</p>
         {% endif %}
     </form>
-    <a href ="/reg" type="submit" class="btn btn-success mt-2">Зарегистрироваться</a>
+    <a href="/reg" type="submit" class="btn btn-success mt-2">Зарегистрироваться</a>
 </div>
 
 {% endblock %}
