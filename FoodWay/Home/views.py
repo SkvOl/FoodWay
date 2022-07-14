@@ -83,6 +83,3 @@ def profile(request):
     }
     return render(request,'Home/profile.html', context)
     
-def page_not_found(request, exception):   
-    print("error 40404")
-    return render(request, 'Home/page_not_found.html', status=404)
