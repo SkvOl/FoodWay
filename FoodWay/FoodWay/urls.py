@@ -13,4 +13,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 ]
 
-handler404 = "FoodWay.views.page_not_found"
+handler404 = "Home.views.page_not_found"
