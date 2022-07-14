@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\SkvOl\Documents\Visual Studio 2022\works\FoodWay\FoodWay\env"
+VIRTUAL_ENV="C:\Users\SkvOl\Documents\Visual Studio 2019\Работы\Python\FoodWay\FoodWay\env"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

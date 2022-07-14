@@ -252,3 +252,65 @@ class rating(models.Model):
         verbose_name_plural = 'rating'
 
 
+class db:    
+    def getListData(table, sql, bones):
+        item = table.objects.raw(sql)
+        res = {}
+        try:
+            for i in range(len(item)):
+                temp_res = {}
+                for bon in bones:
+                    if bon == 'id':
+                        temp_res[bon] = item[i].id
+                    elif bon =='id_user':
+                        temp_res[bon] = item[i].id_user
+                    elif bon =='way':
+                        temp_res[bon] = item[i].way
+                    elif bon =='id_way':
+                        temp_res[bon] = item[i].id_way
+                    elif bon =='rating':
+                        temp_res[bon] = item[i].rating
+                    elif bon =='comment':
+                        temp_res[bon] = item[i].comment
+                    elif bon =='value':
+                        temp_res[bon] = item[i].value
+                    elif bon =='show':
+                        temp_res[bon] = item[i].show
+                    elif bon =='is_deleted':
+                        temp_res[bon] = item[i].is_deleted
+                res[i] = temp_res
+        except Exception as ex:
+            print(ex)
+        temp_res = {}
+        return JsonResponse(res)
+
+    def getOneData(table, sql, bones):
+        item = table.objects.raw(sql)[0]
+        res = {}
+        try: 
+            temp_res = {}
+            for bon in bones:
+                if bon == 'id':
+                    temp_res[bon] = item.id
+                elif bon =='id_user':
+                    temp_res[bon] = item.id_user
+                elif bon =='way':
+                    temp_res[bon] = item.way
+                elif bon =='id_way':
+                    temp_res[bon] = item.id_way
+                elif bon =='rating':
+                    temp_res[bon] = item.rating
+                elif bon =='comment':
+                    temp_res[bon] = item.comment
+                elif bon =='value':
+                    temp_res[bon] = item.value
+                elif bon =='show':
+                    temp_res[bon] = item.show
+                elif bon =='is_deleted':
+                    temp_res[bon] = item.is_deleted
+            res[0] = temp_res
+        except Exception as ex:
+            print(ex)
+        temp_res = {}
+        return JsonResponse(res)
+   

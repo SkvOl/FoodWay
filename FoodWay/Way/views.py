@@ -1,4 +1,4 @@
-from .models import user_to_way, way_to_comm, rating, ways
+from .models import *
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 import json
@@ -7,19 +7,17 @@ import json
 
 def test(request):
 
-    #sql = 'SELECT `id`,`id_user`,`way` FROM `way_user_to_way`'
+    sql = 'SELECT `id`,`id_user`,`way` FROM `way_ways`'
 
-    #lis = ways.getOneData(sql,['id','id_user','way'])
-    #print(type(lis))
+    lis = db.getListData(ways,sql,['id','id_user','way'])
+    
+    print(lis[0]['id'])
+    #way = {
+    #    "1":"1",
+    #    "2":"2"
+    #    }
 
-    #print(lis)
-
-    way = {
-        "1":"1",
-        "2":"2"
-        }
-
-    ways.saveData(id_user = 3, way = way, rating = 1, show = False, is_deleted = False)
+    #db.saveData(ways,id_user = 3, way = way, rating = 1, show = False, is_deleted = False)
 
     return redirect('home')
 
@@ -29,7 +27,6 @@ def add_way(request):
         return JsonResponse({'stasus':'ok'}, safe=False)
     else:  
         current_user = request.user
-        print(f"id current: {current_user.id}")
         return render(request,'Way/form.html')
 
 def save_way(request):
