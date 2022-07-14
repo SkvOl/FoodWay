@@ -31,6 +31,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="FoodWay\views.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Home\admin.py" />
     <Compile Include="Home\apps.py" />
     <Compile Include="Home\forms.py" />
@@ -85,6 +88,7 @@
     <Folder Include="Home\templates\" />
     <Folder Include="Home\templates\Home\" />
     <Folder Include="Home\__pycache__\" />
+    <Folder Include="templates\" />
     <Folder Include="Way\" />
     <Folder Include="Way\migrations\" />
     <Folder Include="Way\templates\" />
@@ -94,6 +98,7 @@
     <Folder Include="Way\__pycache__\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="templates\page_not_found.html" />
     <Content Include="Home\migrations\__pycache__\__init__.cpython-39.pyc" />
     <Content Include="Home\static\Home\content\bootstrap.css" />
     <Content Include="Home\static\Home\content\bootstrap.min.css" />
