@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'ff717049-2462-4527-b0dd-b3b0c748d8af'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
@@ -114,7 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 #LOGGS
 # Пример level DEBUG, INFO, WARNING, ERROR, CRITICAL 
-level = 'DEBUG' 
+level = 'CRITICAL' 
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
