@@ -14,6 +14,33 @@
         width: 85vw;
         height: 80vh;
     }
+
+    .block-phone {
+
+    }
+    .block-pc {
+    }
+
+
+    @media(min-width: 992px) {
+        .block-phone {
+            display: none
+        }
+        .block-pc {
+            display: flex
+        }
+
+    }
+
+    @media(max-width: 991px) {
+        .block-phone {
+            display: flex
+        }
+        .block-pc {
+            display: none
+        }
+
+    }
 </style>
 
 <div class="d-flex flex-row justify-content-around mt-1">
@@ -21,19 +48,25 @@
         <div id="map"></div>
     </div>
 </div>
-<form class="row" id="form_name">
-    {% csrf_token %}
-    <label for="name_way" class="form-label text-center">Название вашего Way</label>
-    <div class="col-10">
-      
-      <input type="text" class="form-control" id="name_way" name="name_way" placeholder="Введите название">
-    </div>
-    <div class="col-2">
-      <button type="submit" class="btn btn-primary mb-3">Сохранить</button>
-    </div>
-</form>
 
-<button id="123">TEST</button>
+<div class="row mt-3 justify-content-center" id="form_name">
+    {% csrf_token %}
+    <div class="col-6">
+        {{form.name_way}}
+        <!--<input type="text" class="form-control" id="name_way" name="name_way" placeholder="Введите название">-->
+    </div>
+
+    <div class="col-2 block-pc justify-content-center">
+        <button type="submit" class="btn btn-success mb-3" id="save_but">Сохранить</button>
+    </div>
+</div>
+
+<div class="row mt-3 justify-content-center block-phone" id="form_name">
+    
+        <button type="submit" class="btn btn-success mb-3" id="save_but">Сохранить</button>
+    
+</div>
+
 <template id="popup_marker">
     {% include 'Way/popup_marker.html' %}
 </template>
@@ -135,11 +168,10 @@
             });
         }
 
-        $('#123').on('click', function (e) {
-            console.log("work");
+        $('#save_but').on('click', function (e) {
             Send_data();
-
         });
+
         map.on('click', function (e) {
             console.log(e.latlng.lat + '   ' + e.latlng.lng);
             userMarker.setLatLng([e.latlng.lat, e.latlng.lng]);
