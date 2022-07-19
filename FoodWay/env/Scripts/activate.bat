@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\SkvOl\Documents\Visual Studio 2019\Работы\Python\FoodWay\FoodWay\env
+set VIRTUAL_ENV=C:\Users\user\Documents\VS2022_Work\FoodWay\FoodWay\env
 
 if not defined PROMPT set PROMPT=$P$G
 

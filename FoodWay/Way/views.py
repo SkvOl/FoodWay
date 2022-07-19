@@ -3,19 +3,21 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 import json
 from .forms import name_of_Way
-
+from .make_route import route
 
 def test(request):
 
-    sql = 'SELECT `id`,`id_user`,`way` FROM `way_ways`'
+    route(request)
 
-    lis = db.getListData(ways,sql,['id','id_user','way'])
+    #sql = 'SELECT `id`,`id_user`,`way` FROM `way_ways`'
+
+    #lis = db.getListData(ways,sql,['id','id_user','way'])
     
-    print(lis[0]['id'])
-    #way = {
-    #    "1":"1",
-    #    "2":"2"
-    #    }
+    #print(lis[0]['id'])
+    ##way = {
+    ##    "1":"1",
+    ##    "2":"2"
+    ##    }
 
     #db.saveData(ways,id_user = 3, way = way, rating = 1, show = False, is_deleted = False)
 
