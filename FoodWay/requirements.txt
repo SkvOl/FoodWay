@@ -5,3 +5,4 @@ django-blacklist==0.6.1
 django-ratelimit==3.0.1
 requests
 polyline
+django-ckeditor

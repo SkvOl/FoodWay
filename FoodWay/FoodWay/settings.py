@@ -33,6 +33,8 @@ INSTALLED_APPS = [
     'Home',
     'Way',
     'blacklist',
+    #'ckeditor_uploader',
+    #'ckeditor',
     # Add your apps here to enable them
     'django.contrib.admin',
     'django.contrib.auth',
@@ -158,3 +160,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 STATIC_URL = '/static/'
 STATIC_ROOT = posixpath.join(*(BASE_DIR.split(os.path.sep) + ['static']))
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"

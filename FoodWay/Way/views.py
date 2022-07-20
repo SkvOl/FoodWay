@@ -7,7 +7,7 @@ from .make_route import route
 
 def test(request):
 
-    route(request)
+    #route(request)
 
     #sql = 'SELECT `id`,`id_user`,`way` FROM `way_ways`'
 
@@ -28,7 +28,9 @@ def add_way(request):
         ways.saveData(id_user = request.user.id, name = request.POST.dict()['name'], way = request.POST.dict()['GEOjson'], rating = 0, show = False, is_deleted = False)
         return JsonResponse({'stasus':'ok'}, safe=False)
     else:  
-        form = name_of_Way();
+        form = name_of_Way()
+        
+        
         return render(request,'Way/form.html',{'form':form})
 
 def save_way(request):
@@ -38,4 +40,13 @@ def save_way(request):
        
         
         return JsonResponse({'stasus':'ok'}, safe=False)
+
+def get_route_car(request):
+    item = request.POST.dict()
+    item['data'] = json.loads(item['data'])
+    item_new=[]
+    for i in range(len(item['data']) - 1):
+        item_new.append(item['data'][i] + item['data'][i + 1])
+
+    return JsonResponse(route(request, item_new), safe=False)
         

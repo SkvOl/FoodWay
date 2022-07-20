@@ -67,6 +67,8 @@
     
 </div>
 
+<button class="btn btn-success mb-3" id="test_but">TEST</button>
+
 <template id="popup_marker">
     {% include 'Way/popup_marker.html' %}
 </template>
@@ -135,21 +137,7 @@
         }
 
         function Send_data() {
-            function getCookie(name) {
-                let cookieValue = null;
-                if (document.cookie && document.cookie !== '') {
-                    const cookies = document.cookie.split(';');
-                    for (let i = 0; i < cookies.length; i++) {
-                        const cookie = cookies[i].trim();
-                        // Does this cookie string begin with the name we want?
-                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                            break;
-                        }
-                    }
-                }
-                return cookieValue;
-            }
+            
             const csrftoken = getCookie('csrftoken');
 
             var data_form = { 'name': $('#name_way').val(), 'GEOjson': JSON.stringify(GeoJson_to_save) };
@@ -170,6 +158,25 @@
 
         $('#save_but').on('click', function (e) {
             Send_data();
+        });
+
+        $('#test_but').on('click', function (e) {
+            var send_data = { 'name': 'coord', 'data': JSON.stringify(polyline.toGeoJSON()['geometry']['coordinates']) };
+            console.log(send_data);
+            const csrftoken = getCookie('csrftoken');
+            $.ajax({
+                url: "{% url 'get_route_car' %}",
+                method: 'post',
+                dataType: 'json',
+                data: send_data,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                },
+                success: function (data) {
+                    console.log(data);
+                    polyline.setLatLngs(data);
+                }
+            });
         });
 
         map.on('click', function (e) {
@@ -238,5 +245,22 @@
         return options;
     }
 
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    
 </script>
 {% endblock content %}
