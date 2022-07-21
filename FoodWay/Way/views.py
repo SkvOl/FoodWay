@@ -2,7 +2,7 @@ from .models import *
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 import json
-from .forms import name_of_Way
+from .forms import name_of_Way, PagePlaceForm
 from .make_route import route
 
 def test(request):
@@ -29,7 +29,7 @@ def add_way(request):
         return JsonResponse({'stasus':'ok'}, safe=False)
     else:  
         form = name_of_Way()
-        
+        #form2 = PagePlaceForm()
         
         return render(request,'Way/form.html',{'form':form})
 

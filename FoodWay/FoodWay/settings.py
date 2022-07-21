@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     'Way',
     'blacklist',
     #'ckeditor_uploader',
-    #'ckeditor',
+    'ckeditor',
     # Add your apps here to enable them
     'django.contrib.admin',
     'django.contrib.auth',

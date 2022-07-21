@@ -2,6 +2,16 @@ from django.db import models
 from django.http import JsonResponse
 from jsonfield import JSONField
 
+from ckeditor.fields import RichTextField
+
+
+class PagePlace(models.Model):
+    content = RichTextField(blank=True, null=True)
+    #name = models.CharField('name', max_length = 150, default = '')
+
+    def __str__(self):
+        return "test"
+
 
 class ways(models.Model):
     id_user = models.PositiveIntegerField('id_user', default = 0)

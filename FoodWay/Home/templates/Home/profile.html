@@ -38,30 +38,32 @@
 <div class="container">
     <div class="row">
         <div class="col-4">
-            <div class="alert alert-secondary m-1">
+            <div class="alert alert-secondary m-1 border-0 shadow">
                 <img class="image-profile" src="{% static 'Home/media/123.jpg'%}" />
             </div>
         </div>
 
         <div class="col-8 d-flex">
-            <div class="alert alert-secondary m-1 w-100">
+            <div class="alert alert-secondary m-1 w-100 border-0 shadow d-flex flex-column">
                 <div class="h4">
-                    <h4>Информация:</h4>
-                    <div class="info-row"><b>Имя: </b>{{user.username}}</div>
-                    {% if user.lastname %}<div class="info-row mt-2"><b>Фамилия: </b>{{user.lastname}}</div> {% endif %}
-                    <div class="info-row"><i class="fa-regular fa-envelope"></i> <b>Почта: </b>{{user.mail}}</div>
+                    <div>Информация:</div>
+                    <div class="info-row mt-2"><b>Имя: </b>{{user.username}}</div>
+                    {% if user.lastname %}<div class="info-row mt-2 mt-2"><b>Фамилия: </b>{{user.lastname}}</div> {% endif %}
+                    <div class="info-row mt-2"><i class="fa-regular fa-envelope"></i> <b>Почта: </b>{{user.mail}}</div>
                     <!--<div class="info-row"><b>Имя: </b>{{name}}</div>-->
                     <!--<div class="info-row"><b>Имя: </b>{{name}}</div>-->
                 </div>
-
+                <div class="mt-auto">
+                    <a class="btn btn-secondary" href="edit"><i class="fa-solid fa-pen"></i><span class="ms-1"></span>Редактировать</a>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="container">
-    <div class="row alert alert-secondary">
-        <table class="table table-striped table-hover">
+<div class="container mt-3">
+    <div class="row alert alert-secondary border-0 shadow">
+        <table class="table table-striped table-hover table-borderless">
             <thead>
                 <tr>
                     <th scope="col">#</th>
