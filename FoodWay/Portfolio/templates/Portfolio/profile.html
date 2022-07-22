@@ -37,13 +37,13 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-4">
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3 d-flex">
             <div class="alert alert-secondary m-1 border-0 shadow">
                 <img class="image-profile" src="{% static 'Home/media/123.jpg'%}" />
             </div>
         </div>
 
-        <div class="col-8 d-flex">
+        <div class="col-12 col-sm-6 col-md-8 col-lg-9 col-xl-9 d-flex">
             <div class="alert alert-secondary m-1 w-100 border-0 shadow d-flex flex-column">
                 <div class="h4">
                     <div>Информация:</div>
@@ -54,7 +54,7 @@
                     <!--<div class="info-row"><b>Имя: </b>{{name}}</div>-->
                 </div>
                 <div class="mt-auto">
-                    <a class="btn btn-secondary" href="edit"><i class="fa-solid fa-pen"></i><span class="ms-1"></span>Редактировать</a>
+                    <a class="btn btn-secondary" href="{% url 'edit_profile' %}"><i class="fa-solid fa-pen"></i><span class="ms-1"></span>Редактировать</a>
                 </div>
             </div>
         </div>

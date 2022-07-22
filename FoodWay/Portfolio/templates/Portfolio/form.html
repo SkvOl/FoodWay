@@ -1,0 +1,105 @@
+{% extends "Home/base_layer.html" %}
+
+{% block content %}
+
+{% load staticfiles %}
+<script src="{% static 'Home/fontawesomefree/js/all.min.js' %}"></script>
+<link href="{% static 'Home/fontawesomefree/css/all.min.css' %}" rel="stylesheet" type="text/css">
+
+<style>
+    .image-profile {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .unselected{
+
+    }
+
+    .unselected::selection {
+        background: transparent;
+    }
+
+    .unselected::-moz-selection {
+        background: transparent;
+    }
+</style>
+<div class="container mt-5">
+    <form class="form-control">
+        <div class="mb-3">
+            <img src="{% static 'Portfolio/media/placeholder_photo.jpg' %}" class="rounded image-profile" id="preview_id" alt="">
+        </div>
+
+        <div class="input-group mb-3">
+            <input type="file" class="form-control" id="photo_profile_id" accept=".jpg,.jpeg,.png">
+        </div>
+
+        <div class="mb-3">
+            <label for="name_id" class="form-label">Имя</label>
+            <input type="text" class="form-control" id="name_id">
+        </div>
+
+
+        <div class="mb-3">
+            <label for="mail_id" class="form-label">Почта</label>
+            <div class="input-group">
+                <input type="email" class="form-control" id="mail_id">
+                <div class="input-group-text">
+                    <label class="me-2" for="show_mail">Отображать</label>
+                    <input class="form-check-input mt-0" type="checkbox" id="show_mail">
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="tel_id" class="form-label">Телефон</label>
+            <div class="input-group">
+                <input type="tel" class="form-control" id="tel_id">
+                <div class="input-group-text">
+                    <label class="me-2" for="show_tel">Отображать</label>
+                    <input class="form-check-input mt-0" type="checkbox" id="show_tel">
+                </div>
+            </div>
+
+        </div>
+        <div class="mb-3">
+            <label for="about_id" class="form-label">О себе</label>
+            <textarea class="form-control" id="about_id" rows="3"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="basic-url" class="form-label">Адрес страницы</label>
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="user_url">https://FoodWay.ru/profile/</span>
+                <input type="text" class="form-control" id="basic-url" aria-describedby="user_url">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+
+    </form>
+
+</div>
+<script>
+    $(document).ready(function () {
+        document.getElementById('photo_profile_id').value='';
+    });
+
+    function make_preview(input_photo) {
+        var preview = $("#preview_id");
+        var reader = new FileReader();
+        console.log(input_photo);
+        if (input_photo.files && input_photo.files[0]) {
+
+            reader.onload = function () {
+                preview.attr('src', reader.result);
+            }
+
+            reader.readAsDataURL(input_photo.files[0]);
+        }
+
+    }
+
+    $("#photo_profile_id").change(function () {
+        make_preview(this);
+    });
+</script>
+
+{% endblock content %}

@@ -33,6 +33,8 @@ INSTALLED_APPS = [
     'Home',
     'Way',
     'blacklist',
+    'PagePlace',
+    'Portfolio',
     #'ckeditor_uploader',
     'ckeditor',
     # Add your apps here to enable them

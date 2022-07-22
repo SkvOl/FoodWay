@@ -50,6 +50,22 @@
     <Compile Include="FoodWay\settings.py" />
     <Compile Include="FoodWay\urls.py" />
     <Compile Include="FoodWay\wsgi.py" />
+    <Compile Include="PagePlace\admin.py" />
+    <Compile Include="PagePlace\apps.py" />
+    <Compile Include="PagePlace\migrations\__init__.py" />
+    <Compile Include="PagePlace\models.py" />
+    <Compile Include="PagePlace\tests.py" />
+    <Compile Include="PagePlace\urls.py" />
+    <Compile Include="PagePlace\views.py" />
+    <Compile Include="PagePlace\__init__.py" />
+    <Compile Include="Portfolio\admin.py" />
+    <Compile Include="Portfolio\apps.py" />
+    <Compile Include="Portfolio\migrations\__init__.py" />
+    <Compile Include="Portfolio\models.py" />
+    <Compile Include="Portfolio\tests.py" />
+    <Compile Include="Portfolio\urls.py" />
+    <Compile Include="Portfolio\views.py" />
+    <Compile Include="Portfolio\__init__.py" />
     <Compile Include="Way\admin.py" />
     <Compile Include="Way\apps.py" />
     <Compile Include="Way\forms.py" />
@@ -92,6 +108,17 @@
     <Folder Include="Home\templates\" />
     <Folder Include="Home\templates\Home\" />
     <Folder Include="Home\__pycache__\" />
+    <Folder Include="PagePlace\" />
+    <Folder Include="PagePlace\migrations\" />
+    <Folder Include="PagePlace\templates\" />
+    <Folder Include="PagePlace\templates\PagePlace\" />
+    <Folder Include="Portfolio\" />
+    <Folder Include="Portfolio\migrations\" />
+    <Folder Include="Portfolio\static\" />
+    <Folder Include="Portfolio\static\Portfolio\" />
+    <Folder Include="Portfolio\static\Portfolio\media\" />
+    <Folder Include="Portfolio\templates\" />
+    <Folder Include="Portfolio\templates\Portfolio\" />
     <Folder Include="templates\" />
     <Folder Include="Way\" />
     <Folder Include="Way\migrations\" />
@@ -102,6 +129,9 @@
     <Folder Include="Way\__pycache__\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="PagePlace\templates\PagePlace\index.html" />
+    <Content Include="Portfolio\static\Portfolio\media\placeholder_photo.jpg" />
+    <Content Include="Portfolio\templates\Portfolio\form.html" />
     <Content Include="templates\page_not_found.html" />
     <Content Include="Home\migrations\__pycache__\__init__.cpython-39.pyc" />
     <Content Include="Home\static\Home\content\bootstrap.css" />
@@ -2231,7 +2261,7 @@
     <Content Include="Home\templates\Home\list_way.html" />
     <Content Include="Home\templates\Home\login.html" />
     <Content Include="Home\templates\Home\loginpartial.html" />
-    <Content Include="Home\templates\Home\profile.html" />
+    <Content Include="Portfolio\templates\Portfolio\profile.html" />
     <Content Include="Home\templates\Home\register.html" />
     <Content Include="Home\templates\Home\base.html" />
     <Content Include="Home\__pycache__\admin.cpython-39.pyc" />

@@ -75,11 +75,4 @@ def register(request):
     } 
 
     return render(request,'Home/register.html', context)
-
-def profile(request):
-    context = { 
-        'title' : 'Профиль',
-        'year' : datetime.now().year,
-    }
-    return render(request,'Home/profile.html', context)
     
