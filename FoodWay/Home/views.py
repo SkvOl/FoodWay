@@ -67,7 +67,6 @@ def register(request):
         form = CustomUserCreationForm()
         print("Метод не post")
         print(request.method)
-
     context = { 
         'title' : 'register',
         'form' : form,
