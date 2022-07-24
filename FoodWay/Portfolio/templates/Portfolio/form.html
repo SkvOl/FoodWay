@@ -23,29 +23,43 @@
     .unselected::-moz-selection {
         background: transparent;
     }
+
+    .drag-n-drop-area {
+        display:none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 6px dashed gray;
+        border-radius:30px;
+    }
 </style>
 
-<div class="container mt-5">
-    <form class="form-control border-0 shadow-lg" action="." method="post">
+
+
+<div class="container mt-4">
+    
+    <form class="form-control border-0 shadow-lg" action="." method="post" enctype="multipart/form-data">
+        {% csrf_token %}
         <div class="row">
             
-
-            <div class="col-12 col-sm-6 col-md-8 col-lg-8 col-xl-8 d-flex">
+            <div class="col-12 col-sm-12 col-md-8 col-lg-8 col-xl-8 d-flex">
                 <div style="width:100%">
 
                     <div class="mb-3">
-                        <label for="id_firstnamed" class="form-label">Имя</label>
+                        <label for="{{ form.firstname.id_for_label }}" class="form-label">Имя</label>
                         {#<input type="text" class="form-control" id="name_id">#}
                         {{ form.firstname }}
                     </div>
 
                     <div class="mb-3">
-                        <label for="id_phone" class="form-label">Телефон</label>
+                        <label for="{{ form.phone.id_for_label }}" class="form-label">Телефон</label>
                         <div class="input-group">
                             {#<input type="tel" class="form-control" id="tel_id">#}
                             {{ form.phone }}
                             <div class="input-group-text">
-                                <label class="me-2" for="id_show_phone">Отображать</label>
+                                <label class="me-2" for="{{ form.show_phone.id_for_label }}">Отображать</label>
                                 {#<input class="form-check-input mt-0" type="checkbox" id="show_tel">#}
                                 {{ form.show_phone }}
                             </div>
@@ -53,21 +67,24 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="mail_id" class="form-label">Почта</label>
+                        <label for="{{ form.email.id_for_label }}" class="form-label">Почта</label>
                         <div class="input-group">
-                            <input type="email" class="form-control" id="mail_id">
+                            {#<input type="email" class="form-control" id="mail_id">#}
+                            {{ form.email }}
                             <div class="input-group-text">
-                                <label class="me-2" for="show_mail">Отображать</label>
-                                <input class="form-check-input mt-0" type="checkbox" id="show_mail">
+                                <label class="me-2" for="{{ form.show_email.id_for_label }}">Отображать</label>
+                                
+                                {#<input class="form-check-input mt-0" type="checkbox" id="show_mail">#}
+                                {{ form.show_email }}
                             </div>
                         </div>
                     </div>
         
                     
                     <div class="mb-3">
-                        <label for="id_url_user" class="form-label">Адрес страницы</label>
+                        <label for="{{ form.url_user.id_for_label }}" class="form-label">Адрес страницы</label>
                         <div class="input-group mb-3">
-                            <span class="input-group-text" id="user_url">https://FoodWay.ru/profile/</span>
+                            <span class="input-group-text">https://FoodWay.ru/profile/</span>
                             {#<input type="text" class="form-control" id="basic-url" aria-describedby="user_url">#}
                             {{ form.url_user }}
                         </div>
@@ -75,31 +92,43 @@
                 </div>
             </div>
         
-            <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-4 d-flex">
+            <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 d-flex">
                 <div style="width:100%" class="d-flex flex-column justify-content-center">
-                    <div class="mb-3">
+                    <label>
+                        <img src="{% static 'Portfolio/media/placeholder_photo.jpg' %}" id="preview_id" class="rounded image-profile" alt="Нажмите для выбора файла.">
+                        {#<input type="file" hidden>#}
+                        {{ form.image_profile.as_hidden }}
+                    </label>
+                    
+                    <!--<div class="mb-3">
                         <img src="{% static 'Portfolio/media/placeholder_photo.jpg' %}" class="rounded image-profile" id="preview_id" alt="">
                     </div>
 
-                    <div class="input-group mb-3">
-                        <input type="file" class="form-control" id="photo_profile_id" accept=".jpg,.jpeg,.png">
-                    </div>
+                    <div class="input-group mb-3">-->
+                        {#<input type="file" class="form-control" id="photo_profile_id" accept=".jpg,.jpeg,.png">#}
+                        <!--{{ form.image_profile }}
+                    </div>-->
                 </div>
             </div>
         
             <div class="mb-3">
-                <label for="about_id" class="form-label">О себе</label>
-                <textarea class="form-control" id="about_id" rows="3"></textarea>
+                <label for="{{ form.about_user.id_for_label }}" class="form-label">О себе</label>
+                {#<textarea class="form-control" id="about_id" rows="3"></textarea>#}
+                {{ form.about_user }}
             </div>
-
-            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <div class="d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+            </div>
         </div>
     </form>
 
 </div>
+<div class="drag-n-drop-area bg-light bg-opacity-25">
+    <div class="position-absolute top-50 start-50 translate-middle h1">Загрузите фото</div>
+</div>
 <script>
     $(document).ready(function () {
-        document.getElementById('photo_profile_id').value='';
+        //document.getElementById('photo_profile_id').value='';
     });
 
     function make_preview(input_photo) {
@@ -117,7 +146,7 @@
 
     }
 
-    $("#photo_profile_id").change(function () {
+    $("#{{ form.image_profile.id_for_label }}").change(function () {
         make_preview(this);
     });
 </script>

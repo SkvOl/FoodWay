@@ -9,21 +9,25 @@ class FormProfile(forms.Form):
                                widget=forms.TextInput({
                                    'class': 'form-control'}))
 
-    phone = forms.CharField(max_length=13,
+    phone = forms.CharField(required=False, max_length=13,
                                widget=forms.TextInput({
                                    'class': 'form-control'}))
 
-    show_phone = forms.BooleanField()
+    show_phone = forms.BooleanField(required=False)
 
     url_user = forms.CharField(max_length=30,
                                 widget=forms.TextInput({
                                    'class': 'form-control'}))
 
-    email = forms.EmailField(label='email',widget=forms.EmailInput({
-                                   'class': 'form-control'}))
+    email = forms.EmailField(widget=forms.EmailInput({
+                                   'class': 'form-control'}), required=False)
 
-    show_email = forms.BooleanField()
+    show_email = forms.BooleanField(required=False)
 
-    #about_user = forms.TextField()
+    image_profile = forms.ImageField(required=False)
+
+    about_user = forms.CharField(max_length=2000, widget=forms.Textarea({
+                                    'class':'form-control','rows':'3'
+                                                                     }), required=False)
     
  
