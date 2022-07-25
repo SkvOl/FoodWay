@@ -27,7 +27,6 @@ class FormProfile(forms.Form):
     image_profile = forms.ImageField(required=False)
 
     about_user = forms.CharField(max_length=2000, widget=forms.Textarea({
-                                    'class':'form-control','rows':'3'
-                                                                     }), required=False)
+                                    'class':'form-control','rows':'3'}), required=False)
     
  

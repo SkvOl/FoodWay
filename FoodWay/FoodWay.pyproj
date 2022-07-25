@@ -60,6 +60,7 @@
     <Compile Include="PagePlace\__init__.py" />
     <Compile Include="Portfolio\admin.py" />
     <Compile Include="Portfolio\apps.py" />
+    <Compile Include="Portfolio\forms.py" />
     <Compile Include="Portfolio\migrations\__init__.py" />
     <Compile Include="Portfolio\models.py" />
     <Compile Include="Portfolio\tests.py" />

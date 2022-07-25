@@ -4,7 +4,6 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 FoodWay/static/
-FoodWay/env/
 
 # User-specific files
 *.rsuser
