@@ -1,22 +1,20 @@
 from django.shortcuts import render
-from .forms import FormProfile
+from .forms import User_info_form
 from .models import User_info
 
 from django.contrib.auth.models import User
 
 from datetime import datetime
 
-def checkbox(data):
-    if data=='on':
-        return True
-    else:
-        return False
+def print_fields(model, par, val):
+    print(model.objects.get(par = val)._meta.get_fields())
 
 def profile(request, id_user=-1):
     if id_user == -1:
         id_user = request.user.id
-
-    print(User.objects.get(id = id_user))
+    
+    #print("data: ")
+    #print(User.objects.get(id = id_user).email)
 
     context = {
         'title' : 'Профиль',
@@ -36,7 +34,7 @@ def edit_profile(request, id_user = -1):
 
     #вытащить из бд данные пользователя
     if request.method == 'POST':
-        form = FormProfile(request.POST)
+        form = User_info_form(request.POST)
         #print(request.POST.dict())
         #test = request.POST
         if form.is_valid():
@@ -45,30 +43,32 @@ def edit_profile(request, id_user = -1):
                 user_info = User_info.objects.get(id = id_user)
             else:
                 user_info = User_info()
+            print(data)
             user_info.id_user = User.objects.get(id = id_user)
-            user_info.first_name=data['firstname']
+            user_info.id_user.email = data['email']
+
+            user_info.first_name=data['first_name']
             user_info.phone=data['phone']
-            user_info.show_phone='show_phone' in data
+            user_info.show_phone=data['show_phone']
             user_info.url_user=data['url_user']
-            user_info.show_email='show_email' in data
+            user_info.show_email=data['show_email']
             user_info.about_user=data['about_user']
+
+            user_info.id_user.save()
             user_info.save()
         #print(test)
         #User_info.saveData(request.user,test.get('firstname'),test.get('phone'),test.get('show_phone'),test.get('url_user'), 0, test.get('show_email'), 0, test.get('about_user'), False)
         #print(request.FILES)
         #handle_uploaded_file(request.FILES['image_profile'])
     else:
-        form = FormProfile()
         if User.objects.filter(id = id_user).exists():
-            User_model = User.objects.get(id = id_user)
-            form.email = User.email
+            user_model = User.objects.get(id = id_user)
         if User_info.objects.filter(id = id_user).exists():
-            User_info_model = User_info.objects.get(id = id_user)
-            #test.firstname.prepare_value(User_info_model.first_name)
-            #test.phone = User_info_model.phone
-            print(User_info_model)
-        #test.firstname = 
-    #print(test)
+            user_info_model = User_info.objects.get(id = id_user)
+            
+        #print(user_model.__dict__ | user_info_model.__dict__)
+        form = User_info_form(user_model.__dict__ | user_info_model.__dict__)
+
     context = { 
         'form' : form,
         'title' : 'Редактирование профиля',
