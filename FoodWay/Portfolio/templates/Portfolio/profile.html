@@ -38,7 +38,7 @@
 <div class="container">
     <div class="row">
         <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3 d-flex">
-            <div class="alert alert-secondary m-1 border-0 shadow">
+            <div class="alert alert-secondary m-1 border-0 shadow d-flex flex-column justify-content-center">
                 <img class="image-profile" src="{% static 'Home/media/123.jpg'%}" />
             </div>
         </div>
@@ -47,11 +47,35 @@
             <div class="alert alert-secondary m-1 w-100 border-0 shadow d-flex flex-column">
                 <div class="h4">
                     <div>Информация:</div>
-                    <div class="info-row mt-2"><b>Имя: </b>{{user.username}}</div>
-                    {% if user.lastname %}<div class="info-row mt-2 mt-2"><b>Фамилия: </b>{{user.lastname}}</div> {% endif %}
-                    <div class="info-row mt-2"><i class="fa-regular fa-envelope"></i> <b>Почта: </b>{{user.mail}}</div>
-                    <!--<div class="info-row"><b>Имя: </b>{{name}}</div>-->
-                    <!--<div class="info-row"><b>Имя: </b>{{name}}</div>-->
+
+                    <div class="info-row mt-4"><b>Логин: </b>{{dop_info.id_user.username}}</div>
+
+                    {% if dop_info.id_user.first_name %}<div class="info-row mt-4"><b>Имя: </b>{{dop_info.id_user.first_name}}</div> {% endif %}
+
+                    {% if dop_info.id_user.last_name %}<div class="info-row mt-4"><b>Фамилия: </b>{{dop_info.id_user.last_name}}</div> {% endif %}
+
+                    {% if dop_info.id_user.email and dop_info.show_email or show_all %}
+                    <div class="info-row mt-4">
+                        <i class="fa-regular fa-envelope"></i> <b>Почта: </b>{{dop_info.id_user.email}}
+                    </div>
+                    {% endif %}
+
+                    {% if dop_info.phone and dop_info.show_phone or show_all %}
+                    <div class="info-row mt-4">
+                        <b>Телефон: </b>{{dop_info.phone}}
+                    </div>
+                    {% endif %}
+
+                    {% if dop_info.about_user %}
+                    <div class="mt-4">
+                        <b>О себе: </b>
+                        <div class="info-row mt-1 card">
+                            <div class="card-body">
+                                {{dop_info.about_user}}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
                 <div class="mt-auto">
                     <a class="btn btn-secondary" href="{% url 'edit_profile' %}"><i class="fa-solid fa-pen"></i><span class="ms-1"></span>Редактировать</a>

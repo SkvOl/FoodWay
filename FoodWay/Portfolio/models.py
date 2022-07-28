@@ -5,7 +5,7 @@ class User_info(models.Model):
 
     id_user = models.OneToOneField(User, on_delete = models.CASCADE)
 
-    first_name = models.CharField('first_name', max_length = 150, default = '')
+    #first_name = models.CharField('first_name', max_length = 150, default = '')
 
     phone = models.CharField(max_length=13, default = '')
 

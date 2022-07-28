@@ -10,6 +10,11 @@ class User_info_form(forms.Form):
                                widget=forms.TextInput({
                                    'class': 'form-control'}))
 
+    last_name = forms.CharField(max_length=150,
+                               widget=forms.TextInput({
+                                   'class': 'form-control'}))
+
+
     phone = forms.CharField(required=False, max_length=13,
                                widget=forms.TextInput({
                                    'class': 'form-control'}))

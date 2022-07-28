@@ -48,9 +48,14 @@
                 <div style="width:100%">
 
                     <div class="mb-3">
-                        <label for="{{ form.firstname.id_for_label }}" class="form-label">Имя</label>
+                        <label for="{{ form.first_name.id_for_label }}" class="form-label">Имя</label>
                         {#<input type="text" class="form-control" id="name_id">#}
                         {{ form.first_name }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.last_name.id_for_label }}" class="form-label">Фамилия</label>
+                        {{ form.last_name }}
                     </div>
 
                     <div class="mb-3">
@@ -73,14 +78,14 @@
                             {{ form.email }}
                             <div class="input-group-text">
                                 <label class="me-2" for="{{ form.show_email.id_for_label }}">Отображать</label>
-                                
+
                                 {#<input class="form-check-input mt-0" type="checkbox" id="show_mail">#}
                                 {{ form.show_email }}
                             </div>
                         </div>
                     </div>
-        
-                    
+
+
                     <div class="mb-3">
                         <label for="{{ form.url_user.id_for_label }}" class="form-label">Адрес страницы</label>
                         <div class="input-group mb-3">
