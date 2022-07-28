@@ -17,14 +17,14 @@ class User_info(models.Model):
 
     show_email = models.BooleanField(default = False)
 
-    #image_profile = models.ImageField(upload_to="picture/")
+    image_profile = models.FileField(upload_to="media/picture/", null=True)
 
     about_user = models.CharField(max_length=2000, default = '')
 
     is_deleted = models.BooleanField('is_deleted', default = False)
 
     def __str__(self):
-        return f"{self.id} {self.first_name}  {self.phone} {self.is_deleted}"
+        return f"{self.id_user} {self.phone} {self.is_deleted}"
 
     def saveData(id_user, first_name, phone, show_phone, url_user, email, show_email, image_profile, about_user, is_deleted = False):
         User_info.objects.create(id_user = id_user, first_name = first_name, phone = phone, show_phone = False, url_user = url_user, show_email = True, about_user = about_user, is_deleted = is_deleted)

@@ -51,11 +51,13 @@
                         <label for="{{ form.first_name.id_for_label }}" class="form-label">Имя</label>
                         {#<input type="text" class="form-control" id="name_id">#}
                         {{ form.first_name }}
+                        {{form.id_user.first_name.errors}}
                     </div>
 
                     <div class="mb-3">
                         <label for="{{ form.last_name.id_for_label }}" class="form-label">Фамилия</label>
                         {{ form.last_name }}
+                        {{form.last_name.errors}}
                     </div>
 
                     <div class="mb-3">
@@ -69,6 +71,7 @@
                                 {{ form.show_phone }}
                             </div>
                         </div>
+                        {{form.phone.errors}}
                     </div>
 
                     <div class="mb-3">
@@ -83,6 +86,7 @@
                                 {{ form.show_email }}
                             </div>
                         </div>
+                        {{form.email.errors}}
                     </div>
 
 
@@ -93,6 +97,7 @@
                             {#<input type="text" class="form-control" id="basic-url" aria-describedby="user_url">#}
                             {{ form.url_user }}
                         </div>
+                        {{form.url_user.errors}}
                     </div>
                 </div>
             </div>
@@ -120,6 +125,7 @@
                 <label for="{{ form.about_user.id_for_label }}" class="form-label">О себе</label>
                 {#<textarea class="form-control" id="about_id" rows="3"></textarea>#}
                 {{ form.about_user }}
+                {{form.about_user.errors}}
             </div>
             <div class="d-flex justify-content-center">
                 <button type="submit" class="btn btn-primary">Сохранить</button>
