@@ -105,19 +105,9 @@
             <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 d-flex">
                 <div style="width:100%" class="d-flex flex-column justify-content-center">
                     <label>
-                        <img src="{% static 'Portfolio/media/placeholder_photo.jpg' %}" id="preview_id" class="rounded image-profile" alt="Нажмите для выбора файла.">
-                        <!--<input type="file" hidden>-->
+                        <img src="{% if image_src %}{{image_src}}{% else %}{% static 'Portfolio/media/placeholder_photo.jpg' %}{% endif %}" id="preview_id" class="rounded image-profile" alt="Нажмите для выбора файла.">
                         {{ form.image_profile }}
                     </label>
-                    
-                    <!--<div class="mb-3">
-                        <img src="{% static 'Portfolio/media/placeholder_photo.jpg' %}" class="rounded image-profile" id="preview_id" alt="">
-                    </div>
-
-                    <div class="input-group mb-3">-->
-                        {#<input type="file" class="form-control" id="photo_profile_id" accept=".jpg,.jpeg,.png">#}
-                        <!--{{ form.image_profile }}
-                    </div>-->
                 </div>
             </div>
         
@@ -139,13 +129,12 @@
 </div>
 <script>
     $(document).ready(function () {
-        //document.getElementById('photo_profile_id').value='';
+        $('#{{ form.image_profile.id_for_label }}').prop('hidden', true);
     });
 
     function make_preview(input_photo) {
         var preview = $("#preview_id");
         var reader = new FileReader();
-        console.log(input_photo);
         if (input_photo.files && input_photo.files[0]) {
 
             reader.onload = function () {

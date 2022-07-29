@@ -1,6 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from datetime import datetime
+import os
+import time
+
+def user_path(instance, filename):
+    ext = os.path.splitext(filename)
+    current_datetime = datetime.now()
+    file =  f"{current_datetime.day}-{current_datetime.month}-{current_datetime.year}-{int(time.time())}{ext[1]}"
+    return f"user_{instance.id_user.id}_{instance.id_user.username}/{file}"
+
 class User_info(models.Model):
 
     id_user = models.OneToOneField(User, on_delete = models.CASCADE)
@@ -17,7 +27,7 @@ class User_info(models.Model):
 
     show_email = models.BooleanField(default = False)
 
-    image_profile = models.FileField(upload_to="media/picture/", null=True)
+    image_profile = models.FileField(upload_to=user_path, null=True)
 
     about_user = models.CharField(max_length=2000, default = '')
 

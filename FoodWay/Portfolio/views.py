@@ -1,3 +1,4 @@
+from email.mime import image
 from django.shortcuts import redirect, render
 from .forms import User_info_form
 from .models import User_info
@@ -69,21 +70,27 @@ def edit_profile(request, id_user = -1):
                 user_info.show_email=data['show_email']
                 user_info.about_user=data['about_user']
                 user_info.image_profile = request.FILES['image_profile'];
-                print(request.FILES)
+                #print(request.FILES)
                 #user_info.id_user.save()
                 user_info.save()
 
-                #return redirect(f"/profile/{id_user}")
+                return redirect(f"/profile/{id_user}")
             else:
                 print(form)
 
         else:
             form = User_info_form(user_info.__dict__ | user_edit.__dict__)
 
+        try:
+            image_src =  user_info.image_profile.url
+        except:
+            image_src = None
+
         context = { 
             'form' : form,
             'title' : 'Редактирование профиля',
             'year' : datetime.now().year,
+            'image_src' : image_src,
         }
         return render(request,'Portfolio/form.html', context)
     else:

@@ -37,15 +37,15 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3 d-flex">
-            <div class="alert alert-secondary m-1 border-0 shadow d-flex flex-column justify-content-center">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 d-flex ps-0 pe-0">
+            <div class="alert alert-secondary me-1 border-0 shadow d-flex flex-column justify-content-center">
                 {#{% static 'Home/media/123.jpg'%}#}
-                <img class="image-profile" src="{{dop_info.image_profile}}" />
+                <img class="image-profile" src="{{ dop_info.image_profile.url }}" />
             </div>
         </div>
 
-        <div class="col-12 col-sm-6 col-md-8 col-lg-9 col-xl-9 d-flex">
-            <div class="alert alert-secondary m-1 w-100 border-0 shadow d-flex flex-column">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8 col-xl-8 d-flex pe-0">
+            <div class="alert alert-secondary ms-1 w-100 border-0 shadow d-flex flex-column">
                 <div class="h4">
                     <div>Информация:</div>
 
