@@ -25,7 +25,7 @@
     }
 
     .drag-n-drop-area {
-        display:none;
+        /*display:none;*/
         position: fixed;
         top: 0;
         left: 0;
@@ -33,7 +33,25 @@
         height: 100%;
         border: 6px dashed gray;
         border-radius:30px;
+        transition: 0.8s;
     }
+    .highlight {
+        opacity:0.5
+    }
+
+    .image-block {
+        position: relative;
+    }
+    .icon-delete {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+    .icon-delete:hover {
+        cursor:pointer;
+    }
+
 </style>
 
 
@@ -104,10 +122,15 @@
         
             <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 d-flex">
                 <div style="width:100%" class="d-flex flex-column justify-content-center">
-                    <label>
-                        <img src="{% if image_src %}{{image_src}}{% else %}{% static 'Portfolio/media/placeholder_photo.jpg' %}{% endif %}" id="preview_id" class="rounded image-profile" alt="Нажмите для выбора файла.">
-                        {{ form.image_profile }}
-                    </label>
+                    <div class="image-block">
+                        <label>
+                            <img src="{% if image_src %}{{image_src}}{% else %}{% static 'Portfolio/media/placeholder_photo.jpg' %}{% endif %}" id="preview_id" class="rounded image-profile" alt="Нажмите для выбора фото.">
+                            {{ form.image_profile }}
+                        </label>
+                        <div class="icon-delete" id ="delete_photo" {% if not image_src %}style="display: none;"{% endif %}>
+                            <i class="fa-solid fa-xmark fa-3x"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         
@@ -122,15 +145,106 @@
             </div>
         </div>
     </form>
-
 </div>
-<div class="drag-n-drop-area bg-light bg-opacity-25">
+<div id ="drop-area" class="drag-n-drop-area bg-light bg-opacity-25" style="display: none;">
     <div class="position-absolute top-50 start-50 translate-middle h1">Загрузите фото</div>
 </div>
 <script>
+    let dropArea = document.getElementById('drop-area');
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, preventDefaults, false)
+    })
+
+    function preventDefaults (e) {
+        e.preventDefault()
+        e.stopPropagation()
+    };
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        document.body.addEventListener(eventName, ()=>{$("#drop-area").show();}, false)
+        dropArea.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+
+        dropArea.addEventListener(eventName, ()=>{$("#drop-area").hide();}, false);
+        dropArea.addEventListener(eventName, unhighlight, false)
+    });
+
+    function highlight(e) {
+        dropArea.classList.remove('bg-opacity-25')
+        dropArea.classList.add('bg-opacity-50');
+    }
+
+    function unhighlight(e) {
+        dropArea.classList.remove('bg-opacity-50');
+        dropArea.classList.add('bg-opacity-25');
+    }
+    
+    dropArea.addEventListener('drop', handleDrop, false);
+
+    function handleDrop(e) {
+        let dt = e.dataTransfer;
+        let files = dt.files[0];
+        make_preview(dt);
+        send_photo(files);
+        
+    }
+
+    $('#delete_photo').on('click',()=>{
+            send_photo(0, true);
+            $("#preview_id").attr('src','{% static 'Portfolio/media/placeholder_photo.jpg' %}');
+            $('#delete_photo').hide();
+        });
+
+
     $(document).ready(function () {
         $('#{{ form.image_profile.id_for_label }}').prop('hidden', true);
     });
+
+     function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function send_photo(file, delete_photo = false){
+        const csrftoken = getCookie('csrftoken');
+
+        let formData = new FormData();
+        if(file){
+            formData.append('image_profile', file);
+        }
+        formData.append('delete', delete_photo);
+
+
+        $.ajax({
+            url: "{% url 'edit_photo' id_view_user %}",
+	        method: 'post',
+	        dataType: 'json',
+            data: formData,
+            contentType: false,
+            cache : false,
+            processData: false,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            },
+	        success: function(data){
+                console.log(data);
+	        }
+        });
+    }
+    
 
     function make_preview(input_photo) {
         var preview = $("#preview_id");
@@ -139,6 +253,7 @@
 
             reader.onload = function () {
                 preview.attr('src', reader.result);
+                $('#delete_photo').show();
             }
 
             reader.readAsDataURL(input_photo.files[0]);
