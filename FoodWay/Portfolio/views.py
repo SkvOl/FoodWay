@@ -1,5 +1,6 @@
 from email.mime import image
 from django.shortcuts import redirect, render
+from django.http import JsonResponse
 from .forms import User_info_form
 from .models import User_info
 

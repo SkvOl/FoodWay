@@ -1,4 +1,4 @@
-"""
+﻿"""
 Django settings for FoodWay project.
 
 Based on 'django-admin startproject' using Django 2.1.2.
@@ -33,11 +33,10 @@ INSTALLED_APPS = [
     'Home',
     'Way',
     'blacklist',
-    'PagePlace',
+    'PagePlaces',
     'Portfolio',
-    #'ckeditor_uploader',
+    'ckeditor_uploader',
     'ckeditor',
-    # Add your apps here to enable them
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

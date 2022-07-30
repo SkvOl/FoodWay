@@ -2,7 +2,7 @@ from .models import *
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 import json
-from .forms import name_of_Way, PagePlaceForm
+from .forms import name_of_Way
 from .make_route import route
 
 def test(request):

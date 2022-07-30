@@ -1,0 +1,31 @@
+{% extends "Home/base_layer.html" %}
+
+{% block content %}
+
+{% load staticfiles %}
+<script src="{% static 'Home/fontawesomefree/js/all.min.js' %}"></script>
+<link href="{% static 'Home/fontawesomefree/css/all.min.css' %}" rel="stylesheet" type="text/css">
+
+<style>
+</style>
+
+
+
+<div class="container mt-4">
+
+    <form class="form-control border-0 shadow-lg" action="." method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{form.media}}<br>
+        {{form.name}}<br>
+        {{form.content}}<br>
+        {{form.short_info}}<br>
+        {{form.url}}<br>
+    </form>
+
+</div>
+
+<script>
+
+</script>
+
+{% endblock content %}
