@@ -4,7 +4,7 @@ from ckeditor_uploader.fields import RichTextUploadingField
 
 
 class PagePlaces(models.Model):
-    id_user = models.PositiveIntegerField('id_user', default = 0)
+    id_user = models.PositiveIntegerField('id_user', default = 0)   #переделать на oneToOneField
     name = models.CharField(name = 'name', max_length = 150, default = '')
     content = RichTextUploadingField(blank = True, null = True)
     short_info = models.CharField(name = 'short_info', max_length = 200, default = '')
