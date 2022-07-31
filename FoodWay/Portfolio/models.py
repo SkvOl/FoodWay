@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 from datetime import datetime
 import os
 import time
@@ -21,7 +22,7 @@ class User_info(models.Model):
 
     show_phone = models.BooleanField(default = False)
 
-    url_user = models.CharField(max_length = 30, default = id_user)
+    url_user = models.CharField(max_length = 30, null=True)
 
     #email = models.EmailField()
 

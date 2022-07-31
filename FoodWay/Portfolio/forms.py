@@ -4,13 +4,15 @@ from django.forms import ModelForm
 from django.forms.fields import EmailField 
 from .models import User_info
 
+import re
+from django.core.validators import RegexValidator
 
 class User_info_form(forms.Form):
-    first_name = forms.CharField(max_length=150,
+    first_name = forms.CharField(required=False, max_length=150,
                                widget=forms.TextInput({
                                    'class': 'form-control'}))
 
-    last_name = forms.CharField(max_length=150,
+    last_name = forms.CharField(required=False, max_length=150,
                                widget=forms.TextInput({
                                    'class': 'form-control'}))
 
@@ -23,7 +25,14 @@ class User_info_form(forms.Form):
 
     url_user = forms.CharField(max_length=30,
                                 widget=forms.TextInput({
-                                   'class': 'form-control'}))
+                                   'class': 'form-control'}), validators = [
+                                       RegexValidator(
+                                           regex = r'[a-zA-Z]+',
+                                           message = 'Адрес должен содержать хотя бы одну латинскую букву',
+                                           code = 'invalid',
+                                           inverse_match=False,
+                                           flags=re.IGNORECASE)
+                                       ])
 
     email = forms.EmailField(widget=forms.EmailInput({
                                    'class': 'form-control'}), required=False)
