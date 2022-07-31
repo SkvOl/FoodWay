@@ -1,47 +1,31 @@
 from django.db import models
 from django.http import JsonResponse
 from jsonfield import JSONField
+from django.contrib.auth.models import User
 
 
 class ways(models.Model):
-    id_user = models.PositiveIntegerField('id_user', default = 0)
+    id_user = models.ForeignKey(User, on_delete = models.CASCADE)
     name = models.CharField('name', max_length = 150, default = '')
     way = JSONField('way')
-    rating = models.PositiveSmallIntegerField('rating', default = 0)
     show = models.BooleanField('show', default = False)
     is_deleted = models.BooleanField('is_deleted', default = False)
 
     def __str__(self):
-        return f"{self.id} {self.id_user}  {self.name} {self.way} {self.rating} {self.show} {self.is_deleted}"
+        return f"{self.id} {self.id_user} {self.name} {self.way} {self.show} {self.is_deleted}"
 
 
-    def saveData(id_user, name, way, rating, show = False, is_deleted = False):
-        ways.objects.create(id_user = id_user, name = name, way = way, rating = rating, show = show, is_deleted = is_deleted)
+    def saveData(id_user, name, way, show = False, is_deleted = False):
+        ways.objects.create(id_user = id_user, name = name, way = way, show = show, is_deleted = is_deleted)
         
     class Meta:
         verbose_name = 'ways'
         verbose_name_plural = 'ways'
 
 
-class user_to_way(models.Model):
-    id_user = models.PositiveIntegerField('id_user', default = 0)
-    id_way = models.PositiveIntegerField('id_way', default = 0)
-    is_deleted = models.BooleanField('is_deleted', default = False)
-
-    def __str__(self):
-        return f"{self.id} {self.id_user} {self.id_way} {self.is_deleted}"
-
-    def saveData(id_user, id_way, is_deleted):
-        user_to_way.objects.create(id_user = id_user, id_way = id_way, is_deleted = is_deleted)
-
-    class Meta:
-        verbose_name = 'user_to_way'
-        verbose_name_plural = 'user_to_way'
-
-
 class way_to_comm(models.Model):
-    id_user = models.PositiveIntegerField('id_user', default = 0)
-    id_way = models.PositiveIntegerField('id_way', default = 0)
+    id_user = models.ForeignKey(User, on_delete = models.CASCADE)
+    id_way = models.ForeignKey(ways, on_delete = models.CASCADE)
     comment = models.TextField('comment')
     is_deleted = models.BooleanField('is_deleted', default = False)
 
@@ -58,8 +42,8 @@ class way_to_comm(models.Model):
 
 
 class rating(models.Model):
-    id_user = models.PositiveIntegerField('id_user', default = 0)
-    id_way = models.PositiveIntegerField('id_way', default = 0)
+    id_user = models.ForeignKey(User, on_delete = models.CASCADE)
+    id_way = models.ForeignKey(ways, on_delete = models.CASCADE)
     value = models.PositiveSmallIntegerField('value', default = 0)
     is_deleted = models.BooleanField('is_deleted', default = False)
 

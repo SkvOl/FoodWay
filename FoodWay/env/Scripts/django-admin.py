@@ -1,4 +1,4 @@
-#!C:\Users\user\Documents\Work\VS 2022\FoodWayNew\FoodWay\env\Scripts\python.exe
+#!C:\Users\user\Documents\Work\VS 2022\FoodWay\FoodWay\env\Scripts\python.exe
 from django.core import management
 
 if __name__ == "__main__":

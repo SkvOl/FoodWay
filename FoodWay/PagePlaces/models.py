@@ -1,10 +1,11 @@
 from django.db import models
+from django.contrib.auth.models import User
 from ckeditor_uploader.fields import RichTextUploadingField
 # Create your models here.
 
 
 class PagePlaces(models.Model):
-    id_user = models.PositiveIntegerField('id_user', default = 0)   #переделать на oneToOneField
+    id_user = models.OneToOneField(User, on_delete = models.CASCADE)   #переделать на oneToOneField
     name = models.CharField(name = 'name', max_length = 150, default = '')
     content = RichTextUploadingField(blank = True, null = True)
     short_info = models.CharField(name = 'short_info', max_length = 200, default = '')

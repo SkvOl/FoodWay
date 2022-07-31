@@ -5,7 +5,6 @@ Definition of views.
 from datetime import datetime
 from django.shortcuts import redirect, render
 from django.http import HttpRequest
-from django.core import mail
 from .forms import CustomUserCreationForm 
 from .models import MyUser
 import re
@@ -65,8 +64,7 @@ def register(request):
             print(form.is_valid())
     else: 
         form = CustomUserCreationForm()
-        print("Метод не post")
-        print(request.method)
+        
     context = { 
         'title' : 'register',
         'form' : form,

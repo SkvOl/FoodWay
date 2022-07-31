@@ -17,11 +17,11 @@ class User_info(models.Model):
 
     #first_name = models.CharField('first_name', max_length = 150, default = '')
 
-    phone = models.CharField(max_length=13, default = '')
+    phone = models.CharField(max_length = 13, default = '')
 
     show_phone = models.BooleanField(default = False)
 
-    url_user = models.CharField(max_length=30, default = '')
+    url_user = models.CharField(max_length = 30, default = id_user)
 
     #email = models.EmailField()
 
@@ -29,7 +29,7 @@ class User_info(models.Model):
 
     image_profile = models.FileField(upload_to=user_path, null=True)
 
-    about_user = models.CharField(max_length=2000, default = '')
+    about_user = models.CharField(max_length = 2000, default = '')
 
     is_deleted = models.BooleanField('is_deleted', default = False)
 
