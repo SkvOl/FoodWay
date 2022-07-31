@@ -7,6 +7,15 @@ from .models import User_info
 import re
 from django.core.validators import RegexValidator
 
+
+def uniqueURL(value):
+    from django.core.exceptions import ValidationError
+    if User_info.objects.filter(url_user = value).exists():
+        raise ValidationError(
+            'URL не уникальный',
+            code='invalid'
+        )
+
 class User_info_form(forms.Form):
     first_name = forms.CharField(required=False, max_length=150,
                                widget=forms.TextInput({

@@ -31,27 +31,30 @@ def print_fields(model, par, val):
     print(model.objects.get(par = val)._meta.get_fields())
 
 def profile(request, url = -1):
-    
-    user_info = get_user_by_url(url, request)
-
-    if user_info:
-        if user_info.id_user.id == request.user.id:
-            is_owner = True
-        else:
-            is_owner = False
-
-        show_all = is_owner or request.user.is_superuser
-    
-        
-        context = {
-            'title' : 'Профиль',
-            'year' : datetime.now().year,
-            'dop_info' : user_info,  #сомневаюсь что верно переправил функцию
-            'show_all': show_all,
-        }
-        return render(request, 'Portfolio/profile.html', context)
+    if url == -1:
+        user_info = request.user.user_info
+    elif User_info.objects.filter(url_user = url).exists():
+        user_info = User_info.objects.get(url_user = url)
     else:
         return page_not_found(request, None)
+        
+
+    if user_info.id_user.id == request.user.id:
+        is_owner = True
+    else:
+        is_owner = False
+
+    show_all = is_owner or request.user.is_superuser
+    
+        
+    context = {
+        'title' : 'Профиль',
+        'year' : datetime.now().year,
+        'dop_info' : user_info,
+        'show_all': show_all,
+    }
+    return render(request, 'Portfolio/profile.html', context)
+    
 
 
 def handle_uploaded_file(f):
@@ -61,58 +64,60 @@ def handle_uploaded_file(f):
 
 def edit_profile(request, url = -1):
 
-    user_info = get_user_by_url(url, request)
-
-    if user_info:
-
-        #user_edit = User.objects.get(url_user = url)
-        #user_info = User_info.objects.get_or_create(url = user_edit)[0]     #не получилось создать через id_user_(два подчеркивания)_id (что логично в общем-то)
-        
-        if request.method == 'POST':
-            form = User_info_form(request.POST)
-            
-            if form.is_valid():
-                data = form.cleaned_data
-                #print(request.FILES)
-                #print(data)
-                #user_info.id_user = user_edit  #возможно надо
-                user_info.id_user.email = data['email']
-                user_info.id_user.first_name = data['first_name']
-                user_info.id_user.last_name = data['last_name']
-                
-                user_info.phone = data['phone']               #возможно можно засунуть в конструктор
-                user_info.show_phone = data['show_phone']
-                user_info.url_user = data['url_user']
-                user_info.show_email = data['show_email']
-                user_info.about_user = data['about_user']
-
-                if request.FILES and request.FILES['image_profile']:
-                    user_info.image_profile = request.FILES['image_profile'];
-                
-                user_info.id_user.save()
-                user_info.save()
-
-                return redirect(f"/profile/{data['url_user']}")
-            else:
-                print(form)
-        else:
-            form = User_info_form(user_info.__dict__ | user_info.id_user.__dict__)
-
-        try:
-            image_src =  user_info.image_profile.url
-        except:
-            image_src = None
-
-        context = { 
-            'form' : form,
-            'id_view_user': user_info.id_user.id,
-            'title' : 'Редактирование профиля',
-            'year' : datetime.now().year,
-            'image_src' : image_src,
-        }
-        return render(request,'Portfolio/form.html', context)
+    if url == -1:
+        user_info = request.user.user_info
+    elif User_info.objects.filter(url_user = url).exists():
+        user_info = User_info.objects.get(url_user = url)
     else:
         return page_not_found(request, None)
+
+    if request.method == 'POST':
+        form = User_info_form(request.POST)
+            
+        if form.is_valid():
+            data = form.cleaned_data
+            #print(request.FILES)
+            #print(data)
+            #user_info.id_user = user_edit  #возможно надо
+
+            if User_info.objects.filter(url_user = data['url_user']).exclude(id_user = user_info.id_user).exists():
+                return page_not_found(request, None)
+
+            user_info.id_user.email = data['email']
+            user_info.id_user.first_name = data['first_name']
+            user_info.id_user.last_name = data['last_name']
+                
+            user_info.phone = data['phone']               #возможно можно засунуть в конструктор
+            user_info.show_phone = data['show_phone']
+            user_info.url_user = data['url_user']
+            user_info.show_email = data['show_email']
+            user_info.about_user = data['about_user']
+
+            if request.FILES and request.FILES['image_profile']:
+                user_info.image_profile = request.FILES['image_profile'];
+                
+            user_info.id_user.save()
+            #user_info.save()
+
+            return redirect(f"/profile/{data['url_user']}")
+        else:
+            print(form)
+    else:
+        form = User_info_form(user_info.__dict__ | user_info.id_user.__dict__)
+
+    try:
+        image_src =  user_info.image_profile.url
+    except:
+        image_src = None
+
+    context = { 
+        'form' : form,
+        'id_view_user': user_info.id_user.id,
+        'title' : 'Редактирование профиля',
+        'year' : datetime.now().year,
+        'image_src' : image_src,
+    }
+    return render(request,'Portfolio/form.html', context)
 
 def edit_photo(request, id_user = -1):
     if request.method == 'POST':    #по какой-то причина в jquery/ajax появляется ошибка
@@ -131,3 +136,12 @@ def edit_photo(request, id_user = -1):
                 user_info.save()
 
     return JsonResponse({'stasus':'ok'}, safe=False)
+
+def checkURL(request):
+    url = request.POST.get('url')
+    id_user = request.POST.get('id_user')
+    if User_info.objects.filter(url_user = url).exclude(id_user__id = id_user).exists():
+        status = 1  #провал (не уникальный)
+    else:
+        status = 0
+    return JsonResponse({'status' : status}, safe=False)
