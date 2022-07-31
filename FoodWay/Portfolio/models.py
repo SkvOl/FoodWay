@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import reverse
 
 from datetime import datetime
 import os
@@ -43,7 +44,9 @@ class User_info(models.Model):
 
     def saveData(id_user, first_name, phone, show_phone, url_user, email, show_email, image_profile, about_user, is_deleted = False):
         User_info.objects.create(id_user = id_user, first_name = first_name, phone = phone, show_phone = False, url_user = url_user, show_email = True, about_user = about_user, is_deleted = is_deleted)
-
+    
+    def get_absolute_url (self):
+        return reverse('profile_id', kwargs={'url': self.url_user})
 
 
 @receiver(post_save, sender=User)

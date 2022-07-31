@@ -1,0 +1,16 @@
+{% extends "Home/base_layer.html" %}
+
+{% block content %}
+
+{% load staticfiles %}
+
+<div class="container mt-4">
+    {% for item in PagePlaces %}
+        {{item.name}}
+        {{item.url}}
+        <a href="{{item.get_absolute_url}}">Ссылка</a>
+        <br />
+    {% endfor %}
+</div>
+
+{% endblock content %}
