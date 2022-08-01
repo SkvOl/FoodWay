@@ -99,7 +99,7 @@ def edit_profile(request, url = -1):
             user_info.id_user.save()
             #user_info.save()
 
-            return redirect(f"/profile/{data['url_user']}")
+            return redirect(user_info.get_absolute_url())
         else:
             print(form)
     else:

@@ -5,6 +5,7 @@ from .models import PagePlaces
 from django.http import JsonResponse
 
 from django.views.generic import ListView, DetailView
+from django.shortcuts import get_object_or_404
 
 def addPagePlaces(request):
     """страница создания, PagePlaces"""
@@ -29,75 +30,38 @@ def addPagePlaces(request):
 
     return render(request, 'PagePlaces/form.html', context)
 
-def editPagePlaces(request, id_PagePlace):
+def editPagePlace(request, slug):
     """страница редактирования, PagePlaces"""
 
+    page_place = get_object_or_404(PagePlaces, url = slug)
 
-    if PagePlaces.objects.filter(id = id_PagePlace).exists():
-        if request.method == 'POST': 
-            form = PagePlacesForm(request.POST) 
-            if form.is_valid(): 
-                try:
-                    form.save(); 
-                    return redirect('home')
-                except:
-                    print("Ошибка сохранения формы при добавлении PagePlaces")
-        else:
-            user = PagePlaces.objects.get(id = id_PagePlace)
-            initial = {
-                        'name' : user.name,
-                        'content' : user.content,
-                        'short_info' : user.short_info,
-                        'url' : user.url,
-                      }
-
-            form = PagePlacesForm(initial = initial)
-
+    if request.method == 'POST': 
+        form = PagePlacesForm(request.POST) 
+        if form.is_valid(): 
+            #form.save(); 
+            data = form.cleaned_data
+            page_place.name = data['name']  #пришлось делать таким образом, так как иначе создается измененная копия (из за отсутствия id в форме)
+            page_place.content = data['content']
+            page_place.short_info = data['short_info']
+            page_place.url = data['url']
+            page_place.save()
+            return redirect('home')
     else:
-        return page_not_found(request, None)
-
-
+        form = PagePlacesForm(instance = page_place)
 
     context = {
                 'form' : form,
               }
 
-    return render(request, 'PagePlaces/edit.html', context)
-
-def viewPagePlaces(request, url = ''):
-    """страница просмотра PagePlaces"""
-
-    if PagePlaces.objects.filter(url = url).exists():
-
-        user_view = PagePlaces.objects.get(url = url)
-
-        if user_view.id_user == request.user.id:
-            is_owner = True
-        else:
-            is_owner = False
-
-        show_all = is_owner or request.user.is_superuser
-    
-        context = {
-                    'name' : user_view.name,
-                    'url' : url,
-                  }
-
-        return render(request, 'PagePlaces/PagePlace.html', context)
-    else:
-        return page_not_found(request, None)
-
-#def checkURL(request, url = ''):
-#    unique = PagePlaces.objects.filter(url = url).exists()       #надо узнать уникальность
-#    return JsonResponse({'unique' : unique}, safe = False)
+    return render(request, 'PagePlaces/form.html', context)
 
 def checkURL(request):
     url = request.POST.get('url')
     id_PagePlaces = request.POST.get('id_PagePlaces')
-    res = PagePlaces.objects.filter(url_user = url)
+    res = PagePlaces.objects.filter(url = url)
 
     if id_PagePlaces:
-        res = res.exclude(id_user__id = id_PagePlaces)
+        res = res.exclude(id = id_PagePlaces)
 
     if res.exists():
         status = 1  #провал (не уникальный)
@@ -105,7 +69,15 @@ def checkURL(request):
         status = 0
     return JsonResponse({'status' : status}, safe=False)
 
-class PagePlaceSchow(ListView):
+def deletePagePlace(request):
+    id_PagePlaces = request.POST.get('id_PagePlaces')
+    pageplace = PagePlaces.objects.get(id = id_PagePlaces)
+    if pageplace.id_user == request.user or request.user.is_superuser:
+        pageplace.is_deleted = True
+        pageplace.save()
+    return JsonResponse({'status' : '1'}, safe=False)
+
+class PagePlaceList(ListView):
     model = PagePlaces
     context_object_name = 'PagePlaces'
     #template_name = 'PagePlaces/PagePlaces_list.html'
@@ -123,7 +95,7 @@ class PagePlaceDetailView(DetailView):
     context_object_name = 'PagePlace'
     slug_field = 'url'
 
-    def get_context_data(self, *, object_list=None, **kwargs):
+    def get_context_data(self, *, object_list = None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Название страницы'
+        context['title'] = self.object.name
         return context

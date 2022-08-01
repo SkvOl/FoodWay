@@ -39,13 +39,17 @@
                 </div>
 
                 <div class="col-3 d-flex flex-column justify-content-center">
-                    <div class="text-center but_item shadow-sm m-1 rounded-3">
-                        Посмотреть на карте
-                    </div>
-                    <div class="text-center but_item shadow-sm m-1 rounded-3">
-                        Редактирвать
-                    </div>
-                    <div class="text-center but_item shadow-sm m-1 rounded-3">
+                    <a href="{{item.get_absolute_url}}" style="color:black">
+                        <div class="text-center but_item shadow-sm m-1 rounded-3">
+                            Посмотреть на карте
+                        </div>
+                    </a>
+                    <a href="{% url 'editPagePlace' item.url %}" style="color:black">
+                        <div class="text-center but_item shadow-sm m-1 rounded-3">
+                            Редактирвать
+                        </div>
+                    </a>
+                    <div class="text-center but_item shadow-sm m-1 rounded-3" onclick="delete_pageplace('{{item.id}}')">
                         Удалить
                     </div>
                 </div>
@@ -56,4 +60,38 @@
     
 </div>
 
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function delete_pageplace(id) {
+        if (confirm('Страница удаляется без возможности восстановления. Продолжить?')) {
+            $.ajax({
+                url: "{% url 'deletePagePlace' %}",
+                method: 'post',
+                dataType: 'json',
+                data: { 'id_PagePlaces': id },
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                },
+                success: function (data) {
+
+                    console.log(data);
+                }
+            });
+        }
+    }
+</script>
 {% endblock content %}
