@@ -3,14 +3,57 @@
 {% block content %}
 
 {% load staticfiles %}
+<style>
+    a {
+        text-decoration: none;
+    }
+    .list{
 
+    }
+
+    .list-item{
+
+    }
+    .list-item:hover {
+        background-color: #c9c9c959;
+    }
+    .but_item {
+        background-color:white;
+        transition-duration: .5s;
+    }
+    .but_item:hover{
+        cursor: pointer;
+    }
+</style>
 <div class="container mt-4">
-    {% for item in PagePlaces %}
-        {{item.name}}
-        {{item.url}}
-        <a href="{{item.get_absolute_url}}">Ссылка</a>
-        <br />
-    {% endfor %}
+    <ul class="list">
+        {% for item in PagePlaces %}
+        <li class="shadow rounded-3 m-3 p-2 list-item">
+            <div class="row">
+                <div class="col-9">
+                    <a href="{{item.get_absolute_url}}">
+                        <h2 class="text-decoration-none">{{item.name}}</h2>
+                    </a>
+                    <p class="mt-3 mb-1">Телефон: {{item.phone}}</p>
+                    <p>{{item.short_info}}</p>
+                </div>
+
+                <div class="col-3 d-flex flex-column justify-content-center">
+                    <div class="text-center but_item shadow-sm m-1 rounded-3">
+                        Посмотреть на карте
+                    </div>
+                    <div class="text-center but_item shadow-sm m-1 rounded-3">
+                        Редактирвать
+                    </div>
+                    <div class="text-center but_item shadow-sm m-1 rounded-3">
+                        Удалить
+                    </div>
+                </div>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    
 </div>
 
 {% endblock content %}

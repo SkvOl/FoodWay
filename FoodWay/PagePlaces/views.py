@@ -4,7 +4,7 @@ from FoodWay.views import page_not_found
 from .models import PagePlaces
 from django.http import JsonResponse
 
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 def addPagePlaces(request):
     """страница создания, PagePlaces"""
@@ -13,7 +13,9 @@ def addPagePlaces(request):
         form = PagePlacesForm(request.POST) 
         if form.is_valid(): 
             try:
-                form.save(); 
+                res = form.save(commit=False)
+                res.id_user = request.user
+                res.save()
                 return redirect('home')
             except:
                 print("Ошибка сохранения формы при добавлении PagePlaces")
@@ -95,7 +97,7 @@ def checkURL(request):
     res = PagePlaces.objects.filter(url_user = url)
 
     if id_PagePlaces:
-        res = res.exclude(id_user__id = id_user)
+        res = res.exclude(id_user__id = id_PagePlaces)
 
     if res.exists():
         status = 1  #провал (не уникальный)
@@ -106,7 +108,7 @@ def checkURL(request):
 class PagePlaceSchow(ListView):
     model = PagePlaces
     context_object_name = 'PagePlaces'
-    template_name = 'PagePlaces/PagePlaces_list.html'
+    #template_name = 'PagePlaces/PagePlaces_list.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -115,3 +117,13 @@ class PagePlaceSchow(ListView):
 
     def get_queryset(self):
         return PagePlaces.objects.all()
+
+class PagePlaceDetailView(DetailView):
+    model = PagePlaces
+    context_object_name = 'PagePlace'
+    slug_field = 'url'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Название страницы'
+        return context

@@ -1,0 +1,15 @@
+{% extends "Home/base_layer.html" %}
+
+{% block content %}
+
+{% load staticfiles %}
+
+<div class="container mt-4">
+
+    {{PagePlace.name}}
+    {{PagePlace.content|safe}}
+    <br />
+
+</div>
+
+{% endblock content %}

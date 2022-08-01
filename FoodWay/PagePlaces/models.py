@@ -6,7 +6,7 @@ from django.shortcuts import reverse
 
 
 class PagePlaces(models.Model):
-    id_user = models.OneToOneField(User, on_delete = models.CASCADE)            #был не прав, нужен foreign key
+    id_user = models.ForeignKey(User, on_delete = models.CASCADE)
     name = models.CharField(name = 'name', max_length = 150, default = '')
     content = RichTextUploadingField(blank = True, null = True)
     short_info = models.CharField(name = 'short_info', max_length = 200, default = '')
@@ -17,7 +17,7 @@ class PagePlaces(models.Model):
         return f"{self.id} {self.id_user} {self.name} {self.content} {self.short_info} {self.url} {self.is_deleted}"
     
     def get_absolute_url (self):
-        return reverse('PagePlaces', kwargs={'url': self.url})
+        return reverse('PagePlaces', kwargs={'slug': self.url})
 
     class Meta:
         verbose_name = 'page places'

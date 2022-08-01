@@ -144,7 +144,7 @@
                 {{form.about_user.errors}}
             </div>
             <div class="d-flex justify-content-center">
-                <button type="submit" class="btn btn-primary">Сохранить</button>
+                <button id="but_save" type="submit" class="btn btn-success">Сохранить</button>
             </div>
         </div>
     </form>
@@ -197,7 +197,7 @@
 
     $('#delete_photo').on('click',()=>{
             send_photo(0, true);
-            $("#preview_id").attr('src','{% static 'Portfolio/media/placeholder_photo.jpg' %}');
+            $("#preview_id").attr('src',"{% static 'Portfolio/media/placeholder_photo.jpg' %}");
             $('#delete_photo').hide();
         });
 
@@ -278,7 +278,7 @@
             method: 'post',
             dataType: 'json',
             data: { 'url': $('#{{ form.url_user.id_for_label }}').val(),
-                    'id_user' : {{id_view_user}}    
+                    'id_user' : {{id_view_user}},    
                     },
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
@@ -288,10 +288,12 @@
                     $('#url_status').removeClass('alert-success');
                     $('#url_status').addClass('alert-warning');
                     $("#url_status").html('К сожалению, такой адрес занят');
+                    $('#but_save').prop('disabled', true);
                 }else{
                     $('#url_status').addClass('alert-success');
                     $('#url_status').removeClass('alert-warning');
                     $("#url_status").html('Адрес свободен!');
+                    $('#but_save').prop('disabled', false);
                 }
                 console.log(data);
 		    }
