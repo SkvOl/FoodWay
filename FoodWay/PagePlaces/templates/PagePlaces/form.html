@@ -7,55 +7,201 @@
 <link href="{% static 'Home/fontawesomefree/css/all.min.css' %}" rel="stylesheet" type="text/css">
 
 <style>
-    .django-ckeditor-widget{
+    .django-ckeditor-widget {
         width: 100%;
     }
+
+    .col-open{
+        cursor:pointer;
+        border: solid 1px black;
+    }
+
+    #map {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+
+    .content-map {
+        width: 100%;
+        height: 60vh;
+    }
+
 </style>
 
 
 
 <div class="container mt-4">
 
+
+
     <form class="form-control border-0 shadow-lg" action="." method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{form.media}}
-        <div class="mb-3">
-            <label for="{{ form.name.id_for_label }}" class="form-label">Название</label>
-            {{ form.name }}
-            {{ form.name.errors }}
-        </div>
 
-        <div class="mb-3">
-            <label for="{{ form.content.id_for_label }}" class="form-label">Контент</label>
-            {{ form.content }}
-            {{ form.content.errors }}
-        </div>
+        
 
-        <div class="mb-3">
-            <label for="{{ form.short_info.id_for_label }}" class="form-label">Короткая информация</label>
-            {{ form.short_info }}
-            {{ form.short_info.errors }}
-        </div>
 
-        <div class="mb-3">
-            <label for="{{ form.url.id_for_label }}" class="form-label">Адрес страницы</label>
-            <div class="input-group mb-3">
-                <span class="input-group-text">https://FoodWay.ru/PagePlaces/</span>
-                {{ form.url }}
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item mb-3">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Название и адрес страницы
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+
+                        <div class="mb-3">
+                            <label for="{{ form.name.id_for_label }}" class="form-label">Название</label>
+                            {{ form.name }}
+                            {{ form.name.errors }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.url.id_for_label }}" class="form-label">Адрес страницы</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">https://FoodWay.ru/PagePlaces/</span>
+                                {{ form.url }}
+                            </div>
+                            <div class="alert alert-success" id="url_status" role="alert">
+                                Вы можете придумать свой адрес! (должен содержать как минимум одну латинскую букву)
+                            </div>
+                            {{form.url.errors}}
+                        </div>
+
+                    </div>
+                </div>
             </div>
-            <div class="alert alert-success" id="url_status" role="alert">
-                Вы можете придумать свой адрес! (должен содержать как минимум одну латинскую букву)
+            <div class="accordion-item mb-3">
+                <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        Местоположение на карте
+                    </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+
+                        <div class="content-map">
+                            <div id="map"></div>
+                        </div>
+
+                        <div class="row g-3 align-items-center mt-4">
+                            <div class="col-auto">
+                                <label for="{{form.icon.id_for_label}}" class="col-form-label">Иконка</label>
+                            </div>
+                            <div class="col">
+                                {{form.icon}}
+                            </div>
+                            <div class="col-3 d-flex justify-content-center">
+                                <div class="btn btn-primary">Зафиксировать</div>
+                            </div>
+                        </div>
+
+                        
+                    </div>
+                </div>
             </div>
-            {{form.url.errors}}
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        Информация, отображаемая на странице
+                    </button>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+
+                        <div class="mb-3">
+                            <label for="{{ form.content.id_for_label }}" class="form-label">Контент</label>
+                            {{ form.content }}
+                            {{ form.content.errors }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.short_info.id_for_label }}" class="form-label">Короткая информация</label>
+                            {{ form.short_info }}
+                            {{ form.short_info.errors }}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="d-flex justify-content-center">
+
+
+        <div class="d-flex justify-content-center mt-3">
             <button id="but_save" type="submit" class="btn btn-success">Сохранить</button>
         </div>
     </form>
 
 </div>
 
+<template id="popup_marker">
+    {% include 'PagePlaces/popup_marker.html' %}
+</template>
+
 <script>
+
+    DG.then(function () {
+        var options = {
+            center: [53.20973372247789, 44.99897003173828],
+            zoom: 13,
+            geoclicker: true,
+            worldCopyJump: true,
+            zoomControl: false,
+            fullscreenControl: false
+        };
+        var map = window.map = DG.map('map', options);
+
+        var controlOptions = DG.Browser.mobile ? { position: 'bottomright' } : {};
+        DG.control.zoom(controlOptions).addTo(map);
+        DG.control.traffic(controlOptions).addTo(map);
+        DG.control.location(controlOptions).addTo(map);
+        DG.control.ruler(controlOptions).addTo(map);
+        if (DG.screenfull.isAvailable()) {
+            DG.control.fullscreen(controlOptions).addTo(map);
+        }
+        //var balloonHTML = '<a href="http://www.2gis.ru/" target="_blank">\n\
+        //<img src="__BASE_URL__/img/2gis-logo.png" alt="2GIS" title="2GIS" width="154" height="66" style="border: none"></a>\n\
+        //<p>Компания «ДубльГИС»</p>Тел.: (383) 363-05-55<br />Адрес: г. Новосибирск, Карла Маркса площадь, 7<br />\n\
+        //(МФК «Сан Сити»), 13 этаж';
+        var add_popup_marker = $('#popup_marker')[0].innerHTML;
+        //var marker = DG.marker([53.20973372247789, 44.99897003173828]).addTo(map).bindPopup(balloonHTML);
+
+        var userMarker = DG.marker([54.980156831455, 82.897440725094], {
+            draggable: true
+        }).addTo(map);
+
+        userMarker.on('moveend', function (e) {
+            var lat = e.target._latlng.lat,
+                lng = e.target._latlng.lng;
+            //save_marker();
+        });
+        //marker.openPopup();
+
+
+        function save_marker() {
+            //userMarker.getLatLng().lat
+            DG.marker([userMarker.getLatLng().lat, userMarker.getLatLng().lng]).addTo(map);
+        }
+
+        map.on('click', function (e) {
+            console.log(e.latlng.lat + '   ' + e.latlng.lng);
+            userMarker.setLatLng([e.latlng.lat, e.latlng.lng]);
+        });
+
+        map.on('popupopen', function (e) {
+            console.log(e);
+            var test = e['popup'].getContent();
+            console.log(test);
+            $('#info').html(test);
+        });
+
+        map.on('moveend', function () {
+            
+        });
+    });
+
 
     $(document).ready(function(){
         $(document).on('input', '#{{form.url.id_for_label}}', checkURL);
@@ -84,7 +230,7 @@
             url: "{% url 'checkurl' %}",
             method: 'post',
             dataType: 'json',
-            data: { 
+            data: {
                     'url': $('#{{form.url.id_for_label}}').val(),
                     {% if form.id %}'id_PagePlaces':{{form.id}}{% endif %}
                     },
