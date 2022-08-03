@@ -14,6 +14,18 @@ def icon_place(instance, filename):
     file =  f"{current_datetime.day}-{current_datetime.month}-{current_datetime.year}-{int(time.time())}{ext[1]}"
     return f"user_{instance.id_user.id}_{instance.id_user.username}/icon/{file}"
 
+class Icon(models.Model):
+    name = models.CharField(name = 'name', max_length = 150, default = '')
+    icon = models.FileField(upload_to = 'icons/', null = True, blank=True)
+    is_deleted = models.BooleanField('is_deleted', default = False)
+
+    def __str__(self):
+        return f"{self.name} {self.is_deleted}"
+
+    class Meta:
+        verbose_name = 'Icon'
+        verbose_name_plural = 'Icons'
+
 class PagePlaces(models.Model):
     id_user = models.ForeignKey(User, on_delete = models.CASCADE)
     name = models.CharField(name = 'name', max_length = 150, default = '')
@@ -22,7 +34,8 @@ class PagePlaces(models.Model):
     url = models.CharField(name = 'url', max_length = 20, unique = True)
     lat = models.DecimalField(name = 'lat', max_digits=19, decimal_places=16, null = True, blank=True)
     lng = models.DecimalField(name = 'lng', max_digits=19, decimal_places=16, null = True, blank=True)
-    icon = models.FileField(upload_to = icon_place, null = True, blank=True)
+    #icon = models.FileField(upload_to = icon_place, null = True, blank=True)
+    icon_id = models.ForeignKey(Icon, on_delete = models.DO_NOTHING, null = True)
     is_deleted = models.BooleanField('is_deleted', default = False)
 
     def __str__(self):

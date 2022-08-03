@@ -20,12 +20,12 @@ class PagePlacesForm(forms.ModelForm):
                                    'class': 'form-control',
                                    'placeholder': 'Сделайте выделяющийся адрес (до 20 символов)'}))
 
-    icon = forms.FileField(widget=forms.FileInput({
-                                   'class': 'form-control',
-                                   'placeholder': 'По желанию, загрузите иконку'}))
+    #icon = forms.FileField(widget=forms.FileInput({
+    #                               'class': 'form-control',
+    #                               'placeholder': 'По желанию, загрузите иконку'}),required=False)
 
     class Meta:
         model = PagePlaces
-        fields = ['name', 'content', 'short_info', 'url', 'icon']
+        fields = ['name', 'content', 'short_info', 'url', 'icon_id', 'lat', 'lng']
 
 

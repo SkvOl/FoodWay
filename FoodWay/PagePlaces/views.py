@@ -1,7 +1,7 @@
 ﻿from django.shortcuts import render, redirect
 from .forms import PagePlacesForm
 from FoodWay.views import page_not_found
-from .models import PagePlaces
+from .models import PagePlaces, Icon
 from django.http import JsonResponse
 
 from django.views.generic import ListView, DetailView
@@ -34,22 +34,24 @@ def editPagePlace(request, slug):
     """страница редактирования, PagePlaces"""
 
     page_place = get_object_or_404(PagePlaces, url = slug)
+    all_icon = Icon.objects.filter(is_deleted = 0)
 
     if request.method == 'POST': 
-        form = PagePlacesForm(request.POST) 
+        form = PagePlacesForm(request.POST, instance = page_place) 
         if form.is_valid(): 
-            #form.save(); 
-            data = form.cleaned_data
-            page_place.name = data['name']  #пришлось делать таким образом, так как иначе создается измененная копия (из за отсутствия id в форме)
-            page_place.content = data['content']
-            page_place.short_info = data['short_info']
-            page_place.url = data['url']
-            page_place.save()
+            form.save(); 
+            #data = form.cleaned_data
+            #page_place.name = data['name']  #пришлось делать таким образом, так как иначе создается измененная копия (из за отсутствия id в форме)
+            #page_place.content = data['content']
+            #page_place.short_info = data['short_info']
+            #page_place.url = data['url']
+            #page_place.save()
             return redirect('home')
     else:
         form = PagePlacesForm(instance = page_place)
 
     context = {
+                'all_icon' : all_icon,
                 'form' : form,
               }
 
@@ -88,12 +90,14 @@ class PagePlaceList(ListView):
         return context
 
     def get_queryset(self):
-        return PagePlaces.objects.all()
+        return PagePlaces.objects.filter(is_deleted = 0)
 
 class PagePlaceDetailView(DetailView):
     model = PagePlaces
     context_object_name = 'PagePlace'
     slug_field = 'url'
+
+    queryset = PagePlaces.objects.filter(is_deleted = False)
 
     def get_context_data(self, *, object_list = None, **kwargs):
         context = super().get_context_data(**kwargs)

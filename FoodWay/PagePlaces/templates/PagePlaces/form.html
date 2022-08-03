@@ -11,8 +11,8 @@
         width: 100%;
     }
 
-    .col-open{
-        cursor:pointer;
+    .col-open {
+        cursor: pointer;
         border: solid 1px black;
     }
 
@@ -27,29 +27,42 @@
         height: 60vh;
     }
 
-</style>
+    .icon-marker:hover {
+        box-shadow: 0 0 5px;
+        cursor: pointer;
+    }
 
+</style>
 
 
 <div class="container mt-4">
 
+    <div>
+        {% for icon in all_icon %}
+        
+            <img class = "icon-marker" id="{{icon.id}}" width="50" height="50" src="{{icon.icon.url}}" />
+        
+        {% endfor %}
+    </div>
 
 
     <form class="form-control border-0 shadow-lg" action="." method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{form.media}}
 
-        
 
 
         <div class="accordion" id="accordionExample">
+
             <div class="accordion-item mb-3">
                 <h2 class="accordion-header" id="headingOne">
+
                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                         Название и адрес страницы
                     </button>
                 </h2>
                 <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+
                     <div class="accordion-body">
 
                         <div class="mb-3">
@@ -81,24 +94,25 @@
                 </h2>
                 <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-
+                        {{form.lat.as_hidden}}
+                        {{form.lng.as_hidden}}
                         <div class="content-map">
                             <div id="map"></div>
                         </div>
 
                         <div class="row g-3 align-items-center mt-4">
                             <div class="col-auto">
-                                <label for="{{form.icon.id_for_label}}" class="col-form-label">Иконка</label>
+                                <label for="{{form.icon_id.id_for_label}}" class="col-form-label">Иконка</label>
                             </div>
                             <div class="col">
-                                {{form.icon}}
+                                {{form.icon_id.as_hidden}}
                             </div>
                             <div class="col-3 d-flex justify-content-center">
-                                <div class="btn btn-primary">Зафиксировать</div>
+                                <div class="btn btn-primary" id="lock_id">Зафиксировать</div>
                             </div>
                         </div>
 
-                        
+
                     </div>
                 </div>
             </div>
@@ -140,71 +154,111 @@
     {% include 'PagePlaces/popup_marker.html' %}
 </template>
 
+{% load l10n %}
+
+{% localize off %}
+
 <script>
+    var lat = 0;
+    var lng = 0;
+    document.getElementById('collapseTwo').addEventListener('shown.bs.collapse', function () {
+        start_map();
+    }, { once: true });
 
-    DG.then(function () {
-        var options = {
-            center: [53.20973372247789, 44.99897003173828],
-            zoom: 13,
-            geoclicker: true,
-            worldCopyJump: true,
-            zoomControl: false,
-            fullscreenControl: false
-        };
-        var map = window.map = DG.map('map', options);
+    function start_map() {
+        DG.then(function () {
+            var options = {
+                {% if form.lat.value and form.lng.value %}
+                center: [{{ form.lat.value }}, {{ form.lng.value }}],
+                {% else %}
+                center: [53.20973372247789, 44.99897003173828],
+                {% endif %}
+                zoom: 13,
+                geoclicker: true,
+                worldCopyJump: true,
+                zoomControl: false,
+                fullscreenControl: false
+            };
+            var map = window.map = DG.map('map', options);
 
-        var controlOptions = DG.Browser.mobile ? { position: 'bottomright' } : {};
-        DG.control.zoom(controlOptions).addTo(map);
-        DG.control.traffic(controlOptions).addTo(map);
-        DG.control.location(controlOptions).addTo(map);
-        DG.control.ruler(controlOptions).addTo(map);
-        if (DG.screenfull.isAvailable()) {
-            DG.control.fullscreen(controlOptions).addTo(map);
-        }
-        //var balloonHTML = '<a href="http://www.2gis.ru/" target="_blank">\n\
-        //<img src="__BASE_URL__/img/2gis-logo.png" alt="2GIS" title="2GIS" width="154" height="66" style="border: none"></a>\n\
-        //<p>Компания «ДубльГИС»</p>Тел.: (383) 363-05-55<br />Адрес: г. Новосибирск, Карла Маркса площадь, 7<br />\n\
-        //(МФК «Сан Сити»), 13 этаж';
-        var add_popup_marker = $('#popup_marker')[0].innerHTML;
-        //var marker = DG.marker([53.20973372247789, 44.99897003173828]).addTo(map).bindPopup(balloonHTML);
+            var controlOptions = DG.Browser.mobile ? { position: 'bottomright' } : {};
+            DG.control.zoom(controlOptions).addTo(map);
+            DG.control.traffic(controlOptions).addTo(map);
+            DG.control.location(controlOptions).addTo(map);
+            DG.control.ruler(controlOptions).addTo(map);
+            if (DG.screenfull.isAvailable()) {
+                DG.control.fullscreen(controlOptions).addTo(map);
+    }
+    
+    var my_icon = DG.icon({
+        iconUrl: "{% static 'PagePlaces/icon_marker/test.png' %}",
+        //iconRetinaUrl: "{% static 'PagePlaces/icon_marker/test.png' %}",
+        iconSize: [38, 38],
+    })
+    
+            //var balloonHTML = '<a href="http://www.2gis.ru/" target="_blank">\n\
+            //<img src="__BASE_URL__/img/2gis-logo.png" alt="2GIS" title="2GIS" width="154" height="66" style="border: none"></a>\n\
+            //<p>Компания «ДубльГИС»</p>Тел.: (383) 363-05-55<br />Адрес: г. Новосибирск, Карла Маркса площадь, 7<br />\n\
+            //(МФК «Сан Сити»), 13 этаж';
+            var add_popup_marker = $('#popup_marker')[0].innerHTML;
+            //var marker = DG.marker([53.20973372247789, 44.99897003173828]).addTo(map).bindPopup(balloonHTML);
+            {% if form.lat.value and form.lng.value %}
+            var init_coord = [{{ form.lat.value }}, {{ form.lng.value }} ];
+            {% else %}
+            var init_coord = [53.20973372247789, 44.99897003173828];
+            {% endif %}
+            var userMarker = DG.marker(init_coord, {
+                //draggable: true
+                icon: my_icon,
+            }).addTo(map);
 
-        var userMarker = DG.marker([54.980156831455, 82.897440725094], {
-            draggable: true
-        }).addTo(map);
+            userMarker.on('moveend', function (e) {
+                var lat = e.target._latlng.lat,
+                    lng = e.target._latlng.lng;
+                //save_marker();
+            });
+            //marker.openPopup();
 
-        userMarker.on('moveend', function (e) {
-            var lat = e.target._latlng.lat,
-                lng = e.target._latlng.lng;
-            //save_marker();
-        });
-        //marker.openPopup();
-
-
-        function save_marker() {
-            //userMarker.getLatLng().lat
-            DG.marker([userMarker.getLatLng().lat, userMarker.getLatLng().lng]).addTo(map);
-        }
-
-        map.on('click', function (e) {
-            console.log(e.latlng.lat + '   ' + e.latlng.lng);
-            userMarker.setLatLng([e.latlng.lat, e.latlng.lng]);
-        });
-
-        map.on('popupopen', function (e) {
-            console.log(e);
-            var test = e['popup'].getContent();
-            console.log(test);
-            $('#info').html(test);
-        });
-
-        map.on('moveend', function () {
-            
-        });
+    $('.icon-marker').click((e) => {
+        console.log(e.target);
+        coord = userMarker.getLatLng();
+        userMarker.remove();
+        userMarker.options.icon.options.iconUrl = e.target.src;
+        userMarker.addTo(map);
+        $('#{{form.icon_id.id_for_label}}').val(e.target.id);
     });
 
+            function save_marker() {
+                //userMarker.getLatLng().lat
+                DG.marker([userMarker.getLatLng().lat, userMarker.getLatLng().lng]).addTo(map);
+            }
+
+            map.on('click', function (e) {
+                lat = e.latlng.lat;
+                lng = e.latlng.lng;
+                console.log(e.latlng.lat + '   ' + e.latlng.lng);
+                userMarker.setLatLng([e.latlng.lat, e.latlng.lng]);
+            });
+
+            map.on('popupopen', function (e) {
+                console.log(e);
+                var test = e['popup'].getContent();
+                console.log(test);
+                $('#info').html(test);
+            });
+
+            map.on('moveend', function () {
+
+            });
+        });
+    }
 
     $(document).ready(function(){
         $(document).on('input', '#{{form.url.id_for_label}}', checkURL);
+        $('#lock_id').click(() => {
+            $('#{{form.lat.id_for_label}}').val(lat);
+            $('#{{form.lng.id_for_label}}').val(lng);
+        })
     });
 
     function getCookie(name) {
@@ -254,5 +308,7 @@
 	    });
     }
 </script>
+
+{% endlocalize %}
 
 {% endblock content %}
