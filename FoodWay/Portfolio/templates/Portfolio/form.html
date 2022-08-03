@@ -115,6 +115,9 @@
                             {#<input type="text" class="form-control" id="basic-url" aria-describedby="user_url">#}
                             {{ form.url_user }}
                         </div>
+                        <div class="alert alert-success" id="url_status" role="alert">
+                            Вы можете придумать свой красивый адрес! (должен содержать как минимум одну латинскую букву)
+                        </div>
                         {{form.url_user.errors}}
                     </div>
                 </div>
@@ -141,7 +144,7 @@
                 {{form.about_user.errors}}
             </div>
             <div class="d-flex justify-content-center">
-                <button type="submit" class="btn btn-primary">Сохранить</button>
+                <button id="but_save" type="submit" class="btn btn-success">Сохранить</button>
             </div>
         </div>
     </form>
@@ -194,14 +197,16 @@
 
     $('#delete_photo').on('click',()=>{
             send_photo(0, true);
-            $("#preview_id").attr('src','{% static 'Portfolio/media/placeholder_photo.jpg' %}');
+            $("#preview_id").attr('src',"{% static 'Portfolio/media/placeholder_photo.jpg' %}");
             $('#delete_photo').hide();
         });
 
 
     $(document).ready(function () {
         $('#{{ form.image_profile.id_for_label }}').prop('hidden', true);
+        $(document).on('input', '#{{ form.url_user.id_for_label }}', checkURL);
     });
+
 
      function getCookie(name) {
         let cookieValue = null;
@@ -264,6 +269,38 @@
     $("#{{ form.image_profile.id_for_label }}").change(function () {
         make_preview(this);
     });
+
+    function checkURL() {
+        const csrftoken = getCookie('csrftoken');
+
+        $.ajax({
+            url: "{% url 'checkURL_profile' %}",
+            method: 'post',
+            dataType: 'json',
+            data: { 'url': $('#{{ form.url_user.id_for_label }}').val(),
+                    'id_user' : {{id_view_user}},    
+                    },
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            },
+		    success: function(data){
+                if(data['status']){
+                    $('#url_status').removeClass('alert-success');
+                    $('#url_status').addClass('alert-warning');
+                    $("#url_status").html('К сожалению, такой адрес занят');
+                    $('#but_save').prop('disabled', true);
+                }else{
+                    $('#url_status').addClass('alert-success');
+                    $('#url_status').removeClass('alert-warning');
+                    $("#url_status").html('Адрес свободен!');
+                    $('#but_save').prop('disabled', false);
+                }
+                console.log(data);
+		    }
+	    });
+    }
 </script>
+
+
 
 {% endblock content %}
