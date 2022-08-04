@@ -39,7 +39,7 @@ class PagePlaces(models.Model):
     is_deleted = models.BooleanField('is_deleted', default = False)
 
     def __str__(self):
-        return f"{self.id} {self.id_user} {self.name} {self.content} {self.short_info} {self.url} {self.is_deleted}"
+        return f"{self.id} {self.id_user} {self.name} {self.short_info} {self.url} {self.is_deleted}"
     
     def get_absolute_url (self):
         return reverse('PagePlaces', kwargs={'slug': self.url})

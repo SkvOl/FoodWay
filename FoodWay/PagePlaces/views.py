@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404
 
 def addPagePlaces(request):
     """страница создания, PagePlaces"""
-
+    all_icon = Icon.objects.filter(is_deleted = 0)
     if request.method == 'POST': 
         form = PagePlacesForm(request.POST) 
         if form.is_valid(): 
@@ -25,6 +25,8 @@ def addPagePlaces(request):
 
 
     context = {
+                'title' : 'Добавление страницы',
+                'all_icon' : all_icon,
                 'form' : form,
               }
 
@@ -35,7 +37,7 @@ def editPagePlace(request, slug):
 
     page_place = get_object_or_404(PagePlaces, url = slug)
     all_icon = Icon.objects.filter(is_deleted = 0)
-
+    
     if request.method == 'POST': 
         form = PagePlacesForm(request.POST, instance = page_place) 
         if form.is_valid(): 
@@ -49,10 +51,11 @@ def editPagePlace(request, slug):
             return redirect('home')
     else:
         form = PagePlacesForm(instance = page_place)
-
     context = {
+                'title' : f"Редактирование {page_place.name}",
                 'all_icon' : all_icon,
                 'form' : form,
+                'selected_icon': page_place.icon_id
               }
 
     return render(request, 'PagePlaces/form.html', context)

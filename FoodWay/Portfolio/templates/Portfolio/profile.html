@@ -7,15 +7,6 @@
 <link href="{% static 'Home/fontawesomefree/css/all.min.css' %}" rel="stylesheet" type="text/css">
 
 <style>
-    .test1 {
-        width: 500px;
-        height: 200px;
-    }
-
-    .test2 {
-        width: 500px;
-        height: 200px;
-    }
 
     .image-profile {
         max-width: 100%;
@@ -39,7 +30,6 @@
     <div class="row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 d-flex ps-0 pe-0">
             <div class="alert alert-secondary me-1 border-0 shadow d-flex flex-column justify-content-center">
-                {#{% static 'Home/media/123.jpg'%}#}
                 <img class="image-profile" src="{% if dop_info.image_profile %}{{ dop_info.image_profile.url }}{% else %}{% static 'Portfolio/media/placeholder_photo.jpg' %}{% endif %}" />
             </div>
         </div>

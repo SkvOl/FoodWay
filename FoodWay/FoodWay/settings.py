@@ -171,6 +171,7 @@ CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
 
 CKEDITOR_CONFIGS = {
     'default': {
+        'height': '700px',
         'width': '100%', 
     },
 }
