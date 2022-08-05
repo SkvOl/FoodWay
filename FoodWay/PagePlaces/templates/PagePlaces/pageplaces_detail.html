@@ -15,6 +15,11 @@
         height: 60vh;
     }
 
+    .content-page img {
+        max-width: 98%;
+        height: auto !important;
+    }
+
     .alert-secondary {
         background-color: #e2e3e533;
     }
@@ -24,9 +29,39 @@
         background-color: #f0f0f3;
         box-shadow: 10px 10px 21px #d3d3d6, -10px -10px 21px #fff;
     }
+
+    .image-profile {
+        object-fit:cover;
+
+        width:100px;
+        height:100px;
+    }
+
+    .block-feedback{
+
+    }
+
+    .block-feedback .header{
+
+    }
+
+    .block-feedback .text {
+
+    }
+    .stars-block {
+        height: 100%;
+    }
+
+    .stars-block .star{
+        height:30px;
+    }
+
+    .inactive {
+        filter: grayscale(1.0);
+    }
 </style>
 <div class="container mt-4">
-    <div class="alert alert-secondary border-0 shadow">
+    <div class="alert alert-secondary border-0 shadow content-page">
         <h1 class="text-center">{{PagePlace.name}}</h1>
         {{PagePlace.name}}
         {{PagePlace.content|safe}}
@@ -38,6 +73,33 @@
             <div id="map"></div>
         </div>
     </div>
+
+    <div class="alert alert-secondary border-0 shadow">
+        <div class="h1 text-center">Отзывы:</div>
+        <div class="block-feedback m-4">
+            <div class="header row alert alert-secondary align-items-center">
+                <div class="col h3">
+
+                    <img class="image-profile rounded-circle" src="{% static 'Portfolio/media/placeholder_photo.jpg' %}" />
+                    Здесь ваше имя
+                </div>
+                <div class="col stars-block">
+                    <img class="star" src="{{PagePlace.icon_id.icon.url}}" />
+                    <img class="star" src="{{PagePlace.icon_id.icon.url}}" />
+                    <img class="star" src="{{PagePlace.icon_id.icon.url}}" />
+                    <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
+                    <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
+                </div>
+                <div class="col-2 h6 text-end">
+                    05.08.2022
+                </div>
+            </div>
+            <div class="text">
+                Это текст комменатрия на первое заведение
+            </div>
+        </div>
+    </div>
+
 
 </div>
 
