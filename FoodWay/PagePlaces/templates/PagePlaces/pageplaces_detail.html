@@ -32,9 +32,9 @@
 
     .image-profile {
         object-fit:cover;
-
-        width:100px;
-        height:100px;
+        border-radius:20%;
+        width:50px;
+        height:50px;
     }
 
     .block-feedback{
@@ -77,26 +77,37 @@
     <div class="alert alert-secondary border-0 shadow">
         <div class="h1 text-center">Отзывы:</div>
         <div class="block-feedback m-4">
-            <div class="header row alert alert-secondary align-items-center">
-                <div class="col h3">
+            <div class="header alert alert-secondary">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <img class="image-profile" src="{{user.user_info.image_profile.url}}" />
 
-                    <img class="image-profile rounded-circle" src="{% static 'Portfolio/media/placeholder_photo.jpg' %}" />
-                    Здесь ваше имя
+                    </div>
+                    <div class="col-auto">
+                        <span class="h3">Здесь ваше имя</span>
+                    </div>
+                    <div class="col stars-block">
+                        <img class="star" src="{{PagePlace.icon_id.icon.url}}" />
+                        <img class="star" src="{{PagePlace.icon_id.icon.url}}" />
+                        <img class="star" src="{{PagePlace.icon_id.icon.url}}" />
+                        <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
+                        <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
+                        <span class="ms-2 h4">(3/5)</span>
+                    </div>
+                    <div class="col-2 h6 text-end">
+                        05.08.2022
+                    </div>
                 </div>
-                <div class="col stars-block">
-                    <img class="star" src="{{PagePlace.icon_id.icon.url}}" />
-                    <img class="star" src="{{PagePlace.icon_id.icon.url}}" />
-                    <img class="star" src="{{PagePlace.icon_id.icon.url}}" />
-                    <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
-                    <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
-                </div>
-                <div class="col-2 h6 text-end">
-                    05.08.2022
+                <hr />
+                <div class="row">
+                    
+                    <div class="text">
+                        Это текст комменатрия на первое заведение жыавопдавжлп жавтп ждтваждп лтвфыадп тыважд лтавыжд плтфвыажд тпыдавжфтп
+                        ыдлп ождыфва опдфвыо пэфаывоп эфаопдыаво пджлфывоап шжфыовап длжфоы эфыоа пэфдоп дфывжалоп фхывшщаоп длфыоап
+                    </div>
                 </div>
             </div>
-            <div class="text">
-                Это текст комменатрия на первое заведение
-            </div>
+            
         </div>
     </div>
 
