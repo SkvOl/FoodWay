@@ -7,6 +7,8 @@ from django.http import JsonResponse
 from django.views.generic import ListView, DetailView
 from django.shortcuts import get_object_or_404
 
+from django.template.loader import render_to_string
+
 def addPagePlaces(request):
     """страница создания, PagePlaces"""
     all_icon = Icon.objects.filter(is_deleted = 0)
@@ -38,7 +40,7 @@ def editPagePlace(request, slug):
     page_place = get_object_or_404(PagePlaces, url = slug)
     all_icon = Icon.objects.filter(is_deleted = 0)
     
-    if request.method == 'POST': 
+    if request.method == 'POST':
         form = PagePlacesForm(request.POST, instance = page_place) 
         if form.is_valid(): 
             form.save(); 
@@ -78,6 +80,10 @@ def saveFeedback(request):
     if(request.user.is_authenticated):
         obj = FeedbackForm(request.POST).save(commit=False)
         obj.id_user = request.user
+        
+        obj.id_pageplace = PagePlaces.objects.get(pk=request.POST.get('id_pageplace'))
+        p = PagePlaces.objects.get(pk=request.POST.get('id_pageplace'))
+        print(p.feedback_set.all())
         obj.save()
 
     return JsonResponse({'status' : 1}, safe=False)
@@ -114,5 +120,6 @@ class PagePlaceDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['title'] = self.object.name
         context['form_comment'] = FeedbackForm()
-        context['list_feedback'] = self
+        context['range'] = range(5)
+        context['list_feedback'] = self.object.feedback_set.all().order_by('-date')
         return context

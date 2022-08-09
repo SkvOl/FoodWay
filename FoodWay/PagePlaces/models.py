@@ -52,6 +52,7 @@ class PagePlaces(models.Model):
 
 class Feedback(models.Model):
     id_user = models.ForeignKey(User, on_delete = models.CASCADE)
+    id_pageplace = models.ForeignKey(PagePlaces, on_delete = models.CASCADE)
     rating = models.SmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)], default = 0)
     content = models.TextField(max_length = 1000, null = True)
     date = models.DateTimeField(auto_now_add=True)

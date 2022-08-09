@@ -148,6 +148,7 @@
     <Content Include="PagePlaces\templates\PagePlaces\pageplaces_detail.html" />
     <Content Include="PagePlaces\templates\PagePlaces\pageplaces_list.html" />
     <Content Include="PagePlaces\templates\PagePlaces\popup_marker.html" />
+    <Content Include="PagePlaces\templates\PagePlaces\tpl_feedback.html" />
     <Content Include="PagePlaces\__pycache__\admin.cpython-39.pyc" />
     <Content Include="PagePlaces\__pycache__\forms.cpython-39.pyc" />
     <Content Include="PagePlaces\__pycache__\models.cpython-39.pyc" />

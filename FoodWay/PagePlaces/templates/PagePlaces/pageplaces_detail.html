@@ -76,7 +76,8 @@
 
     <div class="alert alert-secondary border-0 shadow">
         <div class="h1 text-center">Отзывы:</div>
-        <div class="block-feedback m-4">
+        {{PagePlace.feedback}}
+        <div class="m-4">
 
             <div class="header alert alert-secondary form_feedback">
                 {% csrf_token %}
@@ -103,7 +104,7 @@
                 <hr />
                 <div class="row">
 
-                    <div class="text">
+                    <div class="feedback_text">
                         {{form_comment.content}}
                     </div>
                 </div>
@@ -111,38 +112,43 @@
                     <button id="send_feedback" type="button" class="btn btn-success m-1">Отправить</button>
                 </div>
             </div>
+            
+            <div class="block-feedback">
+                {% for item in list_feedback %}
+                <div class="header alert alert-secondary">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <img class="image-profile" src="{{item.id_user.user_info.image_profile.url}}" />
 
-            <div class="header alert alert-secondary">
-                <div class="row align-items-center">
-                    <div class="col-auto">
-                        <img class="image-profile" src="{{user.user_info.image_profile.url}}" />
+                        </div>
+                        <div class="col-auto">
+                            <span class="h3">{{item.ud_user.username}}</span>
+                        </div>
+                        <div class="col stars-block">
+                            {% for i in range %}
+                                {% if i < item.rating %}
+                                <img class="star" src="{{PagePlace.icon_id.icon.url}}" />
+                                {% else %}
+                                <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
+                                {% endif %}
+                            {% endfor %}
+                            <span class="ms-2 h4">({{item.rating}}/5)</span>
+                        </div>
+                        <div class="col-2 h6 text-end">
+                            {{item.date}}
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
 
-                    </div>
-                    <div class="col-auto">
-                        <span class="h3">Здесь ваше имя</span>
-                    </div>
-                    <div class="col stars-block">
-                        <img class="star" src="{{PagePlace.icon_id.icon.url}}" />
-                        <img class="star" src="{{PagePlace.icon_id.icon.url}}" />
-                        <img class="star" src="{{PagePlace.icon_id.icon.url}}" />
-                        <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
-                        <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
-                        <span class="ms-2 h4">(3/5)</span>
-                    </div>
-                    <div class="col-2 h6 text-end">
-                        05.08.2022
+                        <div class="feedback_text">
+                            {{item.content}}
+                        </div>
                     </div>
                 </div>
-                <hr />
-                <div class="row">
-
-                    <div class="text">
-                        Это текст комменатрия на первое заведение жыавопдавжлп жавтп ждтваждп лтвфыадп тыважд лтавыжд плтфвыажд тпыдавжфтп
-                        ыдлп ождыфва опдфвыо пэфаывоп эфаопдыаво пджлфывоап шжфыовап длжфоы эфыоа пэфдоп дфывжалоп фхывшщаоп длфыоап
-                    </div>
-                </div>
+                {% endfor %}
             </div>
-
+            
         </div>
     </div>
 
@@ -153,30 +159,31 @@
 <template id="tpl_feedback">
     <div class="header alert alert-secondary">
         <div class="row align-items-center">
-            <div id="" class="col-auto">
+            <div class="col-auto">
                 <img class="image-profile" src="{{user.user_info.image_profile.url}}" />
             </div>
             <div class="col-auto">
-                <span class="h3"></span>
+                <span id ="username" class="h3"></span>
             </div>
             <div class="col stars-block">
-                <img class="star" src="{{PagePlace.icon_id.icon.url}}" />
-                <img class="star" src="{{PagePlace.icon_id.icon.url}}" />
-                <img class="star" src="{{PagePlace.icon_id.icon.url}}" />
                 <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
                 <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
-                <span class="ms-2 h4">(3/5)</span>
+                <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
+                <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
+                <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
+                <span class="ms-2 h4">(0/5)</span>
             </div>
-            <div class="col-2 h6 text-end">
-                05.08.2022
+            <div id="date_pub" class="col-2 h6 text-end">
+                
             </div>
         </div>
         <hr />
         <div class="row">
-            <div class="text"></div>
+            <div class="feedback_text"></div>
         </div>
     </div>
 </template>
+
 {% endblock content %}
 
 {% block scripts %}
@@ -267,12 +274,15 @@
             dataType: 'json',
             data: {
                 'rating' : $('#{{form_comment.rating.id_for_label}}').val(),
-                'content': $('#{{form_comment.content.id_for_label}}').val()
+                'content': $('#{{form_comment.content.id_for_label}}').val(),
+                'id_pageplace':{{PagePlace.id}}
             },
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             },
             success: function (data) {
+                var test = $('#tpl_feedback')[0];
+                console.log(test);
                 console.log(data);
             }
         });
