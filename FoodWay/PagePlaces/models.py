@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.shortcuts import reverse
+from django.core.validators import MaxValueValidator, MinValueValidator 
 # Create your models here.
 
 from datetime import datetime
@@ -47,3 +48,18 @@ class PagePlaces(models.Model):
     class Meta:
         verbose_name = 'page places'
         verbose_name_plural = 'page places'
+
+
+class Feedback(models.Model):
+    id_user = models.ForeignKey(User, on_delete = models.CASCADE)
+    rating = models.SmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)], default = 0)
+    content = models.TextField(max_length = 1000, null = True)
+    date = models.DateTimeField(auto_now_add=True)
+    is_deleted = models.BooleanField('is_deleted', default = False)
+
+    def __str__(self):
+        return f"{self.id} {self.rating} {self.date} {self.is_deleted}"
+    
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'

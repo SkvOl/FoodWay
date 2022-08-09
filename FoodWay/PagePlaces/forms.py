@@ -1,5 +1,6 @@
-﻿from django import forms
-from .models import PagePlaces
+from dataclasses import fields
+from django import forms
+from .models import PagePlaces, Feedback
 from ckeditor_uploader.fields import RichTextUploadingFormField
 
 class PagePlacesForm(forms.ModelForm):
@@ -27,5 +28,17 @@ class PagePlacesForm(forms.ModelForm):
     class Meta:
         model = PagePlaces
         fields = ['name', 'content', 'short_info', 'url', 'icon_id', 'lat', 'lng']
+
+
+class FeedbackForm(forms.ModelForm):
+
+    rating = forms.IntegerField(label = 'Рейтинг', max_value = 5, min_value=0, initial=1)
+    content = forms.CharField(label = 'Текст комментария', max_length = 1000, 
+                             widget=forms.Textarea({
+                                    'class':'form-control','rows':'3','placeholder':'Ваш комментарий'}), required=False)
+
+    class Meta:
+        model = Feedback
+        fields = ['rating','content']
 
 

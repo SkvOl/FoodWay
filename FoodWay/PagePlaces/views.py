@@ -1,7 +1,7 @@
 ﻿from django.shortcuts import render, redirect
-from .forms import PagePlacesForm
+from .forms import PagePlacesForm, FeedbackForm
 from FoodWay.views import page_not_found
-from .models import PagePlaces, Icon
+from .models import PagePlaces, Icon, Feedback
 from django.http import JsonResponse
 
 from django.views.generic import ListView, DetailView
@@ -74,6 +74,14 @@ def checkURL(request):
         status = 0
     return JsonResponse({'status' : status}, safe=False)
 
+def saveFeedback(request):
+    if(request.user.is_authenticated):
+        obj = FeedbackForm(request.POST).save(commit=False)
+        obj.id_user = request.user
+        obj.save()
+
+    return JsonResponse({'status' : 1}, safe=False)
+
 def deletePagePlace(request):
     id_PagePlaces = request.POST.get('id_PagePlaces')
     pageplace = PagePlaces.objects.get(id = id_PagePlaces)
@@ -105,4 +113,6 @@ class PagePlaceDetailView(DetailView):
     def get_context_data(self, *, object_list = None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = self.object.name
+        context['form_comment'] = FeedbackForm()
+        context['list_feedback'] = self
         return context

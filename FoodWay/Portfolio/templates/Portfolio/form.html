@@ -84,7 +84,7 @@
                             {#<input type="tel" class="form-control" id="tel_id">#}
                             {{ form.phone }}
                             <div class="input-group-text">
-                                <label class="me-2" for="{{ form.show_phone.id_for_label }}">Отображать</label>
+                                <label class="me-2" for="{{ form.show_phone.id_for_label }}" onmousedown="return false">Отображать</label>
                                 {#<input class="form-check-input mt-0" type="checkbox" id="show_tel">#}
                                 {{ form.show_phone }}
                             </div>
@@ -98,7 +98,7 @@
                             {#<input type="email" class="form-control" id="mail_id">#}
                             {{ form.email }}
                             <div class="input-group-text">
-                                <label class="me-2" for="{{ form.show_email.id_for_label }}">Отображать</label>
+                                <label class="me-2" for="{{ form.show_email.id_for_label }}" onmousedown="return false">Отображать</label>
 
                                 {#<input class="form-check-input mt-0" type="checkbox" id="show_mail">#}
                                 {{ form.show_email }}
