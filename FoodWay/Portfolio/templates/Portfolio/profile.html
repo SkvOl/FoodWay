@@ -40,7 +40,7 @@
                     <div>Информация:</div>
 
                     <div class="info-row mt-4"><b>Логин: </b>{{dop_info.id_user.username}}</div>
-                    
+
                     {% if dop_info.id_user.first_name %}<div class="info-row mt-4"><b>Имя: </b>{{dop_info.id_user.first_name}}</div> {% endif %}
 
                     {% if dop_info.id_user.last_name %}<div class="info-row mt-4"><b>Фамилия: </b>{{dop_info.id_user.last_name}}</div> {% endif %}
@@ -68,9 +68,11 @@
                     </div>
                     {% endif %}
                 </div>
+                {% if show_all %}
                 <div class="mt-auto">
                     <a class="btn btn-secondary" href="{% url 'edit_profile_id' dop_info.url_user %}"><i class="fa-solid fa-pen"></i><span class="ms-1"></span>Редактировать</a>
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>

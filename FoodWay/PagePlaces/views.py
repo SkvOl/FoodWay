@@ -8,6 +8,7 @@ from django.views.generic import ListView, DetailView
 from django.shortcuts import get_object_or_404
 
 from django.template.loader import render_to_string
+from django.utils.formats import localize
 
 def addPagePlaces(request):
     """страница создания, PagePlaces"""
@@ -82,12 +83,21 @@ def saveFeedback(request):
         obj.id_user = request.user
         
         obj.id_pageplace = PagePlaces.objects.get(pk=request.POST.get('id_pageplace'))
-        p = PagePlaces.objects.get(pk=request.POST.get('id_pageplace'))
-        print(p.feedback_set.all())
         obj.save()
+    return JsonResponse({'status' : 1, 'date' : localize(obj.date)}, safe=False)
 
-    return JsonResponse({'status' : 1}, safe=False)
+def checkNewFeedback(request):
+    count = request.POST.get('count')
+    #reply_feed = request.POST.get('reply_feed')
+    if count or (count == 0):
+        id_pageplace = request.POST.get('id_pageplace')
+        new_count = Feedback.objects.filter(id_pageplace__id = id_pageplace).count()
+        delta = new_count - int(count)
+        if delta != 0:
+            new_feed = Feedback.objects.filter(id_pageplace__id = id_pageplace).order_by('-date')[:delta].values_list('id_user__username', 'id_user__user_info__image_profile', 'content', 'rating', 'date')
+            return JsonResponse({'has_new':True, 'new_feed' : list(new_feed), 'new_count':new_count }, safe=False)
 
+    return JsonResponse({'has_new':False, 'new_feed' : None }, safe=False)
 def deletePagePlace(request):
     id_PagePlaces = request.POST.get('id_PagePlaces')
     pageplace = PagePlaces.objects.get(id = id_PagePlaces)
@@ -121,5 +131,6 @@ class PagePlaceDetailView(DetailView):
         context['title'] = self.object.name
         context['form_comment'] = FeedbackForm()
         context['range'] = range(5)
+        context['countOfFeed'] = self.object.feedback_set.count()
         context['list_feedback'] = self.object.feedback_set.all().order_by('-date')
         return context

@@ -77,79 +77,110 @@
     <div class="alert alert-secondary border-0 shadow">
         <div class="h1 text-center">Отзывы:</div>
         {{PagePlace.feedback}}
-        <div class="m-4">
+    <div class="m-4">
 
-            <div class="header alert alert-secondary form_feedback">
-                {% csrf_token %}
+        <!--<button class="btn btn-success" onclick="checkNewFeed()">
+        test
+    </button>-->
+
+        <div class="header alert alert-secondary form_feedback">
+            {% csrf_token %}
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <img class="image-profile" src="{{user.user_info.image_profile.url}}" />
+                </div>
+                <div class="col-auto">
+                    <span class="h3">{{user.username}}</span>
+                </div>
+                <div class="col stars-block">
+                    {{form_comment.rating.as_hidden}}
+                    <img class="star" src="{{PagePlace.icon_id.icon.url}}" />
+                    <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
+                    <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
+                    <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
+                    <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
+                    <span id="rating_n" class="ms-2 h4">(1/5)</span>
+                </div>
+                <div class="col-2 h6 text-end">
+
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+
+                <div class="feedback_text">
+                    {{form_comment.content}}
+                </div>
+            </div>
+            <div class="d-flex justify-content-end">
+                <button id="send_feedback" type="button" class="btn btn-success m-1">Отправить</button>
+            </div>
+        </div>
+        <div class="d-flex" style="height: 200px;">
+            <div class="vr"></div>
+            <div class="header alert alert-secondary">
                 <div class="row align-items-center">
                     <div class="col-auto">
                         <img class="image-profile" src="{{user.user_info.image_profile.url}}" />
                     </div>
                     <div class="col-auto">
-                        <span class="h3">{{user.username}}</span>
+                        <span id="username" class="h3"></span>
                     </div>
                     <div class="col stars-block">
-                        {{form_comment.rating.as_hidden}}
+                        <img class="star" src="{{PagePlace.icon_id.icon.url}}" />
+                        <span id="rating_n" class="ms-2 h4">(0/5)</span>
+                    </div>
+                    <div id="date_pub" class="col-2 h6 text-end">
+
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="feedback_text"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="block-feedback">
+            {% for item in list_feedback %}
+            <div class="header alert alert-secondary pb-1">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <img class="image-profile" src="{{item.id_user.user_info.image_profile.url}}" />
+
+                    </div>
+                    <div class="col-auto">
+                        <a href="{{item.id_user.user_info.get_absolute_url}}" class="h3">{{item.id_user.username}}</a>
+                    </div>
+                    <div class="col stars-block">
+                        {% for i in range %}
+                        {% if i < item.rating %}
+                        <img class="star" src="{{PagePlace.icon_id.icon.url}}" />
+                        {% else %}
                         <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
-                        <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
-                        <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
-                        <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
-                        <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
-                        <span id="rating_n" class="ms-2 h4">(1/5)</span>
+                        {% endif %}
+                        {% endfor %}
+                        <span class="ms-2 h4">({{item.rating}}/5)</span>
                     </div>
                     <div class="col-2 h6 text-end">
-                        05.08.2022
+                        {{item.date}}
                     </div>
                 </div>
                 <hr />
                 <div class="row">
 
                     <div class="feedback_text">
-                        {{form_comment.content}}
+                        {{item.content}}
                     </div>
                 </div>
                 <div class="d-flex justify-content-end">
-                    <button id="send_feedback" type="button" class="btn btn-success m-1">Отправить</button>
+                    <a href="#"><i class="fas fa-reply"></i></a>
                 </div>
             </div>
-            
-            <div class="block-feedback">
-                {% for item in list_feedback %}
-                <div class="header alert alert-secondary">
-                    <div class="row align-items-center">
-                        <div class="col-auto">
-                            <img class="image-profile" src="{{item.id_user.user_info.image_profile.url}}" />
-
-                        </div>
-                        <div class="col-auto">
-                            <span class="h3">{{item.ud_user.username}}</span>
-                        </div>
-                        <div class="col stars-block">
-                            {% for i in range %}
-                                {% if i < item.rating %}
-                                <img class="star" src="{{PagePlace.icon_id.icon.url}}" />
-                                {% else %}
-                                <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
-                                {% endif %}
-                            {% endfor %}
-                            <span class="ms-2 h4">({{item.rating}}/5)</span>
-                        </div>
-                        <div class="col-2 h6 text-end">
-                            {{item.date}}
-                        </div>
-                    </div>
-                    <hr />
-                    <div class="row">
-
-                        <div class="feedback_text">
-                            {{item.content}}
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-            
+            {% endfor %}
         </div>
+
+    </div>
     </div>
 
 
@@ -166,12 +197,8 @@
                 <span id ="username" class="h3"></span>
             </div>
             <div class="col stars-block">
-                <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
-                <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
-                <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
-                <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
-                <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
-                <span class="ms-2 h4">(0/5)</span>
+                <img class="star" src="{{PagePlace.icon_id.icon.url}}" />
+                <span id="rating_n" class="ms-2 h4">(0/5)</span>
             </div>
             <div id="date_pub" class="col-2 h6 text-end">
                 
@@ -265,28 +292,103 @@
         return cookieValue;
     }
 
+    var countOfFeed = {{ countOfFeed }};
+
     function save_feedback() {
         const csrftoken = getCookie('csrftoken');
+        
+        var rating = $('#{{form_comment.rating.id_for_label}}').val(),
+            content = $('#{{form_comment.content.id_for_label}}').val(),
+            id_pageplace = '{{PagePlace.id}}';
+
+        $('#{{form_comment.content.id_for_label}}').val('');
 
         $.ajax({
             url: "{% url 'saveFeedback' %}",
             method: 'post',
             dataType: 'json',
             data: {
-                'rating' : $('#{{form_comment.rating.id_for_label}}').val(),
-                'content': $('#{{form_comment.content.id_for_label}}').val(),
-                'id_pageplace':{{PagePlace.id}}
+                'rating': rating,
+                'content': content,
+                'id_pageplace': id_pageplace
             },
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             },
             success: function (data) {
-                var test = $('#tpl_feedback')[0];
-                console.log(test);
+                add_feedback('{{user.username}}', "{{user.user_info.image_profile.url}}", content, rating, data['date']);
+                countOfFeed++;
+            }
+        });
+    }
+
+    function add_feedback(username = 'test', user_image = 'test', text = 'test', rating = 3, date = 'test') {
+        var block_feed = $('.block-feedback')[0];
+        var tpl_feed = $('#tpl_feedback')[0].content.cloneNode(true);
+
+        tpl_feed.querySelector('.image-profile').src = user_image;
+        tpl_feed.querySelector('#username').innerHTML = username;
+        tpl_feed.querySelector('#date_pub').innerHTML = date;
+        tpl_feed.querySelector('.feedback_text').innerHTML = text;
+        tpl_feed.querySelector('#rating_n').innerHTML = '(' + rating + '/5)';
+
+        var block = tpl_feed.querySelector('.stars-block');
+        var star = block.querySelector('.star');
+
+        for (let i = 4; i >= 0; i--) {
+            if (i < rating)
+                block.insertAdjacentElement('afterbegin', star.cloneNode(true));
+            else {
+                let tmp = star.cloneNode(true);
+                tmp.classList.add('inactive');
+                block.insertAdjacentElement('afterbegin', tmp);
+            }
+        }
+        star.remove();
+        
+        
+        let element_div = document.createElement('div');
+        element_div.append(tpl_feed);
+        element_div.style = 'display:none';
+
+        block_feed.insertAdjacentElement('afterbegin', element_div);
+        
+
+        $(element_div).slideDown(300);
+    }
+
+    
+    
+
+    function checkNewFeed() {
+        console.log('check');
+        const csrftoken = getCookie('csrftoken');
+        var id_pageplace = '{{PagePlace.id}}';
+
+        $.ajax({
+            url: "{% url 'checkNewFeedback' %}",
+            method: 'post',
+            dataType: 'json',
+            data: {
+                'count': countOfFeed,
+                'id_pageplace': id_pageplace
+            },
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            },
+            success: function (data) {
+                if (data['has_new']) {
+                    data['new_feed'].forEach(element => {
+                        add_feedback(element[0], '/media/'+element[1], element[2], element[3], element[4])
+                    })
+                    countOfFeed = data['new_count'];
+                }
                 console.log(data);
             }
         });
     }
+
+    setInterval(checkNewFeed, 500);
 
     $(document).ready(function () {
         $('#send_feedback').click(() => { save_feedback() });

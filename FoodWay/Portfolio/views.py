@@ -68,6 +68,8 @@ def edit_profile(request, url = -1):
         user_info = request.user.user_info
     elif User_info.objects.filter(url_user = url).exists():
         user_info = User_info.objects.get(url_user = url)
+        if (request.user != user_info.id_user) and not request.user.is_superuser:
+            return page_not_found(request, None)
     else:
         return page_not_found(request, None)
 

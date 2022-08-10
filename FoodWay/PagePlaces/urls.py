@@ -8,6 +8,7 @@ urlpatterns = [
     path('all/', views.PagePlaceList.as_view(), name = 'showAllPagePlaces'), 
     path('delete/', views.deletePagePlace, name = 'deletePagePlace'),
     path('savefeedback/', views.saveFeedback, name = 'saveFeedback'),
+    path('checknewfeedback/', views.checkNewFeedback, name = 'checkNewFeedback'),
     path('<str:slug>/edit/', views.editPagePlace, name = 'editPagePlace'),
     path('<str:slug>/', views.PagePlaceDetailView.as_view(), name = 'PagePlaces'),
 ]
