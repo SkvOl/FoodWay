@@ -116,30 +116,7 @@
                 <button id="send_feedback" type="button" class="btn btn-success m-1">Отправить</button>
             </div>
         </div>
-        <div class="d-flex" style="height: 200px;">
-            <div class="vr"></div>
-            <div class="header alert alert-secondary">
-                <div class="row align-items-center">
-                    <div class="col-auto">
-                        <img class="image-profile" src="{{user.user_info.image_profile.url}}" />
-                    </div>
-                    <div class="col-auto">
-                        <span id="username" class="h3"></span>
-                    </div>
-                    <div class="col stars-block">
-                        <img class="star" src="{{PagePlace.icon_id.icon.url}}" />
-                        <span id="rating_n" class="ms-2 h4">(0/5)</span>
-                    </div>
-                    <div id="date_pub" class="col-2 h6 text-end">
-
-                    </div>
-                </div>
-                <hr />
-                <div class="row">
-                    <div class="feedback_text"></div>
-                </div>
-            </div>
-        </div>
+       
 
         <div class="block-feedback">
             {% for item in list_feedback %}
@@ -172,9 +149,6 @@
                     <div class="feedback_text">
                         {{item.content}}
                     </div>
-                </div>
-                <div class="d-flex justify-content-end">
-                    <a href="#"><i class="fas fa-reply"></i></a>
                 </div>
             </div>
             {% endfor %}
@@ -388,7 +362,7 @@
         });
     }
 
-    setInterval(checkNewFeed, 500);
+    //setInterval(checkNewFeed, 500);
 
     $(document).ready(function () {
         $('#send_feedback').click(() => { save_feedback() });

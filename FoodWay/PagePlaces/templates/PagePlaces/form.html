@@ -160,8 +160,13 @@
 {% localize off %}
 
 <script>
-    var lat = 0;
-    var lng = 0;
+    {% if form.lat.value and form.lng.value %}
+    var lat = {{ form.lat.value }};
+    var lng = {{ form.lng.value }};
+    {% else %}
+    var lat = 53.20973372247789;
+    var lng = 44.99897003173828;
+    {% endif %}
     document.getElementById('collapseTwo').addEventListener('shown.bs.collapse', function () {
         start_map();
     }, { once: true });
@@ -169,13 +174,8 @@
     function start_map() {
         DG.then(function () {
             var options = {
-                {% if form.lat.value and form.lng.value %}
-                center: [{{ form.lat.value }}, {{ form.lng.value }}],
-                zoom: 20,
-                {% else %}
-                center: [53.20973372247789, 44.99897003173828],
-                zoom: 13,
-                {% endif %}
+                center: [lat, lng],
+                zoom: 15,
                 
                 geoclicker: true,
                 worldCopyJump: true,
@@ -201,11 +201,9 @@
 
     var add_popup_marker = $('#popup_marker')[0].innerHTML;
     //var marker = DG.marker([53.20973372247789, 44.99897003173828]).addTo(map).bindPopup(balloonHTML);
-    {% if form.lat.value and form.lng.value %}
-    var init_coord = [{{ form.lat.value }}, {{ form.lng.value }} ];
-    {% else %}
-    var init_coord = [53.20973372247789, 44.99897003173828];
-    {% endif %}
+    
+    var init_coord = [lat, lng];
+
     var userMarker = DG.marker(init_coord, {
         //draggable: true
         {% if selected_icon.icon %}
