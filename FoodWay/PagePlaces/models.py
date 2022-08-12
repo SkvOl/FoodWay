@@ -49,7 +49,6 @@ class PagePlaces(models.Model):
         verbose_name = 'page places'
         verbose_name_plural = 'page places'
 
-
 class Feedback(models.Model):
     id_user = models.ForeignKey(User, on_delete = models.CASCADE)
     id_pageplace = models.ForeignKey(PagePlaces, on_delete = models.CASCADE)

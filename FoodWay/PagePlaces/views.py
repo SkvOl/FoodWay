@@ -10,6 +10,8 @@ from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.utils.formats import localize
 
+from Portfolio.models import User_info
+
 def addPagePlaces(request):
     """страница создания, PagePlaces"""
     all_icon = Icon.objects.filter(is_deleted = 0)
@@ -79,12 +81,30 @@ def checkURL(request):
 
 def saveFeedback(request):
     if(request.user.is_authenticated):
+        print(f"\nМоя Value_list:  {myValue_list(7, 1)}")
+
         obj = FeedbackForm(request.POST).save(commit=False)
         obj.id_user = request.user
         
         obj.id_pageplace = PagePlaces.objects.get(pk=request.POST.get('id_pageplace'))
         obj.save()
     return JsonResponse({'status' : 1, 'date' : localize(obj.date)}, safe=False)
+
+def myValue_list(id_pageplace, delta, type_order = '-date'):
+
+    test = Feedback.objects.user_set.all()
+
+
+    new_feed_vl = Feedback.objects.filter(id_pageplace__id = id_pageplace).order_by(type_order)[:delta].values_list('id_user','content', 'rating', 'date')
+    new_feed = []
+    
+    for nf in new_feed_vl:
+        user_info = User_info.objects.get(id_user = nf[0])
+
+        image_profile = user_info.image_profile.url
+        new_feed.append((user_info.get_absolute_url(), image_profile, nf[1], nf[2], nf[3]))
+
+    return new_feed
 
 def checkNewFeedback(request):
     count = request.POST.get('count')
@@ -98,6 +118,7 @@ def checkNewFeedback(request):
             return JsonResponse({'has_new':True, 'new_feed' : list(new_feed), 'new_count':new_count }, safe=False)
 
     return JsonResponse({'has_new':False, 'new_feed' : None }, safe=False)
+
 def deletePagePlace(request):
     id_PagePlaces = request.POST.get('id_PagePlaces')
     pageplace = PagePlaces.objects.get(id = id_PagePlaces)
