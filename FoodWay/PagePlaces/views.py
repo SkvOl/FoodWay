@@ -94,8 +94,22 @@ def checkNewFeedback(request):
         new_count = Feedback.objects.filter(id_pageplace__id = id_pageplace).count()
         delta = new_count - int(count)
         if delta != 0:
-            new_feed = Feedback.objects.filter(id_pageplace__id = id_pageplace).order_by('-date')[:delta].values_list('id_user__username', 'id_user__user_info__image_profile', 'content', 'rating', 'date')
-            return JsonResponse({'has_new':True, 'new_feed' : list(new_feed), 'new_count':new_count }, safe=False)
+            #new_feed = Feedback.objects.filter(id_pageplace__id = id_pageplace).order_by('-date')[:delta].values_list('id_user__username', 'id_user__user_info__image_profile', 'content', 'rating', 'date')
+            
+            new_feed = my_list(id_pageplace, delta)
+            return JsonResponse({'has_new' : True, 'new_feed' : new_feed, 'new_count' : new_count }, safe = False)
+        
+def my_list(id_pageplace, delta, type_order = '-date', begin = 0):
+    new_feed_vl = Feedback.objects.filter(id_pageplace__id = id_pageplace).order_by(type_order)[begin:delta]
+    new_feed = []
+    
+    for nf in new_feed_vl:
+        user_info = nf.id_user.user_info
+        image_profile = user_info.image_profile.url
+        #user_info.get_absolute_url()
+        new_feed.append((nf.id_user.username, image_profile, nf.content, nf.rating, nf.date))
+
+    return new_feed
 
     return JsonResponse({'has_new':False, 'new_feed' : None }, safe=False)
 def deletePagePlace(request):
