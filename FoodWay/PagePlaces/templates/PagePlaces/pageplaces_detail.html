@@ -353,7 +353,7 @@
             success: function (data) {
                 if (data['has_new']) {
                     data['new_feed'].forEach(element => {
-                        add_feedback(element[0], '/media/'+element[1], element[2], element[3], element[4])
+                        add_feedback(element[0], element[1], element[2], element[3], element[4])
                     })
                     countOfFeed = data['new_count'];
                 }
@@ -362,7 +362,7 @@
         });
     }
 
-    //setInterval(checkNewFeed, 500);
+    setInterval(checkNewFeed, 1000);
 
     $(document).ready(function () {
         $('#send_feedback').click(() => { save_feedback() });
