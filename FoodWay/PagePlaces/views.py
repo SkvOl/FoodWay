@@ -79,6 +79,8 @@ def checkURL(request):
 
 def saveFeedback(request):
     if(request.user.is_authenticated):
+        Feedback.objects.filter(id_user = request.user).update(is_deleted = True)
+
         obj = FeedbackForm(request.POST).save(commit=False)
         obj.id_user = request.user
         
@@ -143,8 +145,12 @@ class PagePlaceDetailView(DetailView):
     def get_context_data(self, *, object_list = None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = self.object.name
-        context['form_comment'] = FeedbackForm()
+        if(Feedback.objects.filter(id_user = self.request.user, id_pageplace=self.object, is_deleted = False).exists()):
+            obj = Feedback.objects.filter(id_user = self.request.user, id_pageplace=self.object, is_deleted = False)[0]
+            context['form_comment'] = FeedbackForm(instance = obj)
+        else:
+            context['form_comment'] = FeedbackForm()
         context['range'] = range(5)
         context['countOfFeed'] = self.object.feedback_set.count()
-        context['list_feedback'] = self.object.feedback_set.all().order_by('-date')
+        context['list_feedback'] = self.object.feedback_set.filter(is_deleted=False).order_by('-date')
         return context

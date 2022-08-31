@@ -238,7 +238,7 @@
         //marker.openPopup();
 
         $('.icon-marker').click((e) => {
-            console.log(e.target);
+            //console.log(e.target);
             coord = userMarker.getLatLng();
             my_icon.options.iconUrl = e.target.src;
 
@@ -391,6 +391,7 @@
         $('.form_feedback .star').on('click', (e) => {
             $('#{{form_comment.rating.id_for_label}}').val(get_ind(e));
         });
+        set_star($('#{{form_comment.rating.id_for_label}}').val());
     });
 
 </script>

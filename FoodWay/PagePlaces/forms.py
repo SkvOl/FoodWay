@@ -32,7 +32,7 @@ class PagePlacesForm(forms.ModelForm):
 
 class FeedbackForm(forms.ModelForm):
 
-    rating = forms.IntegerField(label = 'Рейтинг', max_value = 5, min_value=0, initial=1)
+    rating = forms.IntegerField(label = 'Рейтинг', max_value = 5, min_value=1, initial=1)
     content = forms.CharField(label = 'Текст комментария', max_length = 1000, 
                              widget=forms.Textarea({
                                     'class':'form-control','rows':'3','placeholder':'Ваш комментарий'}), required=False)
