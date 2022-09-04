@@ -59,7 +59,11 @@
     .inactive {
         filter: grayscale(1.0);
     }
+    .half-rating {
+        
+    }
 </style>
+
 <div class="container mt-4">
     <div class="alert alert-secondary border-0 shadow content-page">
         <h1 class="text-center">{{PagePlace.name}}</h1>
@@ -84,37 +88,40 @@
     </button>-->
 
         <div class="header alert alert-secondary form_feedback">
+            <form action="{% url 'saveFeedback'%}" method="post">
             {% csrf_token %}
-            <div class="row align-items-center">
-                <div class="col-auto">
-                    <img class="image-profile" src="{{user.user_info.image_profile.url}}" />
-                </div>
-                <div class="col-auto">
-                    <span class="h3">{{user.username}}</span>
-                </div>
-                <div class="col stars-block">
-                    {{form_comment.rating.as_hidden}}
-                    <img class="star" src="{{PagePlace.icon_id.icon.url}}" />
-                    <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
-                    <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
-                    <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
-                    <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
-                    <span id="rating_n" class="ms-2 h4">(1/5)</span>
-                </div>
-                <div class="col-2 h6 text-end">
+                <input type="hidden" name="id_pageplace" value="{{ PagePlace.id }}"/>
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <img class="image-profile" src="{{user.user_info.image_profile.url}}" />
+                    </div>
+                    <div class="col-auto">
+                        <span class="h3">{{user.username}}</span>
+                    </div>
+                    <div class="col stars-block">
+                        {{form_comment.rating.as_hidden}}
+                        <img class="star" src="{{PagePlace.icon_id.icon.url}}" />
+                        <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
+                        <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
+                        <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
+                        <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
+                        <span id="rating_n" class="ms-2 h4">(1/5)</span>
+                    </div>
+                    <div class="col-2 h6 text-end">
 
+                    </div>
                 </div>
-            </div>
-            <hr />
-            <div class="row">
+                <hr />
+                <div class="row">
 
-                <div class="feedback_text">
-                    {{form_comment.content}}
+                    <div class="feedback_text">
+                        {{form_comment.content}}
+                    </div>
                 </div>
-            </div>
-            <div class="d-flex justify-content-end">
-                <button id="send_feedback" type="button" class="btn btn-success m-1">Отправить</button>
-            </div>
+                <div class="d-flex justify-content-end">
+                    <button type="submit" id="send_feedback" class="btn btn-success m-1">Отправить</button>
+                </div>
+            </form>
         </div>
        
 
@@ -153,6 +160,41 @@
             </div>
             {% endfor %}
         </div>
+
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                {% if list_feedback.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ list_feedback.previous_page_number }}" aria-label="Предыдущая">
+                    <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+                {% if not list_feedback.previous_page_number == 1 %}
+                <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                {% endif %}
+                {% endif %}
+                
+                
+                <li class="page-item active"><a class="page-link" href="#">{{ list_feedback.number }} </a></li>
+
+                {% if list_feedback.has_next %}
+
+                {% if not list_feedback.next_page_number == list_feedback.paginator.num_pages %}
+                <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                {% endif %}
+
+                <li class="page-item"><a class="page-link" href="?page={{ list_feedback.paginator.num_pages }}">{{ list_feedback.paginator.num_pages }}</a></li>
+
+
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ list_feedback.next_page_number }}" aria-label="Следующая">
+                    <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
 
     </div>
     </div>
@@ -362,10 +404,10 @@
         });
     }
 
-    setInterval(checkNewFeed, 1000);
+    //setInterval(checkNewFeed, 1000);
 
     $(document).ready(function () {
-        $('#send_feedback').click(() => { save_feedback() });
+        //$('#send_feedback').click(() => { save_feedback() });
 
         const all_stars = $('.form_feedback .star');
         const arr_stars = all_stars.toArray();

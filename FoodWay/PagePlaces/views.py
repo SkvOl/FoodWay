@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404
 
 from django.template.loader import render_to_string
 from django.utils.formats import localize
+from django.core.paginator import Paginator
 
 def addPagePlaces(request):
     """страница создания, PagePlaces"""
@@ -51,7 +52,7 @@ def editPagePlace(request, slug):
             #page_place.short_info = data['short_info']
             #page_place.url = data['url']
             #page_place.save()
-            return redirect('home')
+            return redirect(page_place.get_absolute_url())
     else:
         form = PagePlacesForm(instance = page_place)
     context = {
@@ -78,15 +79,25 @@ def checkURL(request):
     return JsonResponse({'status' : status}, safe=False)
 
 def saveFeedback(request):
-    if(request.user.is_authenticated):
-        Feedback.objects.filter(id_user = request.user).update(is_deleted = True)
+    if request.user.is_authenticated and request.method == 'POST':
+        id_page = request.POST.get('id_pageplace')
+
+        old_feedbacks = Feedback.objects.filter(id_user = request.user, id_pageplace = id_page, is_deleted = False)
+        old_date = False
+        if old_feedbacks:
+            old_date = old_feedbacks[0].date
+            old_feedbacks.update(is_deleted = True)
 
         obj = FeedbackForm(request.POST).save(commit=False)
         obj.id_user = request.user
+        if old_date:
+            obj.date = old_date
         
-        obj.id_pageplace = PagePlaces.objects.get(pk=request.POST.get('id_pageplace'))
+        obj.id_pageplace = PagePlaces.objects.get(pk=id_page)
         obj.save()
-    return JsonResponse({'status' : 1, 'date' : localize(obj.date)}, safe=False)
+        return redirect(obj.id_pageplace.get_absolute_url())
+    return redirect('home')
+    #return JsonResponse({'status' : 1, 'date' : localize(obj.date)}, safe=False)
 
 def checkNewFeedback(request):
     count = request.POST.get('count')
@@ -145,12 +156,18 @@ class PagePlaceDetailView(DetailView):
     def get_context_data(self, *, object_list = None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = self.object.name
-        if(Feedback.objects.filter(id_user = self.request.user, id_pageplace=self.object, is_deleted = False).exists()):
-            obj = Feedback.objects.filter(id_user = self.request.user, id_pageplace=self.object, is_deleted = False)[0]
-            context['form_comment'] = FeedbackForm(instance = obj)
+        query = Feedback.objects.filter(id_user = self.request.user, id_pageplace=self.object, is_deleted = False)
+        if(query.exists()):
+            context['form_comment'] = FeedbackForm(instance = query[0])
         else:
             context['form_comment'] = FeedbackForm()
         context['range'] = range(5)
         context['countOfFeed'] = self.object.feedback_set.count()
-        context['list_feedback'] = self.object.feedback_set.filter(is_deleted=False).order_by('-date')
+
+        feedback_list = self.object.feedback_set.filter(is_deleted=False).order_by('-date')
+        paginator = Paginator(feedback_list, 2)
+
+        page_number = self.request.GET.get('page')
+        #paginator.get_elided_page_range(page_number, on_each_side=2, on_ends=1)
+        context['list_feedback'] = paginator.get_page(page_number)
         return context

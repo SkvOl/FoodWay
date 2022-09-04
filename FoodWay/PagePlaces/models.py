@@ -3,6 +3,12 @@ from django.contrib.auth.models import User
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.shortcuts import reverse
 from django.core.validators import MaxValueValidator, MinValueValidator 
+
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+from django.db.models import Avg
+
+from django.utils import timezone
 # Create your models here.
 
 from datetime import datetime
@@ -35,6 +41,7 @@ class PagePlaces(models.Model):
     url = models.CharField(name = 'url', max_length = 20, unique = True)
     lat = models.DecimalField(name = 'lat', max_digits=19, decimal_places=16, null = True, blank=True)
     lng = models.DecimalField(name = 'lng', max_digits=19, decimal_places=16, null = True, blank=True)
+    rating = models.DecimalField(name = 'rating', max_digits=3, decimal_places=2, default = 0.0)
     #icon = models.FileField(upload_to = icon_place, null = True, blank=True)
     icon_id = models.ForeignKey(Icon, on_delete = models.DO_NOTHING, null = True)
     is_deleted = models.BooleanField('is_deleted', default = False)
@@ -55,7 +62,7 @@ class Feedback(models.Model):
     id_pageplace = models.ForeignKey(PagePlaces, on_delete = models.CASCADE)
     rating = models.SmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], default = 1)
     content = models.TextField(max_length = 1000, null = True)
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(default = timezone.now)
     is_deleted = models.BooleanField('is_deleted', default = False)
 
     def __str__(self):
@@ -64,3 +71,12 @@ class Feedback(models.Model):
     class Meta:
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
+
+
+@receiver(post_save, sender=Feedback)
+def save_or_create_feedback(sender, instance, created, **kwargs):
+    if created:
+        print ('test')
+        average = Feedback.objects.filter(id_pageplace = instance.id_pageplace, is_deleted = False).aggregate(Avg('rating'))
+        instance.id_pageplace.rating = average['rating__avg']
+        instance.id_pageplace.save()
