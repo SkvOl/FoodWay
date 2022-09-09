@@ -1,6 +1,6 @@
 {% if user.is_authenticated %}
 
-{% load staticfiles %}
+{% load static %}
 <script src="{% static 'Home/fontawesomefree/js/all.min.js' %}"></script>
 <link href="{% static 'Home/fontawesomefree/css/all.min.css' %}" rel="stylesheet" type="text/css">
 <style>
@@ -30,7 +30,7 @@
                 <!--<hr class="dropdown-divider">-->
 
                 <a class="dropdown-item" href="{% url 'add_PagePlaces' %}">Добавить страницу</a>
-                <a class="dropdown-item" href="{% url 'add_way' %}">Добавить путь</a>
+                <a class="dropdown-item" href="#">Добавить путь</a>
 
                 <hr class="dropdown-divider">
                 <a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()">Выйти</a>

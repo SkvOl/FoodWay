@@ -8,7 +8,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('', include('Home.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
-    path('way/', include('Way.urls')),
+    #path('way/', include('Way.urls')),
     path('profile/', include('Portfolio.urls')),
     path('pageplaces/', include('PagePlaces.urls')),
     path('admin/', admin.site.urls),

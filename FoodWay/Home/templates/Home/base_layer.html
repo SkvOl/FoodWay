@@ -1,6 +1,6 @@
 {% extends "Home/base.html" %}
 
-{% load staticfiles %}
+{% load static %}
 
 {% block navig_panel %}
 <style>
@@ -52,18 +52,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
 
-                <!--<li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Менеджер страниц
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#">Список добавленных страниц</a></li>
-                        <li><a class="dropdown-item" href="#">Список добавленных путей</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">Добавить страницу</a></li>
-                        <li><a class="dropdown-item" href="{% url 'add_way' %}">Добавить путь</a></li>
-                    </ul>
-                </li>-->
+               
                 {% if user.is_superuser %}
                 <li class="nav-item login-block-phone">
                     <a class="nav-link" href="/admin">Панель администратора</a>
@@ -83,7 +72,7 @@
                 <li class="nav-item login-block-phone"><a class="nav-link" href="{% url 'showAllPagePlaces' %}">Список добавленных страниц</a></li>
                 <li class="nav-item login-block-phone"><a class="nav-link" href="#">Список добавленных путей</a></li>
                 <li class="nav-item login-block-phone"><a class="nav-link" href="{% url 'add_PagePlaces' %}">Добавить страницу</a></li>
-                <li class="nav-item login-block-phone"><a class="nav-link" href="{% url 'add_way' %}">Добавить путь</a></li>
+                {#<li class="nav-item login-block-phone"><a class="nav-link" href="{% url 'add_way' %}">Добавить путь</a></li>#}
                 <li class="nav-item login-block-phone">
                     <a class="nav-link" href="{% url 'my_profile' %}"><i class="fas fa-user"></i><span class="ms-2"></span>Профиль</a>
                 </li>
