@@ -11,6 +11,7 @@ from django.template.loader import render_to_string
 from django.utils.formats import localize
 from django.core.paginator import Paginator
 
+
 def addPagePlaces(request):
     """страница создания, PagePlaces"""
     all_icon = Icon.objects.filter(is_deleted = 0)
@@ -64,6 +65,35 @@ def editPagePlace(request, slug):
 
     return render(request, 'PagePlaces/form.html', context)
 
+
+def my_list(request):
+    new_feed_vl = PagePlaces.objects.filter(lng__range = (request.POST.get('west'),request.POST.get('east')), lat__range = (request.POST.get('south'),request.POST.get('north')))
+    new_feed = []
+    
+    for nf in new_feed_vl:
+        new_feed.append({'lat' : nf.lat, 'lng' : nf.lng, 'name' : nf.name, 'icon' : nf.icon_id.icon.url, 'info' : getinfo(request)});
+
+    return new_feed
+
+
+def getpoints(request):
+    data = my_list(request)
+    return JsonResponse({'status' : True, 'data': data}, safe=False)
+
+def getinfo(request):
+    id = request.POST.get('id')
+    id = 7
+    obj = PagePlaces.objects.get(pk = id)
+    
+    context = {
+                'obj' : obj,
+                'count_feedback' : Feedback.objects.filter(id_pageplace__id = id, is_deleted = False).count()
+              }
+    text_render = render_to_string('PagePlaces/popup_marker.html', context)
+    print(text_render)
+    return text_render
+    return JsonResponse({'status' : True, 'info': text_render}, safe=False)
+
 def checkURL(request):
     url = request.POST.get('url')
     id_PagePlaces = request.POST.get('id_PagePlaces')
@@ -99,32 +129,22 @@ def saveFeedback(request):
     return redirect('home')
     #return JsonResponse({'status' : 1, 'date' : localize(obj.date)}, safe=False)
 
-def checkNewFeedback(request):
-    count = request.POST.get('count')
-    #reply_feed = request.POST.get('reply_feed')
-    if count or (count == 0):
-        id_pageplace = request.POST.get('id_pageplace')
-        new_count = Feedback.objects.filter(id_pageplace__id = id_pageplace).count()
-        delta = new_count - int(count)
-        if delta != 0:
-            #new_feed = Feedback.objects.filter(id_pageplace__id = id_pageplace).order_by('-date')[:delta].values_list('id_user__username', 'id_user__user_info__image_profile', 'content', 'rating', 'date')
+#def checkNewFeedback(request):
+#    count = request.POST.get('count')
+#    #reply_feed = request.POST.get('reply_feed')
+#    if count or (count == 0):
+#        id_pageplace = request.POST.get('id_pageplace')
+#        new_count = Feedback.objects.filter(id_pageplace__id = id_pageplace).count()
+#        delta = new_count - int(count)
+#        if delta != 0:
+#            #new_feed = Feedback.objects.filter(id_pageplace__id = id_pageplace).order_by('-date')[:delta].values_list('id_user__username', 'id_user__user_info__image_profile', 'content', 'rating', 'date')
             
-            new_feed = my_list(id_pageplace, delta)
-            return JsonResponse({'has_new' : True, 'new_feed' : new_feed, 'new_count' : new_count }, safe = False)
+#            new_feed = my_list(id_pageplace, delta)
+#            return JsonResponse({'has_new' : True, 'new_feed' : new_feed, 'new_count' : new_count }, safe = False)
         
-def my_list(id_pageplace, delta, type_order = '-date', begin = 0):
-    new_feed_vl = Feedback.objects.filter(id_pageplace__id = id_pageplace).order_by(type_order)[begin:delta]
-    new_feed = []
-    
-    for nf in new_feed_vl:
-        user_info = nf.id_user.user_info
-        image_profile = user_info.image_profile.url
-        #user_info.get_absolute_url()
-        new_feed.append((nf.id_user.username, image_profile, nf.content, nf.rating, nf.date))
 
-    return new_feed
 
-    return JsonResponse({'has_new':False, 'new_feed' : None }, safe=False)
+
 def deletePagePlace(request):
     id_PagePlaces = request.POST.get('id_PagePlaces')
     pageplace = PagePlaces.objects.get(id = id_PagePlaces)

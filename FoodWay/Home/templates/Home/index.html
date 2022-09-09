@@ -17,6 +17,7 @@
     }
 </style>
 
+<button id="ttt">dfgffdg</button>
 <div class="alert alert-light h1 text-center" role="alert">
     С нами уже 2 человека!
 </div>
@@ -34,6 +35,7 @@
 </div>
 
 <script>
+    let markers = [];
     DG.then(function () {
         var options = {
             center: [53.20973372247789, 44.99897003173828],
@@ -55,7 +57,7 @@
             DG.control.fullscreen(controlOptions).addTo(map);
         }
         var balloonHTML = '<a href="http://www.2gis.ru/" target="_blank">\n\
-        <img src="__BASE_URL__/img/2gis-logo.png" alt="2GIS" title="2GIS" width="154" height="66" style="border: none"></a>\n\
+        <img src="/media/icons/shaurma.png" alt="2GIS" title="2GIS" width="50" height="50" style="border: none"></a>\n\
         <p>Компания «ДубльГИС»</p>Тел.: (383) 363-05-55<br />Адрес: г. Новосибирск, Карла Маркса площадь, 7<br />\n\
         (МФК «Сан Сити»), 13 этаж';
         var marker = DG.marker([53.20973372247789, 44.99897003173828]).addTo(map).bindPopup(balloonHTML);
@@ -64,15 +66,15 @@
             // only open popup when no coordinates specified because it moves map to popup
             //marker.openPopup();
         }
-        var userMarker = DG.marker([54.980156831455, 82.897440725094], {
-            draggable: true
-        }).addTo(map);
+        // var userMarker = DG.marker([54.980156831455, 82.897440725094], {
+        //     draggable: true
+        // }).addTo(map);
 
-        userMarker.on('moveend', function (e) {
-            var lat = e.target._latlng.lat,
-                lng = e.target._latlng.lng;
-            //save_marker();
-        });
+        // userMarker.on('moveend', function (e) {
+        //     var lat = e.target._latlng.lat,
+        //         lng = e.target._latlng.lng;
+        //     //save_marker();
+        // });
         //marker.openPopup();
 
 
@@ -81,31 +83,104 @@
             DG.marker([userMarker.getLatLng().lat, userMarker.getLatLng().lng]).addTo(map);
         }
 
-        map.on('click', function (e) {
-            console.log(e.latlng.lat + '   ' + e.latlng.lng);
-            userMarker.setLatLng([e.latlng.lat, e.latlng.lng]);
-        });
+        // map.on('click', function (e) {
+        //     console.log(e.latlng.lat + '   ' + e.latlng.lng);
+        //     userMarker.setLatLng([e.latlng.lat, e.latlng.lng]);
+        // });
 
-        map.on('popupopen', function (e) {
-            console.log(e);
-            var test = e['popup'].getContent();
-            console.log(test);
-            $('#info').html(test);
-        });
+        // map.on('popupopen', function (e) {
+        //     console.log(e);
+        //     var test = e['popup'].getContent();
+        //     console.log(test);
+        //     $('#info').html(test);
+        // });
 
         map.on('moveend', function () {
-            if (!history.replaceState) {
-                return; // ie <= 9
-            }
+            get_points();
+            //if (!history.replaceState) {
+            //    return; // ie <= 9
+            //}
 
-            var center = map.getCenter();
-            history.replaceState({}, document.title,
-                '?lng=' + center.lng.toFixed(5) +
-                '&lat=' + center.lat.toFixed(5) +
-                '&zoom=' + map.getZoom()
-            );
+            //var center = map.getCenter();
+            //history.replaceState({}, document.title,
+            //    '?lng=' + center.lng.toFixed(5) +
+            //    '&lat=' + center.lat.toFixed(5) +
+            //    '&zoom=' + map.getZoom()
+            //);
         });
+
+        
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+        function get_points(){
+            let bounds = map.getBounds();
+            $.ajax({
+                url: "{% url 'getpoints' %}",
+                method: 'post',
+                dataType: 'json',
+                data: {
+                    'west' : bounds.getWest(),
+                    'east' : bounds.getEast(),
+                    'north' : bounds.getNorth(),
+                    'south' : bounds.getSouth(),
+                },
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                },
+                success: function (data) {
+                    console.log(data);
+                    for(let i = markers.length; i > 0; i--){
+                        let tmp = markers.pop();
+                        
+                        tmp.removeFrom(map);
+                    }
+                    data['data'].forEach((val)=>{
+                        let icon = DG.icon({
+                            iconUrl: val['icon'],
+                            iconSize: [38, 38],
+                        });
+                        markers.push(
+                            DG.marker([val['lat'], val['lng']], {icon : icon}).addTo(map).bindPopup(val['info'])
+                        );
+                        $('#info').html(val['info']);
+                    });
+                }
+            });
+        }
+
+        function get_info(id){
+            $.ajax({
+                url: "{% url 'getinfo' %}",
+                method: 'post',
+                dataType: 'json',
+                data: {
+                    'id' : id,
+                },
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                },
+                success: function (data) {
+                    console.log(data);
+                    
+                }
+            });
+        }
+        $('#ttt').click(()=>{get_info(7)});
     });
+    
 
     function parseQuery() {
         var res = {};

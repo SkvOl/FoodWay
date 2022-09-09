@@ -125,7 +125,7 @@
         </div>
        
 
-        <div class="block-feedback">
+        <div id="feed_b" class="block-feedback">
             {% for item in list_feedback %}
             <div class="header alert alert-secondary pb-1">
                 <div class="row align-items-center">
@@ -382,7 +382,7 @@
         var id_pageplace = '{{PagePlace.id}}';
 
         $.ajax({
-            url: "{% url 'checkNewFeedback' %}",
+            url: "",
             method: 'post',
             dataType: 'json',
             data: {
