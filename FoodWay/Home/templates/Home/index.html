@@ -36,6 +36,7 @@
 
 <script>
     let markers = [];
+    let tmp_markers = [];
     DG.then(function () {
         var options = {
             center: [53.20973372247789, 44.99897003173828],
@@ -124,6 +125,10 @@
             }
             return cookieValue;
         }
+
+        //function find_in_array() {
+
+        //}
         
         function get_points(){
             let bounds = map.getBounds();
@@ -144,7 +149,7 @@
                     console.log(data);
                     for(let i = markers.length; i > 0; i--){
                         let tmp = markers.pop();
-                        
+                        //if(data['data'].find(item => item.id== ))
                         tmp.removeFrom(map);
                     }
                     data['data'].forEach((val)=>{
@@ -178,7 +183,7 @@
                 }
             });
         }
-        $('#ttt').click(()=>{get_info(7)});
+        $('#ttt').click(() => {get_info(7)});
     });
     
 

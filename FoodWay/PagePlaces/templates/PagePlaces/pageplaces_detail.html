@@ -86,11 +86,11 @@
         <!--<button class="btn btn-success" onclick="checkNewFeed()">
         test
     </button>-->
-
+        {% if form_comment %}
         <div class="header alert alert-secondary form_feedback">
             <form action="{% url 'saveFeedback'%}" method="post">
-            {% csrf_token %}
-                <input type="hidden" name="id_pageplace" value="{{ PagePlace.id }}"/>
+                {% csrf_token %}
+                <input type="hidden" name="id_pageplace" value="{{ PagePlace.id }}" />
                 <div class="row align-items-center">
                     <div class="col-auto">
                         <img class="image-profile" src="{{user.user_info.image_profile.url}}" />
@@ -123,7 +123,8 @@
                 </div>
             </form>
         </div>
-       
+        {% endif %}
+
 
         <div id="feed_b" class="block-feedback">
             {% for item in list_feedback %}
@@ -166,7 +167,7 @@
                 {% if list_feedback.has_previous %}
                 <li class="page-item">
                     <a class="page-link" href="?page={{ list_feedback.previous_page_number }}" aria-label="Предыдущая">
-                    <span aria-hidden="true">&laquo;</span>
+                        <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
                 <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
@@ -174,8 +175,8 @@
                 <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
                 {% endif %}
                 {% endif %}
-                
-                
+
+
                 <li class="page-item active"><a class="page-link" href="#">{{ list_feedback.number }} </a></li>
 
                 {% if list_feedback.has_next %}
@@ -189,7 +190,7 @@
 
                 <li class="page-item">
                     <a class="page-link" href="?page={{ list_feedback.next_page_number }}" aria-label="Следующая">
-                    <span aria-hidden="true">&raquo;</span>
+                        <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>
                 {% endif %}

@@ -71,7 +71,7 @@ def my_list(request):
     new_feed = []
     
     for nf in new_feed_vl:
-        new_feed.append({'lat' : nf.lat, 'lng' : nf.lng, 'name' : nf.name, 'icon' : nf.icon_id.icon.url, 'info' : getinfo(request)});
+        new_feed.append({'id':nf.id, 'lat' : nf.lat, 'lng' : nf.lng, 'name' : nf.name, 'icon' : nf.icon_id.icon.url, 'info' : getinfo(request)});
 
     return new_feed
 
@@ -90,9 +90,9 @@ def getinfo(request):
                 'count_feedback' : Feedback.objects.filter(id_pageplace__id = id, is_deleted = False).count()
               }
     text_render = render_to_string('PagePlaces/popup_marker.html', context)
-    print(text_render)
+    #print(text_render)
     return text_render
-    return JsonResponse({'status' : True, 'info': text_render}, safe=False)
+    #return JsonResponse({'status' : True, 'info': text_render}, safe=False)
 
 def checkURL(request):
     url = request.POST.get('url')
@@ -176,15 +176,16 @@ class PagePlaceDetailView(DetailView):
     def get_context_data(self, *, object_list = None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = self.object.name
-        query = Feedback.objects.filter(id_user = self.request.user, id_pageplace=self.object, is_deleted = False)
-        if(query.exists()):
-            context['form_comment'] = FeedbackForm(instance = query[0])
-        else:
-            context['form_comment'] = FeedbackForm()
+        if(self.request.user.is_authenticated):
+            query = Feedback.objects.filter(id_user = self.request.user, id_pageplace=self.object, is_deleted = False)
+            if(query.exists()):
+                context['form_comment'] = FeedbackForm(instance = query[0])
+            else:
+                context['form_comment'] = FeedbackForm()
         context['range'] = range(5)
         context['countOfFeed'] = self.object.feedback_set.count()
 
-        feedback_list = self.object.feedback_set.filter(is_deleted=False).order_by('-date')
+        feedback_list = self.object.feedback_set.filter(is_deleted = False).order_by('-date')
         paginator = Paginator(feedback_list, 2)
 
         page_number = self.request.GET.get('page')
