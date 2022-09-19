@@ -11,6 +11,8 @@ urlpatterns = [
     #path('way/', include('Way.urls')),
     path('profile/', include('Portfolio.urls')),
     path('pageplaces/', include('PagePlaces.urls')),
+    path('jet/', include('jet.urls', 'jet')),  # URL-адреса Django JET
+    path('jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
     path('admin/', admin.site.urls),
     re_path(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}), 
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}), 

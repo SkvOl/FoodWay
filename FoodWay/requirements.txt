@@ -6,3 +6,4 @@ django-ratelimit==3.0.1
 requests
 polyline
 django-ckeditor
+django-jet-reboot

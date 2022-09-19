@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'Portfolio',
     'ckeditor_uploader',
     'ckeditor',
+    'jet.dashboard',
+    'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,6 +48,40 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+
+JET_THEMES = [
+    {
+        'theme': 'default', # название папки с темой
+        'color': '#47bac1', # цвет кнопки выбора темы в пользовательском меню
+        'title': 'Default' # название темы
+    },
+    {
+        'theme': 'green',
+        'color': '#44b78b',
+        'title': 'Green'
+    },
+    {
+        'theme': 'light-green',
+        'color': '#2faa60',
+        'title': 'Light Green'
+    },
+    {
+        'theme': 'light-violet',
+        'color': '#a464c4',
+        'title': 'Light Violet'
+    },
+    {
+        'theme': 'light-blue',
+        'color': '#5EADDE',
+        'title': 'Light Blue'
+    },
+    {
+        'theme': 'light-gray',
+        'color': '#222',
+        'title': 'Light Gray'
+    }
+]
+JET_SIDE_MENU_COMPACT = True
 
 # Middleware framework
 # https://docs.djangoproject.com/en/2.1/topics/http/middleware/

@@ -120,3 +120,5 @@ class db:
         temp_res = {}
         return JsonResponse(res)
    
+
+    #перейди в исходники поля и измени ugettex_lazy на gettext_lazy
