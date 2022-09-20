@@ -2,7 +2,6 @@
 
 
 {% block content %}
-{% load static %}
 
 <style>
     #map {
@@ -33,9 +32,13 @@
         </div>
     </div>
 </div>
+{% endblock content %}
+
+{% block scripts %}
+{{block.super}}
 
 <script>
-    let markers = [];
+    let markers = {};
     let tmp_markers = [];
     DG.then(function () {
         var options = {
@@ -110,7 +113,7 @@
             //);
         });
 
-        
+
         function getCookie(name) {
             let cookieValue = null;
             if (document.cookie && document.cookie !== '') {
@@ -129,63 +132,70 @@
         //function find_in_array() {
 
         //}
-        
-        function get_points(){
+
+        function get_points() {
             let bounds = map.getBounds();
             $.ajax({
                 url: "{% url 'getpoints' %}",
                 method: 'post',
                 dataType: 'json',
                 data: {
-                    'west' : bounds.getWest(),
-                    'east' : bounds.getEast(),
-                    'north' : bounds.getNorth(),
-                    'south' : bounds.getSouth(),
+                    'west': bounds.getWest(),
+                    'east': bounds.getEast(),
+                    'north': bounds.getNorth(),
+                    'south': bounds.getSouth(),
                 },
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
                 },
                 success: function (data) {
-                    console.log(data);
-                    for(let i = markers.length; i > 0; i--){
-                        let tmp = markers.pop();
-                        //if(data['data'].find(item => item.id== ))
-                        tmp.removeFrom(map);
-                    }
-                    data['data'].forEach((val)=>{
+
+                    //console.log(data);
+
+                    //for(let i = markers.length; i > 0; i--){
+                    //    let tmp = markers.pop();
+                    //    //if(data['data'].find(item => item.id== ))
+                    //    tmp.removeFrom(map);
+                    //}
+                    data['data'].forEach((val) => {
                         let icon = DG.icon({
                             iconUrl: val['icon'],
                             iconSize: [38, 38],
                         });
-                        markers.push(
-                            DG.marker([val['lat'], val['lng']], {icon : icon}).addTo(map).bindPopup(val['info'])
-                        );
-                        $('#info').html(val['info']);
+                        if (!(val['id'] in markers)) {
+                            markers[val['id']] = DG.marker([val['lat'], val['lng']], { icon: icon }).addTo(map).bindPopup(val['info']);
+                        }
+
+                        //markers.push(
+                        //    DG.marker([val['lat'], val['lng']], {icon : icon}).addTo(map).bindPopup(val['info'])
+                        //);
+                        //$('#info').html(val['info']);
                     });
+                    console.log(markers);
                 }
             });
         }
 
-        function get_info(id){
+        function get_info(id) {
             $.ajax({
                 url: "{% url 'getinfo' %}",
                 method: 'post',
                 dataType: 'json',
                 data: {
-                    'id' : id,
+                    'id': id,
                 },
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
                 },
                 success: function (data) {
                     console.log(data);
-                    
+
                 }
             });
         }
-        $('#ttt').click(() => {get_info(7)});
+        $('#ttt').click(() => { get_info(7) });
     });
-    
+
 
     function parseQuery() {
         var res = {};
@@ -213,4 +223,5 @@
         DG.marker([userMarker.getLatLng().lat, userMarker.getLatLng().lng]).addTo(map);
     }
 </script>
-{% endblock content %}
+
+{% endblock scripts %}

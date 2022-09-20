@@ -1,10 +1,15 @@
-<div class="">
+<div>
     <div>
         <div class="h5">{{obj.name}}</div>
         <a href="{{obj.get_absolute_url}}#feed_b" class="h6">Отзывов: {{count_feedback}}</a>
+        <span class="h6">Рейтинг: {{obj.rating}}</span>
     </div>
     <hr class="mt-1" />
     <div>
-        1111
+        <p class="m-1">
+            <i style="position: relative" class="fa-solid fa-earth-europe"></i>: <a href="{{obj.get_absolute_url}}">FoodWay.ru{{obj.get_absolute_url}}</a>
+        </p>
+        {% if obj.phone %}<p class="m-1"><i style="position: relative" class="fa-solid fa-phone"></i>: {{obj.phone}}</p> {% endif %}
+        <p>{{obj.short_info}}</p>
     </div>
 </div>

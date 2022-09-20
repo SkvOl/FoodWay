@@ -1,6 +1,5 @@
 {% extends "Home/base.html" %}
 
-{% load static %}
 
 {% block navig_panel %}
 <style>
@@ -52,7 +51,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
 
-               
+
                 {% if user.is_superuser %}
                 <li class="nav-item login-block-phone">
                     <a class="nav-link" href="/admin">Панель администратора</a>
@@ -72,7 +71,8 @@
                 <li class="nav-item login-block-phone"><a class="nav-link" href="{% url 'showAllPagePlaces' %}">Список добавленных страниц</a></li>
                 <li class="nav-item login-block-phone"><a class="nav-link" href="#">Список добавленных путей</a></li>
                 <li class="nav-item login-block-phone"><a class="nav-link" href="{% url 'add_PagePlaces' %}">Добавить страницу</a></li>
-                {#<li class="nav-item login-block-phone"><a class="nav-link" href="{% url 'add_way' %}">Добавить путь</a></li>#}
+
+                <li class="nav-item login-block-phone"><a class="nav-link" href="{% url 'add_way' %}">Добавить путь</a></li>
                 <li class="nav-item login-block-phone">
                     <a class="nav-link" href="{% url 'my_profile' %}"><i class="fas fa-user"></i><span class="ms-2"></span>Профиль</a>
                 </li>
@@ -91,8 +91,6 @@
 </nav>
 
 {% endblock navig_panel %}
-
-
 
 {% block footer %}
 

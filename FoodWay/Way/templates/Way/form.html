@@ -16,8 +16,8 @@
     }
 
     .block-phone {
-
     }
+
     .block-pc {
     }
 
@@ -26,20 +26,20 @@
         .block-phone {
             display: none
         }
+
         .block-pc {
             display: flex
         }
-
     }
 
     @media(max-width: 991px) {
         .block-phone {
             display: flex
         }
+
         .block-pc {
             display: none
         }
-
     }
 </style>
 
@@ -62,9 +62,9 @@
 </div>
 
 <div class="row mt-3 justify-content-center block-phone" id="form_name">
-    
-        <button type="submit" class="btn btn-success mb-3" id="save_but">Сохранить</button>
-    
+
+    <button type="submit" class="btn btn-success mb-3" id="save_but">Сохранить</button>
+
 </div>
 
 <button class="btn btn-success mb-3" id="test_but">TEST</button>
@@ -72,6 +72,11 @@
 <template id="popup_marker">
     {% include 'Way/popup_marker.html' %}
 </template>
+
+{% endblock content %}
+
+{% block scripts %}
+{{block.super}}
 
 <script>
     DG.then(function () {
@@ -111,7 +116,7 @@
         userMarker.on('moveend', function (e) {
             var lat = e.target._latlng.lat,
                 lng = e.target._latlng.lng;
-            
+
             this.openPopup();
         });
 
@@ -130,29 +135,29 @@
             }
         });
 
-        
+
 
         function save_marker() {
             DG.marker([userMarker.getLatLng().lat, userMarker.getLatLng().lng]).addTo(map);
         }
 
         function Send_data() {
-            
+
             const csrftoken = getCookie('csrftoken');
 
             var data_form = { 'name': $('#name_way').val(), 'GEOjson': JSON.stringify(GeoJson_to_save) };
 
             $.ajax({
                 url: "{% url 'add_way' %}",
-	            method: 'post',
-	            dataType: 'json',
+                method: 'post',
+                dataType: 'json',
                 data: data_form,
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader("X-CSRFToken", csrftoken);
                 },
-	            success: function(data){
+                success: function (data) {
                     console.log(data);
-	            }
+                }
             });
         }
 
@@ -261,6 +266,7 @@
         return cookieValue;
     }
 
-    
+
 </script>
-{% endblock content %}
+
+{% endblock scripts %}

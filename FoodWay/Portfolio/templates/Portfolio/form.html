@@ -12,17 +12,16 @@
         height: auto;
     }
 
-    .unselected{
-
+    .unselected {
     }
 
-    .unselected::selection {
-        background: transparent;
-    }
+        .unselected::selection {
+            background: transparent;
+        }
 
-    .unselected::-moz-selection {
-        background: transparent;
-    }
+        .unselected::-moz-selection {
+            background: transparent;
+        }
 
     .drag-n-drop-area {
         /*display:none;*/
@@ -32,36 +31,37 @@
         width: 100%;
         height: 100%;
         border: 6px dashed gray;
-        border-radius:30px;
+        border-radius: 30px;
         transition: 0.8s;
     }
+
     .highlight {
-        opacity:0.5
+        opacity: 0.5
     }
 
     .image-block {
         position: relative;
     }
+
     .icon-delete {
         position: absolute;
         top: 0;
         right: 0;
     }
 
-    .icon-delete:hover {
-        cursor:pointer;
-    }
-
+        .icon-delete:hover {
+            cursor: pointer;
+        }
 </style>
 
 
 
 <div class="container mt-4">
-    
+
     <form class="form-control border-0 shadow-lg" action="." method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="row">
-            
+
             <div class="col-12 col-sm-12 col-md-8 col-lg-8 col-xl-8 d-flex">
                 <div style="width:100%">
 
@@ -122,7 +122,7 @@
                     </div>
                 </div>
             </div>
-        
+
             <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 d-flex">
                 <div style="width:100%" class="d-flex flex-column justify-content-center">
                     <div class="image-block">
@@ -130,13 +130,13 @@
                             <img src="{% if image_src %}{{image_src}}{% else %}{% static 'Portfolio/media/placeholder_photo.jpg' %}{% endif %}" id="preview_id" class="rounded image-profile" alt="Нажмите для выбора фото.">
                             {{ form.image_profile }}
                         </label>
-                        <div class="icon-delete" id ="delete_photo" {% if not image_src %}style="display: none;"{% endif %}>
+                        <div class="icon-delete" id="delete_photo" {% if not image_src %}style="display: none;" {% endif %}>
                             <i class="fa-solid fa-xmark fa-3x"></i>
                         </div>
                     </div>
                 </div>
             </div>
-        
+
             <div class="mb-3">
                 <label for="{{ form.about_user.id_for_label }}" class="form-label">О себе</label>
                 {#<textarea class="form-control" id="about_id" rows="3"></textarea>#}
@@ -149,9 +149,16 @@
         </div>
     </form>
 </div>
-<div id ="drop-area" class="drag-n-drop-area bg-light bg-opacity-25" style="display: none;">
+<div id="drop-area" class="drag-n-drop-area bg-light bg-opacity-25" style="display: none;">
     <div class="position-absolute top-50 start-50 translate-middle h1">Загрузите фото</div>
 </div>
+
+
+{% endblock content %}
+
+
+{% block scripts %}
+{{block.super}}
 <script>
     let dropArea = document.getElementById('drop-area');
 
@@ -184,7 +191,7 @@
         dropArea.classList.remove('bg-opacity-50');
         dropArea.classList.add('bg-opacity-25');
     }
-    
+
     dropArea.addEventListener('drop', handleDrop, false);
 
     function handleDrop(e) {
@@ -192,7 +199,7 @@
         let files = dt.files[0];
         make_preview(dt);
         send_photo(files);
-        
+
     }
 
     $('#delete_photo').on('click',()=>{
@@ -249,7 +256,7 @@
 	        }
         });
     }
-    
+
 
     function make_preview(input_photo) {
         var preview = $("#preview_id");
@@ -278,7 +285,7 @@
             method: 'post',
             dataType: 'json',
             data: { 'url': $('#{{ form.url_user.id_for_label }}').val(),
-                    'id_user' : {{id_view_user}},    
+                    'id_user' : {{id_view_user}},
                     },
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
@@ -301,6 +308,4 @@
     }
 </script>
 
-
-
-{% endblock content %}
+{% endblock scripts %}

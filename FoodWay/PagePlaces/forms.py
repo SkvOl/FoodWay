@@ -21,13 +21,18 @@ class PagePlacesForm(forms.ModelForm):
                                    'class': 'form-control',
                                    'placeholder': 'Сделайте выделяющийся адрес (до 20 символов)'}))
 
+    phone = forms.CharField(label='phone', max_length = 20,
+                          widget=forms.TextInput({
+                                   'class': 'form-control',
+                                   'placeholder': 'Номер телефона (при наличии)'}))
+
     #icon = forms.FileField(widget=forms.FileInput({
     #                               'class': 'form-control',
     #                               'placeholder': 'По желанию, загрузите иконку'}),required=False)
 
     class Meta:
         model = PagePlaces
-        fields = ['name', 'content', 'short_info', 'url', 'icon_id', 'lat', 'lng']
+        fields = ['name', 'content', 'short_info', 'url', 'icon_id', 'lat', 'lng', 'phone']
 
 
 class FeedbackForm(forms.ModelForm):

@@ -7,23 +7,25 @@
     a {
         text-decoration: none;
     }
-    .list{
 
+    .list {
     }
 
-    .list-item{
+    .list-item {
+    }
 
-    }
-    .list-item:hover {
-        background-color: #c9c9c959;
-    }
+        .list-item:hover {
+            background-color: #c9c9c959;
+        }
+
     .but_item {
-        background-color:white;
+        background-color: white;
         transition-duration: .5s;
     }
-    .but_item:hover{
-        cursor: pointer;
-    }
+
+        .but_item:hover {
+            cursor: pointer;
+        }
 </style>
 <div class="container mt-4">
     <ul class="list">
@@ -58,9 +60,13 @@
         </li>
         {% endfor %}
     </ul>
-    
+
 </div>
 
+
+{% endblock content %}
+{% block scripts %}
+{{block.super}}
 <script>
     function getCookie(name) {
         let cookieValue = null;
@@ -95,4 +101,4 @@
         }
     }
 </script>
-{% endblock content %}
+{% endblock scripts %}

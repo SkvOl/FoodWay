@@ -70,8 +70,9 @@ def my_list(request):
     new_feed_vl = PagePlaces.objects.filter(lng__range = (request.POST.get('west'),request.POST.get('east')), lat__range = (request.POST.get('south'),request.POST.get('north')))
     new_feed = []
     
+    #for i in range(50):
     for nf in new_feed_vl:
-        new_feed.append({'id':nf.id, 'lat' : nf.lat, 'lng' : nf.lng, 'name' : nf.name, 'icon' : nf.icon_id.icon.url, 'info' : getinfo(request)});
+        new_feed.append({'id':nf.id, 'lat' : nf.lat, 'lng' : nf.lng, 'name' : nf.name, 'icon' : nf.icon_id.icon.url, 'info' : getinfo(nf.id)});
 
     return new_feed
 
@@ -80,9 +81,8 @@ def getpoints(request):
     data = my_list(request)
     return JsonResponse({'status' : True, 'data': data}, safe=False)
 
-def getinfo(request):
-    id = request.POST.get('id')
-    id = 7
+def getinfo(id):
+    #id = 7
     obj = PagePlaces.objects.get(pk = id)
     
     context = {

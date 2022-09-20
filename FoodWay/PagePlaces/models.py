@@ -42,6 +42,7 @@ class PagePlaces(models.Model):
     lat = models.DecimalField(name = 'lat', max_digits=19, decimal_places=16, null = True, blank=True)
     lng = models.DecimalField(name = 'lng', max_digits=19, decimal_places=16, null = True, blank=True)
     rating = models.DecimalField(name = 'rating', max_digits=3, decimal_places=2, default = 0.0)
+    phone = models.CharField(max_length = 13, blank=True)
     #icon = models.FileField(upload_to = icon_place, null = True, blank=True)
     icon_id = models.ForeignKey(Icon, on_delete = models.DO_NOTHING, null = True)
     is_deleted = models.BooleanField('is_deleted', default = False)
@@ -76,7 +77,6 @@ class Feedback(models.Model):
 @receiver(post_save, sender=Feedback)
 def save_or_create_feedback(sender, instance, created, **kwargs):
     if created:
-        print ('test')
         average = Feedback.objects.filter(id_pageplace = instance.id_pageplace, is_deleted = False).aggregate(Avg('rating'))
         instance.id_pageplace.rating = average['rating__avg']
         instance.id_pageplace.save()
