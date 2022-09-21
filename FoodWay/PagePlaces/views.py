@@ -186,9 +186,9 @@ class PagePlaceDetailView(DetailView):
         context['countOfFeed'] = self.object.feedback_set.count()
 
         feedback_list = self.object.feedback_set.filter(is_deleted = False).order_by('-date')
-        paginator = Paginator(feedback_list, 2)
+        paginator = Paginator(feedback_list, 1)
 
         page_number = self.request.GET.get('page')
-        #paginator.get_elided_page_range(page_number, on_each_side=2, on_ends=1)
-        context['list_feedback'] = paginator.get_page(page_number)
+        context['page_range'] = paginator.get_elided_page_range(page_number, on_each_side=1, on_ends=1)
+        context['curr_page'] = paginator.get_page(page_number)
         return context

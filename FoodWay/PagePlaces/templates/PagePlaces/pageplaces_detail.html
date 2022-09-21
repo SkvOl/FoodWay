@@ -79,123 +79,112 @@
     <div class="alert alert-secondary border-0 shadow">
         <div class="h1 text-center">Отзывы:</div>
         {{PagePlace.feedback}}
-        <div class="m-4">
+    <div class="m-4">
 
-            <!--<button class="btn btn-success" onclick="checkNewFeed()">
-                test
-            </button>-->
-            {% if form_comment %}
-            <div class="header alert alert-secondary form_feedback">
-                <form action="{% url 'saveFeedback'%}" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="id_pageplace" value="{{ PagePlace.id }}" />
-                    <div class="row align-items-center">
-                        <div class="col-auto">
-                            <img class="image-profile" src="{{user.user_info.image_profile.url}}" />
-                        </div>
-                        <div class="col-auto">
-                            <span class="h3">{{user.username}}</span>
-                        </div>
-                        <div class="col stars-block">
-                            {{form_comment.rating.as_hidden}}
-                            <img class="star" src="{{PagePlace.icon_id.icon.url}}" />
-                            <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
-                            <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
-                            <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
-                            <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
-                            <span id="rating_n" class="ms-2 h4">(1/5)</span>
-                        </div>
-                        <div class="col-2 h6 text-end">
-
-                        </div>
+        <!--<button class="btn btn-success" onclick="checkNewFeed()">
+        test
+    </button>-->
+        {% if form_comment %}
+        <div class="header alert alert-secondary form_feedback">
+            <form action="{% url 'saveFeedback'%}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="id_pageplace" value="{{ PagePlace.id }}" />
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <img class="image-profile" src="{{user.user_info.image_profile.url}}" />
                     </div>
-                    <hr />
-                    <div class="row">
-
-                        <div class="feedback_text">
-                            {{form_comment.content}}
-                        </div>
+                    <div class="col-auto">
+                        <span class="h3">{{user.username}}</span>
                     </div>
-                    <div class="d-flex justify-content-end">
-                        <button type="submit" id="send_feedback" class="btn btn-success m-1">Отправить</button>
+                    <div class="col stars-block">
+                        {{form_comment.rating.as_hidden}}
+                        <img class="star" src="{{PagePlace.icon_id.icon.url}}" />
+                        <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
+                        <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
+                        <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
+                        <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
+                        <span id="rating_n" class="ms-2 h4">(1/5)</span>
                     </div>
-                </form>
-            </div>
-            {% endif %}
+                    <div class="col-2 h6 text-end">
 
-
-            <div id="feed_b" class="block-feedback">
-                {% for item in list_feedback %}
-                <div class="header alert alert-secondary pb-1">
-                    <div class="row align-items-center">
-                        <div class="col-auto">
-                            <img class="image-profile" src="{{item.id_user.user_info.image_profile.url}}" />
-
-                        </div>
-                        <div class="col-auto">
-                            <a href="{{item.id_user.user_info.get_absolute_url}}" class="h3">{{item.id_user.username}}</a>
-                        </div>
-                        <div class="col stars-block">
-                            {% for i in range %}
-                            {% if i < item.rating %}
-                            <img class="star" src="{{PagePlace.icon_id.icon.url}}" />
-                            {% else %}
-                            <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
-                            {% endif %}
-                            {% endfor %}
-                            <span class="ms-2 h4">({{item.rating}}/5)</span>
-                        </div>
-                        <div class="col-2 h6 text-end">
-                            {{item.date}}
-                        </div>
-                    </div>
-                    <hr />
-                    <div class="row">
-
-                        <div class="feedback_text">
-                            {{item.content}}
-                        </div>
                     </div>
                 </div>
-                {% endfor %}
-            </div>
+                <hr />
+                <div class="row">
 
-            <nav aria-label="Page navigation example">
-                <ul class="pagination">
-                    {% if list_feedback.has_previous %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ list_feedback.previous_page_number }}" aria-label="Предыдущая">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
-                    {% if not list_feedback.previous_page_number == 1 %}
-                    <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
-                    {% endif %}
-                    {% endif %}
-
-
-                    <li class="page-item active"><a class="page-link" href="#">{{ list_feedback.number }} </a></li>
-
-                    {% if list_feedback.has_next %}
-
-                    {% if not list_feedback.next_page_number == list_feedback.paginator.num_pages %}
-                    <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
-                    {% endif %}
-
-                    <li class="page-item"><a class="page-link" href="?page={{ list_feedback.paginator.num_pages }}">{{ list_feedback.paginator.num_pages }}</a></li>
-
-
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ list_feedback.next_page_number }}" aria-label="Следующая">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </nav>
-
+                    <div class="feedback_text">
+                        {{form_comment.content}}
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button type="submit" id="send_feedback" class="btn btn-success m-1">Отправить</button>
+                </div>
+            </form>
         </div>
+        {% endif %}
+
+
+        <div id="feed_b" class="block-feedback">
+            {% for item in list_feedback %}
+            <div class="header alert alert-secondary pb-1">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <img class="image-profile" src="{{item.id_user.user_info.image_profile.url}}" />
+
+                    </div>
+                    <div class="col-auto">
+                        <a href="{{item.id_user.user_info.get_absolute_url}}" class="h3">{{item.id_user.username}}</a>
+                    </div>
+                    <div class="col stars-block">
+                        {% for i in range %}
+                        {% if i < item.rating %}
+                        <img class="star" src="{{PagePlace.icon_id.icon.url}}" />
+                        {% else %}
+                        <img class="star inactive" src="{{PagePlace.icon_id.icon.url}}" />
+                        {% endif %}
+                        {% endfor %}
+                        <span class="ms-2 h4">({{item.rating}}/5)</span>
+                    </div>
+                    <div class="col-2 h6 text-end">
+                        {{item.date}}
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+
+                    <div class="feedback_text">
+                        {{item.content}}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                {% if curr_page.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ curr_page.previous_page_number }}" aria-label="Предыдущая">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+
+                {% for i in page_range %}
+                <li class="page-item{% if i == curr_page.number %} active{% endif %}{% if i == "…" %} disabled{% endif %}"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                {% endfor %}
+
+                <!--<li class="page-item active"><a class="page-link" href="#">{{ list_feedback.number }} </a></li>-->
+                {% if curr_page.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ curr_page.next_page_number }}" aria-label="Следующая">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+
+    </div>
     </div>
 
 

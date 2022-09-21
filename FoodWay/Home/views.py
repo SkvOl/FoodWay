@@ -7,6 +7,7 @@ from django.shortcuts import redirect, render
 from django.http import HttpRequest
 from .forms import CustomUserCreationForm 
 from .models import MyUser
+from django.contrib.auth.models import User
 import re
 
 def home(request):
@@ -18,6 +19,7 @@ def home(request):
         {
             'title':'Home Page',
             'year':datetime.now().year,
+            'count_user':User.objects.all().count()
         }
     )
 
