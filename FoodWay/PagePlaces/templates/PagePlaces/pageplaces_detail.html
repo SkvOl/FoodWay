@@ -65,7 +65,6 @@
 <div class="container mt-4">
     <div class="alert alert-secondary border-0 shadow content-page">
         <h1 class="text-center">{{PagePlace.name}}</h1>
-        {{PagePlace.name}}
         {{PagePlace.content|safe}}
     </div>
 
@@ -125,7 +124,7 @@
 
 
         <div id="feed_b" class="block-feedback">
-            {% for item in list_feedback %}
+            {% for item in curr_page %}
             <div class="header alert alert-secondary pb-1">
                 <div class="row align-items-center">
                     <div class="col-auto">
@@ -149,6 +148,7 @@
                         {{item.date}}
                     </div>
                 </div>
+                {% if item.content %}
                 <hr />
                 <div class="row">
 
@@ -156,10 +156,12 @@
                         {{item.content}}
                     </div>
                 </div>
+                {% endif %}
             </div>
             {% endfor %}
         </div>
-        <nav aria-label="Page navigation example">
+        {% if curr_page.has_previous or curr_page.has_next %}
+        <nav aria-label="Page navigation">
             <ul class="pagination">
                 {% if curr_page.has_previous %}
                 <li class="page-item">
@@ -170,7 +172,7 @@
                 {% endif %}
 
                 {% for i in page_range %}
-                <li class="page-item{% if i == curr_page.number %} active{% endif %}{% if i == "…" %} disabled{% endif %}"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                <li class="page-item{% if i == curr_page.number %} active{% endif %}{% if i == " …" %} disabled{% endif %}"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
                 {% endfor %}
 
                 <!--<li class="page-item active"><a class="page-link" href="#">{{ list_feedback.number }} </a></li>-->
@@ -183,6 +185,7 @@
                 {% endif %}
             </ul>
         </nav>
+        {% endif %}
 
     </div>
     </div>

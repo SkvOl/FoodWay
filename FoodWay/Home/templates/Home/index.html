@@ -164,6 +164,7 @@
                         });
                         if (!(val['id'] in markers)) {
                             markers[val['id']] = DG.marker([val['lat'], val['lng']], { icon: icon }).addTo(map).bindPopup(val['info']);
+                            $(markers[val['id']]).on('click', (e) => { get_info(val['id']) })
                         }
 
                         //markers.push(
@@ -180,7 +181,7 @@
             $.ajax({
                 url: "{% url 'getinfo' %}",
                 method: 'post',
-                dataType: 'json',
+                //dataType: 'json',
                 data: {
                     'id': id,
                 },

@@ -11,7 +11,9 @@ from django.template.loader import render_to_string
 from django.utils.formats import localize
 from django.core.paginator import Paginator
 
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def addPagePlaces(request):
     """страница создания, PagePlaces"""
     all_icon = Icon.objects.filter(is_deleted = 0)
@@ -37,6 +39,7 @@ def addPagePlaces(request):
 
     return render(request, 'PagePlaces/form.html', context)
 
+@login_required
 def editPagePlace(request, slug):
     """страница редактирования, PagePlaces"""
 
@@ -46,13 +49,7 @@ def editPagePlace(request, slug):
     if request.method == 'POST':
         form = PagePlacesForm(request.POST, instance = page_place) 
         if form.is_valid(): 
-            form.save(); 
-            #data = form.cleaned_data
-            #page_place.name = data['name']  #пришлось делать таким образом, так как иначе создается измененная копия (из за отсутствия id в форме)
-            #page_place.content = data['content']
-            #page_place.short_info = data['short_info']
-            #page_place.url = data['url']
-            #page_place.save()
+            form.save();
             return redirect(page_place.get_absolute_url())
     else:
         form = PagePlacesForm(instance = page_place)
@@ -72,7 +69,7 @@ def my_list(request):
     
     #for i in range(50):
     for nf in new_feed_vl:
-        new_feed.append({'id':nf.id, 'lat' : nf.lat, 'lng' : nf.lng, 'name' : nf.name, 'icon' : nf.icon_id.icon.url, 'info' : getinfo(nf.id)});
+        new_feed.append({'id':nf.id, 'lat' : nf.lat, 'lng' : nf.lng, 'name' : nf.name, 'icon' : nf.icon_id.icon.url, 'info' : getinfo_f(nf.id)});
 
     return new_feed
 
@@ -81,7 +78,7 @@ def getpoints(request):
     data = my_list(request)
     return JsonResponse({'status' : True, 'data': data}, safe=False)
 
-def getinfo(id):
+def getinfo_f(id):
     #id = 7
     obj = PagePlaces.objects.get(pk = id)
     
@@ -93,6 +90,9 @@ def getinfo(id):
     #print(text_render)
     return text_render
     #return JsonResponse({'status' : True, 'info': text_render}, safe=False)
+
+def getinfo(request):
+    return getinfo_f(request.POST.get('id'))
 
 def checkURL(request):
     url = request.POST.get('url')
@@ -108,6 +108,7 @@ def checkURL(request):
         status = 0
     return JsonResponse({'status' : status}, safe=False)
 
+@login_required
 def saveFeedback(request):
     if request.user.is_authenticated and request.method == 'POST':
         id_page = request.POST.get('id_pageplace')
@@ -144,7 +145,7 @@ def saveFeedback(request):
         
 
 
-
+@login_required
 def deletePagePlace(request):
     id_PagePlaces = request.POST.get('id_PagePlaces')
     pageplace = PagePlaces.objects.get(id = id_PagePlaces)
@@ -186,9 +187,11 @@ class PagePlaceDetailView(DetailView):
         context['countOfFeed'] = self.object.feedback_set.count()
 
         feedback_list = self.object.feedback_set.filter(is_deleted = False).order_by('-date')
-        paginator = Paginator(feedback_list, 1)
+        paginator = Paginator(feedback_list, 2)
 
         page_number = self.request.GET.get('page')
+        if(not page_number):
+            page_number = 1
         context['page_range'] = paginator.get_elided_page_range(page_number, on_each_side=1, on_ends=1)
         context['curr_page'] = paginator.get_page(page_number)
         return context
