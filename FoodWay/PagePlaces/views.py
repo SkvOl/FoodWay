@@ -69,7 +69,7 @@ def my_list(request):
     
     #for i in range(50):
     for nf in new_feed_vl:
-        new_feed.append({'id':nf.id, 'lat' : nf.lat, 'lng' : nf.lng, 'name' : nf.name, 'icon' : nf.icon_id.icon.url, 'info' : getinfo_f(nf.id)});
+        new_feed.append({ 'id':nf.id, 'lat' : nf.lat, 'lng' : nf.lng, 'name' : nf.name, 'icon' : nf.icon_id.icon.url });
 
     return new_feed
 
@@ -79,20 +79,17 @@ def getpoints(request):
     return JsonResponse({'status' : True, 'data': data}, safe=False)
 
 def getinfo_f(id):
-    #id = 7
     obj = PagePlaces.objects.get(pk = id)
     
     context = {
                 'obj' : obj,
                 'count_feedback' : Feedback.objects.filter(id_pageplace__id = id, is_deleted = False).count()
               }
-    text_render = render_to_string('PagePlaces/popup_marker.html', context)
-    #print(text_render)
-    return text_render
-    #return JsonResponse({'status' : True, 'info': text_render}, safe=False)
+    
+    return render_to_string('PagePlaces/popup_marker.html', context)
 
 def getinfo(request):
-    return getinfo_f(request.POST.get('id'))
+    return JsonResponse({'status' : True, 'data': getinfo_f(request.POST.get('id'))}, safe=False)
 
 def checkURL(request):
     url = request.POST.get('url')
@@ -157,7 +154,6 @@ def deletePagePlace(request):
 class PagePlaceList(ListView):
     model = PagePlaces
     context_object_name = 'PagePlaces'
-    #template_name = 'PagePlaces/PagePlaces_list.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)

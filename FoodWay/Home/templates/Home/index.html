@@ -11,25 +11,21 @@
     }
 
     .content-map {
-        width: 50vw;
+        width: 100%;
         height: 50vh;
+    }
+
+    .alert-secondary {
+        background-color: #e2e3e533;
     }
 </style>
 
-<button id="ttt">dfgffdg</button>
 <div class="alert alert-light h1 text-center" role="alert">
     С нами уже {{count_user}} человека!
 </div>
-<div class="d-flex justify-content-between">
-    <div class="content-map">
+<div class="d-flex justify-content-between container">
+    <div class="content-map alert alert-secondary border-0 shadow">
         <div id="map"></div>
-    </div>
-    <div style="width:100px"></div>
-    <div>
-        <div class="h2 text-center">Информация</div>
-        <div id="info" class="h2">
-
-        </div>
     </div>
 </div>
 {% endblock content %}
@@ -129,9 +125,6 @@
             return cookieValue;
         }
 
-        //function find_in_array() {
-
-        //}
 
         function get_points() {
             let bounds = map.getBounds();
@@ -163,7 +156,7 @@
                             iconSize: [38, 38],
                         });
                         if (!(val['id'] in markers)) {
-                            markers[val['id']] = DG.marker([val['lat'], val['lng']], { icon: icon }).addTo(map).bindPopup(val['info']);
+                            markers[val['id']] = DG.marker([val['lat'], val['lng']], { icon: icon }).addTo(map);
                             $(markers[val['id']]).on('click', (e) => { get_info(val['id']) })
                         }
 
@@ -189,12 +182,14 @@
                     xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
                 },
                 success: function (data) {
+                    markers[id].bindPopup(data['data']).openPopup();
+                    //markers[id].openPopup()
+                    console.log(markers[id]);
                     console.log(data);
-
+                    $(markers[val['id']]).off();
                 }
             });
         }
-        $('#ttt').click(() => { get_info(7) });
     });
 
 
