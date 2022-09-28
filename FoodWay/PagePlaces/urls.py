@@ -11,6 +11,7 @@ urlpatterns = [
     #path('checknewfeedback/', views.checkNewFeedback, name = 'checkNewFeedback'),
     path('getpoints/', views.getpoints, name = 'getpoints'),
     path('getinfo/', views.getinfo, name = 'getinfo'),
+    path('randomicons/', views.get_randon_icons, name = 'random_icons'),
     path('<str:slug>/edit/', views.editPagePlace, name = 'editPagePlace'),
     path('<str:slug>/', views.PagePlaceDetailView.as_view(), name = 'PagePlaces'),
 ]

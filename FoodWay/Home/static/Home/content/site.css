@@ -6,8 +6,6 @@ body {
 }
 
 .body-content {
-    padding-left: 15px;
-    padding-right: 15px;
     flex-grow: 1;
 }
 
@@ -45,3 +43,4 @@ footer {
     border-radius: 5%;
     min-width:20vw;
 }
+

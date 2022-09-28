@@ -18,7 +18,18 @@
     .alert-secondary {
         background-color: #e2e3e533;
     }
+
+    .ball_2 {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        border-radius: 100%;
+        /*background-color: green;*/
+    }
+
 </style>
+
+<img id="123" class="ball_2" src="media/icons/test.png"/>
 
 <div class="alert alert-light h1 text-center" role="alert">
     С нами уже {{count_user}} человека!
@@ -34,6 +45,50 @@
 {{block.super}}
 
 <script>
+
+    $(document).ready(function () {
+        class move_icons{
+            constructor(x, y, dx, dy, icon, el) {
+                this.x = x;
+                this.y = y;
+                this.dx = dx;
+                this.dy = dy;
+                this.icon_url = icon;
+                this.el = el;
+            }
+            update() {
+                this.x += this.dx;
+                this.y += this.dy;
+                if (this.x < 0 || this.x > document.documentElement.clientWidth) {
+                    this.dx = -this.dx;
+                }
+                if (this.y < 0 || this.y > document.documentElement.clientHeight) {
+                    this.dy = -this.dy;
+                }
+                this.el.style.top = this.y + "px";
+                this.el.style.left = this.x + "px";
+            }
+        }
+
+        let ball2 = new move_icons(0, 0, 10, 10, 0, $("#123"));
+        setInterval(() => { ball2.update() }, 200);
+        
+        function get_random_icon() {
+            $.ajax({
+                url: "{% url 'random_icons' %}",
+                method: 'post',
+                dataType: 'json',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                },
+                success: function (data) {
+                    data['data'].forEach((item) => { console.log(item); })
+                }
+            });
+        }
+        get_random_icon();
+    });
+
     let markers = {};
     let tmp_markers = [];
     DG.then(function () {
@@ -110,20 +165,7 @@
         });
 
 
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
+        
 
 
         function get_points() {
@@ -174,7 +216,7 @@
             $.ajax({
                 url: "{% url 'getinfo' %}",
                 method: 'post',
-                //dataType: 'json',
+                dataType: 'json',
                 data: {
                     'id': id,
                 },
@@ -186,10 +228,12 @@
                     //markers[id].openPopup()
                     console.log(markers[id]);
                     console.log(data);
-                    $(markers[val['id']]).off();
+                    $(markers[id]).off();
                 }
             });
         }
+
+        
     });
 
 

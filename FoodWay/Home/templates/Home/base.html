@@ -28,8 +28,39 @@
 
     {% block navig_panel %}{% endblock navig_panel %}
     
+    <style>
+        .ball_my {
+            position: absolute;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            border-radius: 100%;
+            background-color: green;
+            animation: moveX 3s linear 0s infinite alternate, moveY 3.5s linear 0s infinite alternate;
+        }
 
-    <div class="body-content">
+        @keyframes moveX {
+            from {
+                left: 0;
+            }
+
+            to {
+                left: 98%;
+            }
+        }
+
+        @keyframes moveY {
+            from {
+                top: 0;
+            }
+
+            to {
+                top: 98%;
+            }
+        }
+    </style>
+    <div class="body-content" style="position: relative;">
+        <div class="ball_my"></div>
         {% block content %}{% endblock %}
     </div>
 
@@ -40,6 +71,25 @@
     <script src="{% static 'Home/scripts/jquery-1.10.2.js' %}"></script>
     <script src="{% static 'Home/scripts/bootstrap.js' %}"></script>
     <script src="{% static 'Home/scripts/respond.js' %}"></script>
+
+    <!--глобальные скрипты-->
+    <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+
     {% block scripts %}{% endblock scripts %}
 
 </body>

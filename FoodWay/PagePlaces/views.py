@@ -1,6 +1,5 @@
 ﻿from django.shortcuts import render, redirect
 from .forms import PagePlacesForm, FeedbackForm
-from FoodWay.views import page_not_found
 from .models import PagePlaces, Icon, Feedback
 from django.http import JsonResponse
 
@@ -61,6 +60,11 @@ def editPagePlace(request, slug):
               }
 
     return render(request, 'PagePlaces/form.html', context)
+
+def get_randon_icons(request):
+    icons = list(Icon.objects.filter(is_deleted = 0).order_by('?')[:2].values('id','icon'))
+    print (icons)
+    return JsonResponse({'status' : True, 'data': icons}, safe=False)
 
 
 def my_list(request):
