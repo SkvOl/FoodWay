@@ -28,39 +28,7 @@
 
     {% block navig_panel %}{% endblock navig_panel %}
     
-    <style>
-        .ball_my {
-            position: absolute;
-            left: 50%;
-            width: 20px;
-            height: 20px;
-            border-radius: 100%;
-            background-color: green;
-            animation: moveX 3s linear 0s infinite alternate, moveY 3.5s linear 0s infinite alternate;
-        }
-
-        @keyframes moveX {
-            from {
-                left: 0;
-            }
-
-            to {
-                left: 98%;
-            }
-        }
-
-        @keyframes moveY {
-            from {
-                top: 0;
-            }
-
-            to {
-                top: 98%;
-            }
-        }
-    </style>
     <div class="body-content" style="position: relative;">
-        <div class="ball_my"></div>
         {% block content %}{% endblock %}
     </div>
 

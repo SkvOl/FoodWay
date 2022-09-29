@@ -23,13 +23,30 @@
         position: absolute;
         width: 50px;
         height: 50px;
-        border-radius: 100%;
-        /*background-color: green;*/
+        overflow:hidden;
+    }
+    @keyframes moveX {
+        from {
+            left: 0;
+        }
+
+        to {
+            left: 96%;
+        }
+    }
+
+    @keyframes moveY {
+        from {
+            top: 0;
+        }
+
+        to {
+            top: 96%;
+        }
     }
 
 </style>
 
-<img id="123" class="ball_2" src="media/icons/test.png"/>
 
 <div class="alert alert-light h1 text-center" role="alert">
     С нами уже {{count_user}} человека!
@@ -69,10 +86,19 @@
                 this.el.style.left = this.x + "px";
             }
         }
+        function create_icon_move(dx, dy, icon, block_in) {
+            let el = $("<img id = 'ball' class = 'ball_2'></img>");
+            el.css('animation', 'moveX ' + 1 / dx + 's linear 0s infinite alternate, moveY ' + 1 / dy + 's linear 0s infinite alternate');
+            el.attr('src', 'media/' + icon);
+            block_in.append(el);
+        }
+        function getRandomArbitrary(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+        //let ball2 = new move_icons(0, 0, 10, 10, 0, $("#123"));
+        //setInterval(() => { ball2.update() }, 200);
 
-        let ball2 = new move_icons(0, 0, 10, 10, 0, $("#123"));
-        setInterval(() => { ball2.update() }, 200);
-        
+        //create_icon_move(0.2, 0.1, 0, $('.body-content'));
         function get_random_icon() {
             $.ajax({
                 url: "{% url 'random_icons' %}",
@@ -82,7 +108,7 @@
                     xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
                 },
                 success: function (data) {
-                    data['data'].forEach((item) => { console.log(item); })
+                    data['data'].forEach((item) => { console.log(item); create_icon_move(getRandomArbitrary(0.01, 0.5), getRandomArbitrary(0.01, 0.5), item['icon'], $('.body-content')); })
                 }
             });
         }
