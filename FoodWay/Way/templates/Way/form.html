@@ -204,10 +204,11 @@
                 console.log("work");
                 userMarker.closePopup();
                 var mass_coord = polyline.getLatLngs();
-                userMarker.setLatLng(mass_coord.pop());
+                mass_coord.pop();
+                userMarker.setLatLng(mass_coord[mass_coord.length-1]);
                 polyline.setLatLngs(mass_coord);
 
-                //userMarker.openPopup();
+                userMarker.openPopup();
                 GeoJson_to_save = polyline.toGeoJSON();
             });
             //console.log(polyline.toGeoJSON());

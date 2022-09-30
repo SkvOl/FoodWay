@@ -63,7 +63,7 @@ def editPagePlace(request, slug):
 
 def get_randon_icons(request):
     icons = list(Icon.objects.filter(is_deleted = 0).order_by('?')[:2].values('id','icon'))
-    print (icons)
+    #print (icons)
     return JsonResponse({'status' : True, 'data': icons}, safe=False)
 
 
@@ -165,7 +165,10 @@ class PagePlaceList(ListView):
         return context
 
     def get_queryset(self):
-        return PagePlaces.objects.filter(is_deleted = 0)
+        if 'id_user' in self.kwargs:
+            return PagePlaces.objects.filter(id_user = self.kwargs['id_user'], is_deleted = 0)
+        else:
+            return PagePlaces.objects.filter(is_deleted = 0)
 
 class PagePlaceDetailView(DetailView):
     model = PagePlaces

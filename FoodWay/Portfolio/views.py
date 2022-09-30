@@ -27,8 +27,6 @@ def get_user_by_url(url, request):
 
     return False
 
-def print_fields(model, par, val):
-    print(model.objects.get(par = val)._meta.get_fields())
 
 def profile(request, url = -1):
     if url == -1:
