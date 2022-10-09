@@ -42,35 +42,50 @@
     }
 </style>
 
-<div class="container">
-    <div class="card mb-3 mt-1">
-        <div class="row g-0">
-            <div class="col-md-8 content-map">
-                <div id="map"></div>
-            </div>
-            <div class="col-md-4">
-                <div class="card-body d-grid gap-2">
-                    <button type="button" class="btn btn-primary">Добавить</button>
-                    <button type="button" class="btn btn-primary">Отменить</button>
-                    <button type="button" class="btn btn-primary">Автоматическая прокладка по выделенным</button>
-                    <button type="button" class="btn btn-primary">Что-то ещё</button>
-                    <button type="button" class="btn btn-primary">Удалить</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 <!-- <div class="d-flex flex-row justify-content-around mt-1">
     <div class="content-map shadow-lg">
         <div id="map"></div>
     </div>
 </div> -->
 
-<div class="row mt-3 justify-content-center" id="form_name">
+<div class="container">
+    <div class="card mb-3 mt-1">
+        <div class="row g-0">
+            <div class="col-md-8 content-map">
+                <div id="map"></div>
+            </div>
+            <!-- <div class="vr ms-1 me-1"></div> -->
+            <div class="col-md-4 d-flex flex-row flex-wrap align-content-center justify-content-center">
+                <div class="m-1 d-flex flex-column">
+                    <div class="text-center mb-3">Немного информации</div>
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        {{form.name_way}}
+                        <!--<input type="text" class="form-control" id="name_way" name="name_way" placeholder="Введите название">-->
+                    </div>
+                
+                    <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn btn-success" id="save_but">Сохранить</button>
+                    </div>
+                </div>
+                
+                <!-- <div class="card-body d-grid gap-2">
+                                <button type="button" class="btn btn-primary">Добавить</button>
+                    <button type="button" class="btn btn-primary">Отменить</button>
+                    <button type="button" class="btn btn-primary">Автоматическая прокладка по выделенным</button>
+                    <button type="button" class="btn btn-primary">Что-то ещё</button>
+                    <button type="button" class="btn btn-primary">Удалить</button>
+                </div> -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- <div class="row mt-3 justify-content-center" id="form_name">
     {% csrf_token %}
     <div class="col-6">
         {{form.name_way}}
-        <!--<input type="text" class="form-control" id="name_way" name="name_way" placeholder="Введите название">-->
     </div>
 
     <div class="col-2 block-pc justify-content-center">
@@ -82,7 +97,7 @@
 
     <button type="submit" class="btn btn-success mb-3" id="save_but">Сохранить</button>
 
-</div>
+</div> -->
 
 <button class="btn btn-success mb-3" id="test_but">TEST</button>
 
@@ -93,6 +108,7 @@
 {% endblock content %}
 
 {% block scripts %}
+{% load static %}
 {{block.super}}
 
 <script>
@@ -112,6 +128,18 @@
             initialize: function(options) {
                 DG.Util.setOptions(this, options);
                 this.on('add', this._create_new_icon);
+                this.isDraggingMode = false;
+                if(this.options.is_toggle)
+                    this.on('click', this._toggle_draggin_mode);
+            },
+
+            _toggle_draggin_mode: function(){
+                this.isDraggingMode = !this.isDraggingMode;
+                this.setState(this.isDraggingMode ? 'active' : '');
+            },
+            
+            _test_f: function(){
+                this.setState('active');
             },
 
             _create_new_icon: function(){
@@ -124,6 +152,11 @@
             return new DG.Control.Test_2(options);
         };
 
+        //Объявление всех переменных
+        const red_cirlce = DG.icon({
+            iconUrl: '{% static "Way/red_circle.png" %}',
+            iconSize: [15, 15],
+        });
 
         var options = {
             center: [53.20973372247789, 44.99897003173828],
@@ -136,55 +169,161 @@
         var query = parseQuery();
         var map = window.map = DG.map('map', getMapOptions(query, options));
 
+        var GeoJson_to_save = '';
+
+        let markers_node = [];
+
+        var userMarker = null;
+
+        var balloonHTML = $('#popup_marker')[0].content.children[0];
+
+        var polyline = DG.polyline(0, { color: 'red' }).addTo(map);
+
+        var connect_two_points = DG.polyline(0, { color: 'red' }).addTo(map);
+
+        
+
         var controlOptions = DG.Browser.mobile ? { position: 'bottomright' } : {};
         DG.control.zoom(controlOptions).addTo(map);
-
-        const my_but =  DG.control.test_2({position: 'bottomright', my_icon: '<i class="fa-solid fa-plus"></i>', title: 'Добавить метку'}).addTo(map);
-        $(my_but).on('click', ()=>{console.log('my_f')});
-
         DG.control.traffic(controlOptions).addTo(map);
         DG.control.location(controlOptions).addTo(map);
         DG.control.ruler(controlOptions).addTo(map);
-
-
-    
         if (DG.screenfull.isAvailable()) {
             DG.control.fullscreen(controlOptions).addTo(map);
         }
 
-        var balloonHTML = $('#popup_marker')[0].innerHTML;
+        const addMarker =  DG.control.test_2({
+            position: 'bottomright', 
+            my_icon: '<i class="fa-solid fa-plus"></i>', 
+            title: 'Добавить метку'
+        }).addTo(map);
+
+        $(addMarker).on('click', add_point);
+
+        const toggleDragginMode = DG.control.test_2({
+            position: 'bottomright', 
+            my_icon: '<i class="fa-solid fa-pen"></i>', 
+            title: 'Режим перетаскивания',
+            is_toggle: true
+        }).addTo(map);
+
+        $(toggleDragginMode).on('click', ()=>{
+            if (toggleDragginMode.isDraggingMode){
+                markers_node.forEach((val)=>{
+                    val.marker.dragging.enable();
+                });
+                userMarker.remove();
+                connect_two_points.remove();
+            }
+            else{
+                markers_node.forEach((val)=>{
+                    val.marker.dragging.disable();
+                });
+                connect_two_points.addTo(map);
+                userMarker.addTo(map);
+                update_polyline_two_p(userMarker.getLatLng());
+            }
+        });
+
+
+        
+
         //var marker = DG.marker([53.20973372247789, 44.99897003173828]).addTo(map).bindPopup(balloonHTML);
 
-        var polyline = DG.polyline(0, { color: 'red' }).addTo(map);
+        
+
         //map.fitBounds(polyline.getBounds());
-        var GeoJson_to_save = '';
-        var first_draw_way = true;
+        
+        function update_polyline_two_p(endLatLng){
+            let mass_LatLngs = polyline.getLatLngs();
+            let points = [];
+            points[0] = mass_LatLngs[mass_LatLngs.length - 1];
+            points[1] = endLatLng;
+            connect_two_points.setLatLngs(points);
+        }
 
-        var userMarker = DG.marker([54.980156831455, 82.897440725094], {
-            draggable: true
-        }).addTo(map).bindPopup(balloonHTML);
+        function create_marker(Lat_Lng, draggable = true, ballon = false){
+            let new_marker =    DG.marker(Lat_Lng, {
+                                    draggable: draggable,
+                                    icon: red_cirlce
+                                }).addTo(map);
 
-        userMarker.on('moveend', function (e) {
-            var lat = e.target._latlng.lat,
-                lng = e.target._latlng.lng;
+            if(ballon) new_marker.bindPopup((t)=>{
+                let id = find_index_by_node(t);
+                balloonHTML.querySelector('#but_save_disc').setAttribute('id_node', id);
+                if(markers_node[id].description){
+                    $(balloonHTML.querySelector('#description_node')).val(markers_node[id].description);
+                }
+                return balloonHTML
+            });
+            // if(ballon) new_marker.bindPopup(balloonHTML);
 
-            this.openPopup();
-        });
+            
 
-        userMarker.on('drag', function (e) {
-            var lat = e.target._latlng.lat,
-                lng = e.target._latlng.lng;
-            // if (!polyline.isEmpty()) {
-            //     if (first_draw_way) {
-            //         polyline.addLatLng(this.getLatLng());
-            //         first_draw_way = false;
-            //     }
-            //     var mass_coord = polyline.getLatLngs();
-            //     mass_coord.pop();
-            //     mass_coord.push(this.getLatLng());
-            //     polyline.setLatLngs(mass_coord);
-            // }
-        });
+            new_marker.on('move', (e) => {
+                if (!polyline.isEmpty() && !toggleDragginMode.isDraggingMode) {
+                    update_polyline_two_p(e.latlng);
+                    // let mass_LatLngs = polyline.getLatLngs();
+                    // let points = [];
+                    // points[0] = mass_LatLngs[mass_LatLngs.length - 1];
+                    // points[1] = e.latlng;
+                    // connect_two_points.setLatLngs(points);
+                }else{
+                    dragMarker(e.target);
+                }
+            });
+
+            // new_marker.dragging.enable();
+
+            return new_marker;
+        }
+
+        function add_point(){
+            if (userMarker){
+                polyline.addLatLng(userMarker.getLatLng());
+                markers_node.push({marker: create_marker(userMarker.getLatLng(), false, true)});
+            }else{
+                alert("Вы не добавили точку!");
+            }
+        }
+
+        function find_index_by_node(node){
+            return markers_node.findIndex((val)=>{
+                return val.marker === node;
+            });
+        }
+
+        function dragMarker(e){
+            if (toggleDragginMode.isDraggingMode){
+                // console.log(e);
+                let id = find_index_by_node(e);
+                // console.log(id);
+                let mass_coord = polyline.getLatLngs();
+                mass_coord[id] = e.getLatLng();
+                polyline.setLatLngs(mass_coord);
+            }
+        }
+        // userMarker.on('moveend', function (e) {
+        //     var lat = e.target._latlng.lat,
+        //         lng = e.target._latlng.lng;
+
+        //     this.openPopup();
+        // });
+
+        // userMarker.on('drag', function (e) {
+        //     var lat = e.target._latlng.lat,
+        //         lng = e.target._latlng.lng;
+        //     // if (!polyline.isEmpty()) {
+        //     //     if (first_draw_way) {
+        //     //         polyline.addLatLng(this.getLatLng());
+        //     //         first_draw_way = false;
+        //     //     }
+        //     //     var mass_coord = polyline.getLatLngs();
+        //     //     mass_coord.pop();
+        //     //     mass_coord.push(this.getLatLng());
+        //     //     polyline.setLatLngs(mass_coord);
+        //     // }
+        // });
 
 
 
@@ -237,31 +376,44 @@
 
         map.on('click', function (e) {
             console.log(e.latlng.lat + '   ' + e.latlng.lng);
+
+            if (!userMarker) userMarker = create_marker(e.latlng);
             userMarker.setLatLng([e.latlng.lat, e.latlng.lng]);
 
+            
             //polyline.addLatLng([e.latlng.lat, e.latlng.lng]);
+        });
+        
+        map.on('popupclose', function (e) {
+            $("#description_node").val("");
+            $('#but_save_disc').off();
         });
 
         map.on('popupopen', function (e) {
-            $('#but_add').on('click', function (e) {
-                //console.log("work");
-                polyline.addLatLng(userMarker.getLatLng());
-                userMarker.closePopup();
-                first_draw_way = true;
-                GeoJson_to_save = polyline.toGeoJSON();
+            $("#description_node").focus();
+            $('#but_save_disc').on('click', function (e) {
+                // console.log(this);
+                
+                let id = this.getAttribute('id_node');
+                markers_node[id].description = $("#description_node").val();
+                console.log(markers_node);
+                // polyline.addLatLng(userMarker.getLatLng());
+                // userMarker.closePopup();
+                // first_draw_way = true;
+                // GeoJson_to_save = polyline.toGeoJSON();
             });
 
-            $('#but_undo').on('click', function (e) {
-                console.log("work");
-                userMarker.closePopup();
-                var mass_coord = polyline.getLatLngs();
-                mass_coord.pop();
-                userMarker.setLatLng(mass_coord[mass_coord.length-1]);
-                polyline.setLatLngs(mass_coord);
+            // $('#but_undo').on('click', function (e) {
+            //     console.log("work");
+            //     userMarker.closePopup();
+            //     var mass_coord = polyline.getLatLngs();
+            //     mass_coord.pop();
+            //     userMarker.setLatLng(mass_coord[mass_coord.length-1]);
+            //     polyline.setLatLngs(mass_coord);
 
-                userMarker.openPopup();
-                GeoJson_to_save = polyline.toGeoJSON();
-            });
+            //     userMarker.openPopup();
+            //     GeoJson_to_save = polyline.toGeoJSON();
+            // });
             //console.log(polyline.toGeoJSON());
         });
 
